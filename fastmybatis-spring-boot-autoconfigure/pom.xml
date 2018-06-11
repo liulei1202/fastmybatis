@@ -2,17 +2,17 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.oschina.durcframework</groupId>
     <artifactId>fastmybatis-spring-boot-autoconfigure</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>fastmybatis-spring-boot-autoconfigure</name>
-    <description>fastmybatis-spring-boot-autoconfigure</description>
-    <url>https://gitee.com/durcframework/fastmybatis-spring-boot-autoconfigure</url>
+    <description>fastmybatis-spring-boot-autoconfigure(JDK8)</description>
+    <url>https://gitee.com/durcframework/fastmybatis/fastmybatis-spring-boot-autoconfigure</url>
     
     <licenses>
         <license>
-            <name>LICENSE-2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
+            <name>MIT</name>
+            <url>https://mit-license.org/</url>
         </license>
     </licenses>
     <developers>
@@ -20,14 +20,14 @@
             <name>durcframework</name>
             <email>thc8719@163.com</email>
             <organization>oschina</organization>
-            <organizationUrl>https://gitee.com/durcframework/fastmybatis-spring-boot-autoconfigure</organizationUrl>
+            <organizationUrl>https://gitee.com/durcframework/fastmybatis</organizationUrl>
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:https://gitee.com/durcframework/fastmybatis-spring-boot-autoconfigure.git</connection>
-        <developerConnection>scm:git:https://gitee.com/durcframework/fastmybatis-spring-boot-autoconfigure.git</developerConnection>
-        <url>https://gitee.com/durcframework/fastmybatis-spring-boot-autoconfigure.git</url>
-        <tag>fastmybatis-spring-boot-autoconfigure-0.1.0</tag>
+        <connection>scm:git:https://gitee.com/durcframework/fastmybatis.git</connection>
+        <developerConnection>scm:git:https://gitee.com/durcframework/fastmybatis.git</developerConnection>
+        <url>https://gitee.com/durcframework/fastmybatis.git</url>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
