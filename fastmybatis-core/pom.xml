@@ -20,13 +20,13 @@
             <name>durcframework</name>
             <email>thc8719@163.com</email>
             <organization>oschina</organization>
-            <organizationUrl>https://gitee.com/durcframework/fastmybatis/fastmybatis-core</organizationUrl>
+            <organizationUrl>https://gitee.com/durcframework/fastmybatis</organizationUrl>
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:https://gitee.com/durcframework/fastmybatis/fastmybatis-core.git</connection>
-        <developerConnection>scm:git:https://gitee.com/durcframework/fastmybatis/fastmybatis-core.git</developerConnection>
-        <url>https://gitee.com/durcframework/fastmybatis/fastmybatis-core.git</url>
+        <connection>scm:git:https://gitee.com/durcframework/fastmybatis.git</connection>
+        <developerConnection>scm:git:https://gitee.com/durcframework/fastmybatis.git</developerConnection>
+        <url>https://gitee.com/durcframework/fastmybatis.git</url>
         <tag>HEAD</tag>
     </scm>
 
