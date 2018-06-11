@@ -30,7 +30,7 @@
 	<dependencies>
 		<!-- fastmybatis -->
 		<dependency>
-			<groupId>com.gitee.fastmybatis</groupId>
+			<groupId>net.oschina.durcframework</groupId>
 			<artifactId>fastmybatis-spring-boot-starter</artifactId>
 			<version>${fastmybatis-spring-boot-starter.version}</version>
 		</dependency>
