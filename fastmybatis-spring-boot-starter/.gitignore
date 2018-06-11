@@ -1,0 +1,41 @@
+*.class
+
+
+# Package Files #
+
+*.jar
+
+*.war
+
+*.ear
+
+
+
+# ignore Maven generated target folders
+
+target/
+
+
+# ignore eclipse files.
+
+.project
+
+.classpath
+
+.settings
+
+.metadata
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/

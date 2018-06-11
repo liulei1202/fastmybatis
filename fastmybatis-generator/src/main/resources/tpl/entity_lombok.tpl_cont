@@ -1,0 +1,59 @@
+package ${context.packageName}.${param.entityPackageName};
+
+#if(${param.serializable}=="true")
+import java.io.Serializable;
+#end
+
+#if(${table.hasDateField})
+import java.util.Date;
+#end
+
+#if(${table.hasBigDecimalField})
+import java.math.BigDecimal;
+#end
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+#if(!${table.uuid})
+import javax.persistence.GenerationType;
+#end
+
+#if("$!{table.comment}" != "" )
+/**
+  表:${table.tableName} ${table.comment}
+*/
+#end
+@Table(name = "${table.tableName}")
+#if(${param.serializable}=="true")
+@SuppressWarnings("serial")
+#end
+@Data
+public class ${context.javaBeanName} #if(${param.serializable}=="true")implements Serializable #end{
+
+#foreach($column in $columns)
+    #if(${column.isPk})
+    	@Id
+    	@Column(name="${column.columnName}")
+        #if(${column.isIdentity})
+        	@GeneratedValue(strategy = GenerationType.IDENTITY)
+        #elseif(${table.uuid})
+        	@GeneratedValue(generator = "system-uuid")
+        #else
+            @GeneratedValue(strategy = GenerationType.AUTO)
+        #end
+    #else
+        #if(${param.camel2underline} != "true")
+        	@Column(name="${column.columnName}")
+        #end
+    #end
+    #if(${column.javaFieldName} == ${param.deleteColumn})
+        @com.gitee.fastmybatis.core.annotation.LogicDelete
+    #end
+        /** #if("$!{column.comment}" != "")${column.comment},#end 数据库字段：${column.columnName} */
+    	private ${column.javaTypeBox} ${column.javaFieldName};
+    	
+#end
+}

@@ -1,0 +1,114 @@
+package ${context.packageName}.${param.entityPackageName};
+
+#if(${param.serializable}=="true")
+import java.io.Serializable;
+#end
+
+#if(${table.hasDateField})
+import java.util.Date;
+#end
+
+#if(${table.hasBigDecimalField})
+import java.math.BigDecimal;
+#end
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+#if(!${table.uuid})
+import javax.persistence.GenerationType;
+#end
+
+#if("$!{table.comment}" != "" )
+/**
+ * 表名：${table.tableName}
+ * 备注：${table.comment}
+ */
+#end
+@Table(name = "${table.tableName}")
+#if(${param.serializable}=="true")
+@SuppressWarnings("serial")
+#end
+public class ${context.javaBeanName} #if(${param.serializable}=="true")implements java.io.Serializable #end{
+
+#foreach($column in $columns)
+    #if(${column.isPk})
+    	@Id
+    	@Column(name="${column.columnName}")
+        #if(${column.isIdentity})
+        	@GeneratedValue(strategy = GenerationType.IDENTITY)
+        #elseif(${table.uuid})
+        	@GeneratedValue(generator = "system-uuid")
+        #else
+            @GeneratedValue(strategy = GenerationType.AUTO)
+        #end
+    #else
+        #if(${param.camel2underline} != "true")
+        	@Column(name="${column.columnName}")
+        #end
+    #end
+    #if(${column.columnName} == ${param.deleteColumn})
+        @com.gitee.fastmybatis.core.annotation.LogicDelete
+    #end
+        /** #if("$!{column.comment}" != "")${column.comment},#end 数据库字段：${column.columnName} */
+    	private ${column.javaTypeBox} ${column.javaFieldName}; 
+
+#end
+
+#foreach(${column} in ${columns})
+    #if("$!{column.comment}" != "")
+    	/** 设置${column.comment},数据库字段：${table.tableName}.${column.columnName} */
+    #end     
+    	public void set${column.javaFieldNameUF}(${column.javaTypeBox} ${column.javaFieldName}) {
+    		this.${column.javaFieldName} = ${column.javaFieldName};
+    	}
+    #if("$!{column.comment}" != "")
+    	/** 获取${column.comment},数据库字段：${table.tableName}.${column.columnName} */
+    #end	     
+    	public ${column.javaTypeBox} get${column.javaFieldNameUF}() {
+    		return this.${column.javaFieldName};
+    	}
+#end
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((${pk.javaFieldName} == null) ? 0 : ${pk.javaFieldName}.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {return true;}			
+		if (obj == null) {return false;}			
+		if (getClass() != obj.getClass()) {return false;}
+			
+		${context.javaBeanName} other = (${context.javaBeanName}) obj;
+		
+		if (${pk.javaFieldName} == null) {
+			if (other.${pk.javaFieldName} != null) {return false;}				
+		} else if (!${pk.javaFieldName}.equals(other.${pk.javaFieldName})) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+    @Override
+	public String toString() {
+    	StringBuilder sb = new StringBuilder();
+        sb.append("${context.javaBeanName} [");
+        #set ($i=0) 
+#foreach(${column} in ${columns})
+		#if($i > 0)sb.append(", ");#end
+        sb.append("${column.javaFieldName}=").append(${column.javaFieldName});
+        #set($i=$i + 1)
+#end
+        sb.append("]");
+		return sb.toString();
+	}
+
+}

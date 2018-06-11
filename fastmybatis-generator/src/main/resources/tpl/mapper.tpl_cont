@@ -1,0 +1,7 @@
+package ${context.packageName}.${param.mapperPackageName};
+
+import com.gitee.fastmybatis.core.mapper.CrudMapper;
+import ${context.packageName}.${param.entityPackageName}.${context.javaBeanName};
+
+public interface ${context.javaBeanName}${param.mapperClassSuffix} extends CrudMapper<${context.javaBeanName}, ${pk.javaTypeBox}> {
+}

@@ -1,0 +1,334 @@
+#set($jq="$")
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="${context.namespace}">
+    <resultMap id="baseResultMap" type="${context.className}">
+    #foreach($column in $allColumns)
+        <result column="${column.columnName}" property="${column.javaFieldName}" ${column.javaTypeProperty} ${column.typeHandlerProperty} ${column.jdbcTypeProperty} />
+    #end
+    </resultMap>
+    
+    <!-- 表字段 -->
+    <sql id="baseColumns">
+    	#set ($i=0) 
+        #foreach($column in $columns)                         
+        	#if($i > 0),#end t.`${column.columnName}`
+			#set($i=$i +1)             
+        #end
+    </sql>
+    
+	<!-- 根据条件查询记录 -->
+    <select id="list" parameterType="com.gitee.fastmybatis.core.query.Query"
+		resultMap="baseResultMap">
+		SELECT 
+			<include refid="common.sqlColumns" />
+		FROM `${table.tableName}` t
+		<include refid="common.join" />
+        <where>
+            <include refid="common.condition" />
+            #if(${table.hasLogicDeleteColumn})
+              AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+            #end
+        </where>
+		<include refid="common.orderBy" />
+		<include refid="common.limit" />
+	</select>
+	
+	<!-- 根据条件查询记录数 -->
+    <select id="countTotal" parameterType="com.gitee.fastmybatis.core.query.Query"
+		resultType="long">
+		SELECT ${countExpression} FROM `${table.tableName}` t
+		<include refid="common.join" />
+        <where>
+            <include refid="common.condition" />
+            #if(${table.hasLogicDeleteColumn})
+              AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+            #end
+        </where>
+    </select>
+
+	<!-- 根据主键获取单条记录 -->
+    <select id="getById" resultMap="baseResultMap" parameterType="${pk.fullType}">
+		SELECT 
+        	<include refid="baseColumns" />
+		FROM `${table.tableName}` t
+		WHERE `${pk.columnName}` = #{value}
+		#if(${table.hasLogicDeleteColumn})
+          AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+        #end
+		LIMIT 1
+	</select>
+    
+    <!-- 根据条件获取单条记录 -->
+    <select id="getByQuery" resultMap="baseResultMap" parameterType="com.gitee.fastmybatis.core.query.Query">
+		SELECT
+			<include refid="common.sqlColumns" />			
+		FROM `${table.tableName}` t
+		<include refid="common.join" />
+        <where>
+            <include refid="common.condition" />
+            #if(${table.hasLogicDeleteColumn})
+              AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+            #end
+        </where>
+		<include refid="common.orderBy" />
+		LIMIT 1
+	</select>
+	
+	<!-- 根据属性获取单条记录 -->
+	<select id="getByProperty" resultMap="baseResultMap">
+		SELECT
+			<include refid="baseColumns" />
+		FROM `${table.tableName}` t
+		WHERE t.`${jq}{column}` = #{value}
+		#if(${table.hasLogicDeleteColumn})
+          AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+        #end
+		LIMIT 1
+	</select>
+	
+	<!-- 根据属性获取多条记录 -->
+	<select id="listByProperty" resultMap="baseResultMap">
+		SELECT
+			<include refid="baseColumns" />
+		FROM `${table.tableName}` t
+		WHERE t.`${jq}{column}`= #{value}
+		#if(${table.hasLogicDeleteColumn})
+          AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+        #end
+	</select>
+	
+
+	<!-- 保存,保存全部字段 -->
+    <insert id="save" parameterType="${context.className}"
+#if(${pk.isIdentity})
+    keyProperty="${pk.javaFieldName}" keyColumn="${pk.columnName}" useGeneratedKeys="true"
+#end
+    >
+	INSERT INTO `${table.tableName}`
+         (
+ #set ($i=0) 
+        #foreach($column in $columns) 
+            #if(!${column.isIdentityPk})               
+        #if($i > 0),#end `${column.columnName}`
+#set($i=$i +1)
+            #end          
+        #end
+          )
+	VALUES (
+ #set ($i=0) 
+        #foreach($column in $columns) 
+            #if(!${column.isIdentityPk})               
+        #if($i > 0),#end ${column.mybatisInsertValue}
+#set($i=$i +1)
+            #end          
+        #end
+ 
+        )
+	</insert>
+    
+    <!-- 保存,保存不为NULL的字段 -->
+    <insert id="saveIgnoreNull" parameterType="${context.className}"
+    #if(${pk.isIdentity})
+        keyProperty="${pk.javaFieldName}" keyColumn="${pk.columnName}" useGeneratedKeys="true"
+    #end
+        >       
+        INSERT INTO `${table.tableName}`
+    
+        <trim prefix="(" suffix=")" suffixOverrides=",">	 
+
+            #foreach($column in $columns) 
+                #if(!${column.isIdentityPk}) 
+                    #if(${column.hasTypeHandlerInsert})
+                        `${column.columnName}`,
+                    #else
+                        <if test="${column.javaFieldName} != null">
+                       `${column.columnName}`,
+                        </if>
+                    #end
+                #end           
+            #end
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">            
+            #foreach($column in $columns) 
+                #if(!${column.isIdentityPk})  
+                    #if(${column.hasTypeHandlerInsert})
+                        ${column.mybatisInsertValue},
+                    #else
+                        <if test="${column.javaFieldName} != null" >
+                        ${column.mybatisInsertValue},                    
+                        </if>
+                    #end
+                #end            
+            #end
+        </trim>
+    </insert>
+
+	<!-- 批量保存,保存全部字段 -->
+    <insert id="saveBatch">
+		INSERT INTO `${table.tableName}` 
+		(
+ #set ($i=0) 
+        #foreach($column in $columns) 
+            #if(!${column.isIdentityPk})               
+        #if($i > 0),#end `${column.columnName}`
+#set($i=$i +1)
+            #end          
+        #end
+          )
+		VALUES 
+		<foreach collection="entitys" item="entity"  separator=",">
+        ( #set ($i=0)
+        #foreach($column in $columns) 
+            #if(!${column.isIdentityPk})               
+         	#if($i > 0),#end ${column.mybatisInsertValuePrefix}
+         	#set($i=$i +1)
+            #end          
+        #end
+        )
+		</foreach>
+	</insert>
+
+
+	 <!-- 批量保存,保存指定字段 -->
+    <insert id="saveBatchWithColumns">
+		INSERT INTO `${table.tableName}`
+		<foreach collection="columns" item="column" open="(" close=")" separator=",">
+			${jq}{column.columnName}
+		</foreach>
+		VALUES 
+		<foreach collection="entitys" item="entity"  separator=",">
+        ( 
+        	<foreach collection="columns" item="column"  separator=",">
+        		#{entity.${column.alias} ${column.typeHandler}}
+        	</foreach>
+        )
+        </foreach>
+	</insert>
+	
+	<!-- 批量保存(兼容),保存全部字段 -->
+    <insert id="saveMulti">
+		INSERT INTO `${table.tableName}` 
+		(
+ #set ($i=0) 
+        #foreach($column in $columns) 
+            #if(!${column.isIdentityPk})               
+        #if($i > 0),#end `${column.columnName}`
+#set($i=$i +1)
+            #end          
+        #end
+          )
+		<foreach collection="entitys" item="entity"  separator="UNION ALL">
+        SELECT  #set ($i=0)
+        #foreach($column in $columns) 
+            #if(!${column.isIdentityPk})               
+         	#if($i > 0),#end ${column.mybatisInsertValuePrefix}
+         	#set($i=$i +1)
+            #end          
+        #end        
+		</foreach>
+	</insert>
+	
+	<!-- 批量保存(兼容),保存指定字段 -->
+    <insert id="saveMultiWithColumns">
+		INSERT INTO `${table.tableName}`
+		<foreach collection="columns" item="column" open="(" close=")" separator=",">
+			`${jq}{column.columnName}`
+		</foreach>
+		<foreach collection="entitys" item="entity"  separator="UNION ALL">
+        SELECT  
+        	<foreach collection="columns" item="column"  separator=",">
+        		#{entity.${column.alias} ${column.typeHandler}}
+        	</foreach>
+        </foreach>
+	</insert>
+
+	<!-- 更新,更新全部字段 -->
+    <update id="update" parameterType="${context.className}">
+    UPDATE `${table.tableName}`
+     <set>		
+     #foreach($column in $columns) 
+         #if(!${column.isPk})               
+         `${column.columnName}`=${column.mybatisUpdateValue},
+         #end          
+     #end
+     </set>	
+    WHERE `${pk.columnName}` = #{${pk.javaFieldName}}
+    </update>
+    
+    <!-- 更新不为NULL的字段 -->
+    <update id="updateIgnoreNull" parameterType="${context.className}">
+    UPDATE `${table.tableName}`
+    <set>
+    	#foreach($column in $columns) 
+            #if(!${column.isPk})  
+                #if(${column.hasTypeHandlerUpdate})
+                    `${column.columnName}`=${column.mybatisUpdateValue},
+                #else
+                    <if test="${column.javaFieldName} != null" >
+                        `${column.columnName}`=${column.mybatisUpdateValue},
+                    </if>
+                #end
+            #end          
+        #end
+    </set>
+    WHERE `${pk.columnName}` = #{${pk.javaFieldName}}
+    </update>
+    
+	<!-- 根据主键删除记录 -->
+	<delete id="delete" parameterType="${context.className}">
+		#if(${table.hasLogicDeleteColumn})            
+            UPDATE ${table.tableName}
+            <set>
+                #foreach($column in $columns) 
+                    #if(${column.isPk})  
+                    #elseif(${column.isLogicDelete})
+                        ${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicDeleteValueString},
+                    #end          
+                #end
+            </set>
+            WHERE ${pk.columnName} = #{${pk.javaFieldName}}
+            AND ${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+            #if(${table.hasVersionColumn})
+                AND ${table.versionColumn.columnName} = #{${table.versionColumn.javaFieldName}} 
+            #end    
+       #else
+            DELETE FROM ${table.tableName}
+            WHERE ${pk.columnName} = #{${pk.javaFieldName}}
+       #end
+	</delete>  
+	
+	<!-- 根据主键删除 -->
+    <delete id="deleteById" parameterType="${pk.fullType}">
+        #if(${table.hasLogicDeleteColumn})            
+            UPDATE ${table.tableName}
+            <set>
+                #foreach($column in $columns) 
+                    #if(${column.isPk})  
+                    #elseif(${column.isLogicDelete})
+                        ${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicDeleteValueString},
+                    #end          
+                #end
+            </set>
+            WHERE ${pk.columnName} = #{${pk.javaFieldName}}
+            AND ${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+            #if(${table.hasVersionColumn})
+                AND ${table.versionColumn.columnName} = #{${table.versionColumn.javaFieldName}} 
+            #end    
+        #else
+            DELETE FROM ${table.tableName}
+            WHERE ${pk.columnName} = #{value}
+        #end
+    </delete>  
+    
+    <!-- 根据条件删除记录 -->
+    <delete id="deleteByQuery" parameterType="com.gitee.fastmybatis.core.query.Query">
+		DELETE FROM `${table.tableName}`
+		<include refid="common.where" />
+	</delete>
+	
+	<!--_ext_mapper_-->
+    
+    <!--_global_vm_-->
+
+</mapper>

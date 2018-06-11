@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>学生列表</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0" />
+</head>
+<body>
+<div>
+    <table border="1">
+        <thead>
+        <tr>
+            <td>序号</td>
+            <td>姓名</td>
+            <td>余额</td>
+            <td>备注</td>
+            <td>添加时间</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item,stat:${data.rows}">
+            <td th:text="${stat.index+1}">1</td>
+            <td th:text="${item.username}">张三</td>
+            <td th:text="${item.money}">11.0</td>
+            <td th:text="${item.remark}">备注</td>
+            <td th:text="${item.addTime}">2006-02-01</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
