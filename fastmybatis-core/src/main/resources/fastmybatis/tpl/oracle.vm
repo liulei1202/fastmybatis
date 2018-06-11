@@ -341,7 +341,7 @@
                     #end          
                 #end
             </set>
-            WHERE ${pk.columnName} = #{${pk.javaFieldName}}
+            WHERE ${pk.columnName} = #{value}
             AND ${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
             #if(${table.hasVersionColumn})
                 AND ${table.versionColumn.columnName} = #{${table.versionColumn.javaFieldName}} 
