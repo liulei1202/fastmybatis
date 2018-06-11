@@ -21,7 +21,7 @@ public class MapperUtil {
      * 
      * @param total
      * @param pageSize
-     * @return
+     * @return 返回页数
      */
     private static int calcPageCount(long total, int pageSize) {
         return (int) (pageSize == 0 ? 1 : (total + pageSize - 1) / pageSize);
