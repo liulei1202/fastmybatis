@@ -1,179 +1,187 @@
 package com.myapp.entity;
 
 import java.math.BigDecimal;
-import java.util.Collection;
+
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import com.gitee.fastmybatis.core.query.annotation.Condition;
-import com.myapp.entity.type.UserState;
 
+/**
+ * 表名：t_user
+ * 备注：用户表
+ */
 @Table(name = "t_user")
 public class TUser {
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	@Column(name = "username")
-	private String username;
-	@Column(name = "state")
-	private UserState state;
-	@Column(name = "isdel")
-	private Boolean isdel;
-	@Column(name = "remark")
-	private String remark;
-	@Column(name = "add_time")
-	private Date addTime;
-	@Column(name = "money")
-	private BigDecimal money;
-	@Column(name = "left_money")
-	private Float leftMoney;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    /** ID, 数据库字段：id */
+    private Integer id;
 
-	@Transient
-	private String city;
-	private transient String address;
-	
-	private Integer[] ids;
-	private Collection<Integer> ids2;
-	
-	@Condition(column="id")
-	public Integer[] getIds() {
-		return ids;
-	}
+    /** 用户名, 数据库字段：username */
+    private String username;
 
-	public void setIds(Integer[] ids) {
-		this.ids = ids;
-	}
+    /** 状态, 数据库字段：state */
+    private Byte state;
 
-	public Collection<Integer> getIds2() {
-		return ids2;
-	}
+    /** 是否删除, 数据库字段：isdel */
+    @com.gitee.fastmybatis.core.annotation.LogicDelete
+    private Boolean isdel;
 
-	public void setIds2(Collection<Integer> ids2) {
-		this.ids2 = ids2;
-	}
+    /** 备注, 数据库字段：remark */
+    private String remark;
 
-	public Integer[] getState1() {
-		return null;
-	}
-	
-	public List<Integer> getList1() {
-		return null;
-	}
-	
-	public Collection<Integer> getColl() {
-		return null;
-	}
+    /** 添加时间, 数据库字段：add_time */
+    private Date addTime;
 
-	public String getCity() {
-		return city;
-	}
+    /** 金额, 数据库字段：money */
+    private BigDecimal money;
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    /** 剩下的钱, 数据库字段：left_money */
+    private Float leftMoney;
 
-	public String getAddress() {
-		return address;
-	}
+    /** 设置ID,数据库字段：t_user.id */
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    /** 获取ID,数据库字段：t_user.id */
+    public Integer getId() {
+        return this.id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    /** 设置用户名,数据库字段：t_user.username */
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public Integer getId() {
-		return this.id;
-	}
+    /** 获取用户名,数据库字段：t_user.username */
+    public String getUsername() {
+        return this.username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    /** 设置状态,数据库字段：t_user.state */
+    public void setState(Byte state) {
+        this.state = state;
+    }
 
-	public String getUsername() {
-		return this.username;
-	}
+    /** 获取状态,数据库字段：t_user.state */
+    public Byte getState() {
+        return this.state;
+    }
 
-	public void setState(UserState state) {
-		this.state = state;
-	}
+    /** 设置是否删除,数据库字段：t_user.isdel */
+    public void setIsdel(Boolean isdel) {
+        this.isdel = isdel;
+    }
 
-	public UserState getState() {
-		return this.state;
-	}
+    /** 获取是否删除,数据库字段：t_user.isdel */
+    public Boolean getIsdel() {
+        return this.isdel;
+    }
 
-	public void setIsdel(Boolean isdel) {
-		this.isdel = isdel;
-	}
+    /** 设置备注,数据库字段：t_user.remark */
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
-	public Boolean getIsdel() {
-		return this.isdel;
-	}
+    /** 获取备注,数据库字段：t_user.remark */
+    public String getRemark() {
+        return this.remark;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    /** 设置添加时间,数据库字段：t_user.add_time */
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
 
-	public String getRemark() {
-		return this.remark;
-	}
+    /** 获取添加时间,数据库字段：t_user.add_time */
+    public Date getAddTime() {
+        return this.addTime;
+    }
 
-	public void setAddTime(Date addTime) {
-		this.addTime = addTime;
-	}
+    /** 设置金额,数据库字段：t_user.money */
+    public void setMoney(BigDecimal money) {
+        this.money = money;
+    }
 
-	public Date getAddTime() {
-		return this.addTime;
-	}
+    /** 获取金额,数据库字段：t_user.money */
+    public BigDecimal getMoney() {
+        return this.money;
+    }
 
-	public void setMoney(BigDecimal money) {
-		this.money = money;
-	}
+    /** 设置剩下的钱,数据库字段：t_user.left_money */
+    public void setLeftMoney(Float leftMoney) {
+        this.leftMoney = leftMoney;
+    }
 
-	public BigDecimal getMoney() {
-		return this.money;
-	}
+    /** 获取剩下的钱,数据库字段：t_user.left_money */
+    public Float getLeftMoney() {
+        return this.leftMoney;
+    }
 
-	public void setLeftMoney(Float leftMoney) {
-		this.leftMoney = leftMoney;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = (prime * result) + ((id == null) ? 0 : id.hashCode());
 
-	@Condition(column="left_money")
-	public Float getLeftMoney() {
-		return this.leftMoney;
-	}
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("TUser [");
-		sb.append("id=").append(id);
-		sb.append(", ");
-		sb.append("username=").append(username);
-		sb.append(", ");
-		sb.append("state=").append(state);
-		sb.append(", ");
-		sb.append("isdel=").append(isdel);
-		sb.append(", ");
-		sb.append("remark=").append(remark);
-		sb.append(", ");
-		sb.append("addTime=").append(addTime);
-		sb.append(", ");
-		sb.append("money=").append(money);
-		sb.append(", ");
-		sb.append("leftMoney=").append(leftMoney);
-		sb.append("]");
-		return sb.toString();
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
 
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        TUser other = (TUser) obj;
+
+        if (id == null) {
+            if (other.id != null) {
+                return false;
+            }
+        } else if (!id.equals(other.id)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("TUser [");
+        sb.append("id=").append(id);
+        sb.append(", ");
+        sb.append("username=").append(username);
+        sb.append(", ");
+        sb.append("state=").append(state);
+        sb.append(", ");
+        sb.append("isdel=").append(isdel);
+        sb.append(", ");
+        sb.append("remark=").append(remark);
+        sb.append(", ");
+        sb.append("addTime=").append(addTime);
+        sb.append(", ");
+        sb.append("money=").append(money);
+        sb.append(", ");
+        sb.append("leftMoney=").append(leftMoney);
+        sb.append("]");
+
+        return sb.toString();
+    }
 }

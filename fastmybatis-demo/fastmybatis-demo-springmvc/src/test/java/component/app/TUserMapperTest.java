@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +15,11 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.gitee.fastmybatis.core.PageInfo;
-import com.gitee.fastmybatis.core.query.Column;
-import com.gitee.fastmybatis.core.query.EnumColumn;
 import com.gitee.fastmybatis.core.query.Query;
 import com.gitee.fastmybatis.core.query.Sort;
+import com.gitee.fastmybatis.core.util.ClassUtil;
 import com.gitee.fastmybatis.core.util.MapperUtil;
 import com.myapp.entity.TUser;
-import com.myapp.entity.type.UserState;
 import com.myapp.mapper.TUserMapper;
 
 /**
@@ -30,424 +27,422 @@ import com.myapp.mapper.TUserMapper;
  */
 public class TUserMapperTest extends TestBase {
 
-	@Resource
-	TUserMapper mapper;
-	@Resource
-	TransactionTemplate transactionTemplate;
-	
-	// 根据主键查询
-	@Test
-	public void testGet() {
-		TUser user = mapper.getById(3);
-		print(user);
-	}
-	
-	@Test
-    public void testMap() {
-	    Map<String, Object> map = new HashMap<String, Object>();
-	    map.put("id", 3);
-	    map.put("username", "李四");
-        List<TUser> list = mapper.findByMap(map);
-        print(list);
-        
-        TUser user = mapper.getByMap(map);
-        this.print(user);
-    }
-	
-	// 根据字段查询一条记录
-	@Test
-	public void testGetByProperty() {
-		TUser user = mapper.getByProperty("username", "王五");
-		print(user);
-	}
-	
-	// 根据条件查询一条记录
-	@Test
-	public void testGetByExpression() {
-		// 查询ID=3的用户
-		Query query = Query.build().eq("id", 3);
-		
-		TUser user = mapper.getByQuery(query);
-		
-		print(user);
-	}
-	
-	// 条件查询
-	// 查询username='张三'的用户
-	@Test
-	public void testFind() {
-		Query query = new Query();
-		// 添加查询条件
-		query.eq("username", "张三");
-		
-		List<TUser> list = mapper.list(query); // 获取结果集
-		long count = mapper.countTotal(query); // 获取总数
-		print("count:" + count);
-		for (TUser user : list) {
-			System.out.println(user);
-		}
-	}
-	
-	// 分页查询
-	/*MYSQL语句:
-	 * 
-	 * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
-	 * FROM `t_user` t 
-	 * ORDER BY id DESC 
-	 * LIMIT ?,? 
-	 * 
-	 * Parameters: 2(Integer), 2(Integer)
-	 */
-	@Test
-	public void testPage() {
-		Query query = new Query();
-		
-		query.page(2, 2) // 设置pageIndex，pageSize
-			.addSort("id", Sort.DESC); // 添加排序
-		
-		// 查询后的结果，包含总记录数，结果集，总页数等信息
-		PageInfo<TUser> pageInfo = MapperUtil.query(mapper, query);
-		
-		List<TUser> rows = pageInfo.getList();
-		for (TUser user : rows) {
-			System.out.println(user);
-		}
-	}
-	
-	// 自定义返回字段查询，只返回两个字段
-	// SELECT t.id,t.username FROM `t_user` t LIMIT 0,10
-	@Test
-	public void testSelfColumns() {
-		Query query = new Query();
-		// 只返回id,username
-		query.setColumns(Arrays.asList("t.id","t.username"));
-		
-		List<TUser> list = mapper.list(query);
-		
-		for (TUser user : list) {
-			System.out.println(user);
-		}
-	}
-	
-	// 多表查询,left join
-	// 适用场景：获取两张表里面的字段信息返回给前端
-	/* 
-	 *  MYSQL生成如下sql:
-		SELECT 
-			t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
-			, t2.city , t2.address 
-		FROM `t_user` t LEFT JOIN user_info t2 ON t.id = t2.user_id 
-		WHERE t2.id = ?
-		ORDER BY id ASC 
-		LIMIT ?,?
-	 */
-	@Test
-	public void testJoin() {
-		Query query = new Query();
-		// 添加第二张表的字段,跟主表字段一起返回
-		query.addOtherColumns(
-					"t2.city"
-					,"t2.address"
-		);
-		// 左连接查询,主表的alias默认为t
-		query.join("LEFT JOIN user_info t2 ON t.id = t2.user_id"); 
-		//添加条件
-		query.eq("t2.id", 2);
-		
-		query.addSort("t.id");
-		
-		List<TUser> list = mapper.list(query);
-		
-		System.out.println("==============");
-		for (TUser user : list) {
-			System.out.println(
-				user.getId() 
-				+ " " + user.getUsername() 
-				// 下面两个字段是第二张表里面的
-				+ " " + user.getCity() 
-				+ " " + user.getAddress()
-			);
-		}
-		System.out.println("==============");
-	}
-	
-	/**
-     * 联表分页
+    @Resource
+    TUserMapper mapper;
+    @Resource
+    TransactionTemplate transactionTemplate;
+
+    /**
+     * 根据主键查询
+     * 
+     * <pre>
      * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
      * FROM `t_user` t 
-     * LEFT JOIN user_info t2 ON t.id = t2.user_id 
-     * WHERE t.isdel = 0 LIMIT ?,? 
+     * WHERE `id` = ? LIMIT 1
+     * </pre>
+     */
+    @Test
+    public void testGetById() {
+        TUser user = mapper.getById(3);
+        print(user);
+    }
+
+    /**
+     * 根据条件查询一条记录
+     * 
+     * <pre>
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t 
+     * WHERE id = ? AND money > ? LIMIT 1
+     * </pre>
+     */
+    @Test
+    public void testGetByQuery() {
+        // 查询ID=3,金额大于1的用户
+        Query query = new Query().eq("id", 3).gt("money", 1);
+
+        TUser user = mapper.getByQuery(query);
+        print(user);
+    }
+
+    /**
+     * 根据字段查询一条记录
+     * 
+     * <pre>
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t 
+     * WHERE t.`username` = ? LIMIT 1
+     * </pre>
+     */
+    @Test
+    public void testGetByColumn() {
+        TUser user = mapper.getByColumn("username", "王五");
+        print(user);
+    }
+
+    /**
+     * 根据条件查询列表
+     * 
+     * <pre>
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t 
+     * WHERE state = ? AND money IN ( ? , ? , ? )
+     * </pre>
+     */
+    @Test
+    public void testList() {
+        Query query = new Query().eq("state", 0).in("money", Arrays.asList(100, 1.0, 3));
+        List<TUser> list = mapper.list(query);
+        for (TUser tUser : list) {
+            print(tUser);
+        }
+    }
+
+    /**
+     * 返回自定义字段
+     * 
+     * <pre>
+     * SELECT t.id , t.username as username FROM `t_user` t WHERE username = ?
+     * </pre>
+     */
+    @Test
+    public void testListMap() {
+        Query query = new Query();
+        // 添加查询条件
+        query.eq("username", "张三");
+
+        // 自定义字段
+        List<String> columns = Arrays.asList("t.id", "t.username as username");
+        // 查询，返回一个Map集合
+        List<Map<String, Object>> list = mapper.listMap(columns, query);
+
+        for (Map<String, Object> map : list) {
+            System.out.println(map);
+        }
+        // 将map集合转换成实体类集合
+        List<TUser> userList = ClassUtil.mapToList(list, TUser.class);
+        for (TUser tUser : userList) {
+            System.out.println("id:" + tUser.getId() + ",username:" + tUser.getUsername());
+        }
+    }
+
+    /**
+     * 获取记录数
+     * 
+     * <pre>
+     * SELECT count(*) FROM `t_user` t WHERE username = ?
+     * </pre>
+     */
+    @Test
+    public void testGetCount() {
+        Query query = new Query();
+        // 添加查询条件
+        query.eq("username", "张三");
+
+        long total = mapper.getCount(query); // 获取总数
+
+        print("total:" + total);
+    }
+
+    /**
+     * 分页查询
+     * 
+     * <pre>
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t 
+     * WHERE username = ? LIMIT ?,?
+     * </pre>
+     */
+    @Test
+    public void testPageInfo() {
+        Query query = new Query();
+        // 添加查询条件
+        query.eq("username", "张三").page(1, 2) // 分页查询，按页码分，通常使用这种。
+        // .limit(start, offset) // 分页查询，这种是偏移量分页
+        ;
+
+        // 分页信息
+        PageInfo<TUser> pageInfo = MapperUtil.query(mapper, query);
+
+        List<TUser> list = pageInfo.getList(); // 结果集
+        long total = pageInfo.getTotal(); // 总记录数
+        int pageCount = pageInfo.getPageCount(); // 共几页
+
+        System.out.println("total:" + total);
+        System.out.println("pageCount:" + pageCount);
+        print(list);
+    }
+
+    /**
+     * 排序
+     * 
+     * <pre>
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t 
+     * ORDER BY id ASC,state DESC
+     * </pre>
+     */
+    @Test
+    public void testOrder() {
+        Query query = new Query().addSort("id", Sort.ASC).addSort("state", Sort.DESC);
+
+        List<TUser> list = mapper.list(query);
+        print(list);
+    }
+
+    /**
+     * 联表分页
+     * 
+     * <pre>
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t LEFT JOIN user_info t2 ON t.id = t2.user_id 
+     * WHERE t.isdel = 0 LIMIT ?,?
+     * </pre>
      */
     @Test
     public void testJoinPage() {
         Query query = Query.build()
-             // 左连接查询,主表的alias默认为t
-                .join("LEFT JOIN user_info t2 ON t.id = t2.user_id")
-                .page(1, 5); 
-        
+                // 左连接查询,主表的alias默认为t
+                .join("LEFT JOIN user_info t2 ON t.id = t2.user_id").page(1, 5);
+
         List<TUser> list = mapper.list(query);
-        
+
         System.out.println("==============");
         for (TUser user : list) {
-            System.out.println(
-                user.getId() 
-                + " " + user.getUsername() 
-            );
+            System.out.println(user.getId() + " " + user.getUsername());
         }
         System.out.println("==============");
+    }
+
+    /**
+     * 自定义sql方式1
+     */
+    @Test
+    public void testSelfSql1() {
+        int i = mapper.updateById(1, "张三");
+        print("updateById--> " + i);
+    }
+
+    /**
+     * 自定义sql方式2，见TUserMapper.xml
+     */
+    @Test
+    public void testSelfSql2() {
+        TUser user = mapper.selectByName("张三");
+        print(user);
+    }
+
+    /**
+     * 添加-保存所有字段
+     */
+    @Test
+    public void testSave() {
+        TUser user = new TUser();
+        user.setId(30);
+        user.setAddTime(new Date());
+        user.setIsdel(false);
+        user.setLeftMoney(22.1F);
+        user.setMoney(new BigDecimal(100.5));
+        user.setRemark("备注");
+        user.setState((byte)0);
+        user.setUsername("张三");
+
+        mapper.save(user);
+
+        print("添加后的主键:" + user.getId());
+
+        print(user);
+    }
+
+    /**
+     * 添加-保存非空字段
+     */
+    @Test
+    public void testSaveIgnoreNull() {
+        TUser user = new TUser();
+        user.setAddTime(new Date());
+        user.setIsdel(true);
+        user.setMoney(new BigDecimal(100.5));
+        user.setState((byte)0);
+        user.setUsername("张三notnull");
+        user.setLeftMoney(null);
+        user.setRemark(null);
+
+        mapper.saveIgnoreNull(user);
+
+        print("添加后的主键:" + user.getId());
+        print(user);
+    }
+
+    /**
+     * 批量添加.支持mysql,sqlserver2008。如需支持其它数据库使用saveMulti方法
+     * 
+     * <pre>
+     * INSERT INTO person (id, name, age) VALUES (1, 'Kelvin', 22), (2, 'ini_always', 23);
+     * </pre>
+     */
+    @Test
+    public void testInsertBatch() {
+        List<TUser> users = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) { // 创建3个对象
+            TUser user = new TUser();
+            user.setUsername("username" + i);
+            user.setMoney(new BigDecimal(i));
+            user.setRemark("remark" + i);
+            user.setState((byte)0);
+            user.setIsdel(false);
+            user.setAddTime(new Date());
+            user.setLeftMoney(200F);
+            users.add(user);
+        }
+
+        int i = mapper.saveBatch(users); // 返回成功数
+
+        System.out.println("saveBatch --> " + i);
+    }
+
+    /**
+     * 批量添加,兼容更多数据库版本,采用union all
+     * 
+     * <pre>
+     * INSERT INTO `t_user` ( `username` , `state` , `isdel` , `remark` , `add_time` , `money` , `left_money` ) 
+     * SELECT ? , ? , ? , ? , ? , ? , ? 
+     * UNION ALL 
+     * SELECT ? , ? , ? , ? , ? , ? , ? 
+     * UNION ALL 
+     * SELECT ? , ? , ? , ? , ? , ? , ?
+     * </pre>
+     */
+    @Test
+    public void testInsertMulti() {
+        List<TUser> users = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) { // 创建3个对象
+            TUser user = new TUser();
+            user.setUsername("username" + i);
+            user.setMoney(new BigDecimal(i));
+            user.setRemark("remark" + i);
+            user.setState((byte)0);
+            user.setIsdel(false);
+            user.setAddTime(new Date());
+            user.setLeftMoney(200F);
+            users.add(user);
+        }
+
+        int i = mapper.saveMulti(users); // 返回成功数
+
+        System.out.println("saveMulti --> " + i);
+    }
+
+    /**
+     * 事务回滚
+     */
+    @Test
+    public void testUpdateTran() {
+        TUser user = transactionTemplate.execute(new TransactionCallback<TUser>() {
+            @Override
+            public TUser doInTransaction(TransactionStatus arg0) {
+                try {
+                    TUser user = mapper.getById(3);
+                    user.setUsername("王五1");
+                    user.setMoney(user.getMoney().add(new BigDecimal(0.1)));
+                    user.setIsdel(true);
+
+                    int i = mapper.update(user);
+                    print("testUpdate --> " + i);
+                    int j = 1 / 0; // 模拟错误
+                    return user;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    arg0.setRollbackOnly();
+                    return null;
+                }
+            }
+
+        });
+
+        print(user);
+    }
+
+    /**
+     * 更新所有字段
+     */
+    @Test
+    public void testUpdate() {
+        TUser user = mapper.getById(3);
+        user.setUsername("李四");
+        user.setMoney(user.getMoney().add(new BigDecimal(0.1)));
+        user.setState((byte)1);
+        user.setIsdel(true);
+
+        int i = mapper.update(user);
+        print("testUpdate --> " + i);
+    }
+
+    /**
+     * 更新不为null的字段 UPDATE [t_user] SET [username]=?, [isdel]=? WHERE [id] = ?
+     */
+    @Test
+    public void testUpdateIgnoreNull() {
+        TUser user = new TUser();
+        user.setId(3);
+        user.setUsername("王五");
+        user.setState((byte)2);
+        user.setIsdel(false);
+        int i = mapper.updateIgnoreNull(user);
+        print("updateNotNull --> " + i);
     }
     
+    /**
+     * 根据条件更新。将状态为2的数据姓名更新为李四
+     * UPDATE `t_user` SET `username`=?, `add_time`=? WHERE state = ? 
+     */
     @Test
-    public void testJoinPageXml() {
-        Query query = Query.build()
-                    .page(1, 5); 
-            
-        List<TUser> list = mapper.findJoinPage(query);
+    public void testUpdateByQuery() {
+        Query query = new Query().eq("state", 2);
+        // 方式1
+        TUser user = new TUser();
+        user.setUsername("李四");
+        int i = mapper.updateByQuery(user, query);
+        print("updateByQuery --> " + i);
         
-        System.out.println("==============");
-        for (TUser user : list) {
-            System.out.println(
-                user.getId() 
-                + " " + user.getUsername() 
-            );
-        }
-        System.out.println("==============");
+       /* // 方式2
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("username", "李四2");
+        i = mapper.updateByQuery(map, query);
+        print("updateByQuery --> " + i);*/
     }
-	
-	// 自定义sql，见TUserMapper.xml
-	// 注意mybatis的mapper必须跟Mapper类一致
-	@Test
-	public void testSelfSql() {
-		TUser user = mapper.selectByName("张三");
-		
-		print(user);
-	}
-	
-	// 添加-保存所有字段
-	@Test
-	public void testInsert() {
-		TUser user = new TUser();
-		user.setId(30);
-		user.setAddTime(new Date());
-		user.setIsdel(false);
-		user.setLeftMoney(22.1F);
-		user.setMoney(new BigDecimal(100.5));
-		user.setRemark("备注");
-		user.setState(UserState.Reg);
-		user.setUsername("张三");
-		
-		mapper.save(user);
-		
-		print("添加后的主键:" + user.getId());
-		print(user);
-	}
-	
-	// 添加-保存非空字段
-	@Test
-	public void testInsertIgnoreNull() {
-		TUser user = new TUser();
-		user.setAddTime(new Date());
-		user.setIsdel(true);
-		user.setMoney(new BigDecimal(100.5));
-		user.setState(UserState.Reg);
-		user.setUsername("张三notnull");
-		user.setLeftMoney(null);
-		user.setRemark(null);
-		
-		mapper.saveIgnoreNull(user);
-		
-		print("添加后的主键:" + user.getId());
-		print(user);
-	}
-	
-	// 批量添加
-	/*
-	 * 支持mysql,sqlserver2008。如需支持其它数据库使用saveMulti方法
-	 * INSERT INTO person (id, name, age)
-		VALUES
-    	(1, 'Kelvin', 22),
-    	(2, 'ini_always', 23);
-	 */
-	@Test
-	public void testInsertBatch() {
-		List<TUser> users = new ArrayList<>();
-		
-		for (int i = 0; i < 3; i++) { // 创建3个对象
-			TUser user = new TUser();
-			user.setUsername("username" + i);
-			user.setMoney(new BigDecimal(i));
-			user.setRemark("remark" + i);
-			user.setState(UserState.Reg);
-			user.setIsdel(false);
-			user.setAddTime(new Date());
-			user.setLeftMoney(200F);
-			users.add(user);
-		}
-		
-		int i = mapper.saveBatch(users); // 返回成功数
-		
-		System.out.println("saveBatch --> " + i);
-	}
-	
-	/**
-	 * 批量添加,兼容更多数据库版本,采用union all
-	 * INSERT INTO [t_user] ( [username] , [state] , [isdel] , [remark] , [add_time] , [money] , [left_money] ) 
-	 * SELECT ? , ? , ? , ? , ? , ? , ? 
-	 * UNION ALL SELECT ? , ? , ? , ? , ? , ? , ? 
-	 * UNION ALL SELECT ? , ? , ? , ? , ? , ? , ? 
-	 */
-	@Test
-	public void testInsertMulti() {
-		List<TUser> users = new ArrayList<>();
-		
-		for (int i = 0; i < 3; i++) { // 创建3个对象
-			TUser user = new TUser();
-			user.setUsername("username" + i);
-			user.setMoney(new BigDecimal(i));
-			user.setRemark("remark" + i);
-			user.setState(UserState.Reg);
-			user.setIsdel(false);
-			user.setAddTime(new Date());
-			user.setLeftMoney(200F);
-			users.add(user);
-		}
-		
-		int i = mapper.saveMulti(users); // 返回成功数
-		
-		System.out.println("saveMulti --> " + i);
-	}
-	
-	// 批量添加指定字段,仅支持msyql，sqlserver2008，如需支持其它数据库使用saveMulti方法
-	@Test
-	public void testInsertBatchWithColumns() {
-		List<TUser> users = new ArrayList<>();
-		
-		for (int i = 0; i < 3; i++) { // 创建3个对象
-			TUser user = new TUser();
-			user.setUsername("usernameWithColumns" + i);
-			user.setMoney(new BigDecimal(i));
-			user.setAddTime(new Date());
-			
-			users.add(user);
-		}
-		
-		/*
-		 * INSERT INTO `t_user` ( username , money , add_time ) 
-		 * VALUES ( ? , ? , ? ) , ( ? , ? , ? ) , ( ? , ? , ? ) 
-		 */
-		int i= mapper.saveBatchWithColumns(Arrays.asList(
-				new Column("username", "username") // 第一个是数据库字段,第二个是java字段
-				,new Column("money", "money")
-				,new Column("add_time", "addTime")
-				), users);
-		
-		System.out.println("saveBatchWithColumns --> " + i);
-		
-	}
-	
-	/*
-	 * // 批量添加指定字段,兼容
-	 * INSERT INTO [t_user] ( [username] , [money] , [add_time] ) 
-	 * SELECT ? , ? , ? 
-	 * UNION ALL SELECT ? , ? , ? 
-	 * UNION ALL SELECT ? , ? , ? 
-	 */
-	@Test
-	public void testInsertMultiWithColumns() {
-		List<TUser> users = new ArrayList<>();
-		
-		for (int i = 0; i < 3; i++) { // 创建3个对象
-			TUser user = new TUser();
-			user.setUsername("usernameWithColumns" + i);
-			user.setMoney(new BigDecimal(i));
-			user.setAddTime(new Date());
-			user.setState(UserState.Valid);
-			users.add(user);
-		}
-		
-		int i= mapper.saveMultiWithColumns(Arrays.asList(
-				new Column("username", "username") // 第一个是数据库字段,第二个是java字段
-				,new Column("money", "money")
-				,new Column("add_time", "addTime")
-				,new EnumColumn("state", "state")
-				), users);
-		
-		System.out.println("saveMultiWithColumns --> " + i);
-	}
-	
-	// 事务回滚
-	@Test
-	public void testUpdateTran() {
-		TUser user = transactionTemplate.execute(new TransactionCallback<TUser>() {
-			@Override
-			public TUser doInTransaction(TransactionStatus arg0) {
-				try{
-					TUser user = mapper.getById(3);
-					user.setUsername("王五1");
-					user.setMoney(user.getMoney().add(new BigDecimal(0.1)));
-					user.setIsdel(true);
-					
-					int i = mapper.update(user);
-					print("testUpdate --> " + i);
-					int j = 1/0; // 模拟错误
-					return user;
-				}catch(Exception e) {
-					e.printStackTrace();
-					arg0.setRollbackOnly();
-					return null;
-				}
-			}
-			
-		});
-		
-		print(user);
-	}
-	
-	// 更新所有字段
-	@Test
-	public void testUpdate() {
-		TUser user = mapper.getById(3);
-		user.setUsername("李四");
-		user.setMoney(user.getMoney().add(new BigDecimal(0.1)));
-		user.setState(UserState.Valid);
-		user.setIsdel(true);
-		
-		int i = mapper.update(user);
-		print("testUpdate --> " + i);
-	}
-	
-	// 更新不为null的字段
-	/*
-	 *UPDATE [t_user] SET [username]=?, [isdel]=? WHERE [id] = ?  
-	 */
-	@Test
-	public void updateIgnoreNull() {
-		TUser user = new TUser();
-		user.setId(3);
-		user.setUsername("王五");
-		user.setState(UserState.Forbiden);
-		user.setIsdel(false);
-		int i = mapper.updateIgnoreNull(user);
-		print("updateNotNull --> " + i);
-	}
-	
-	// 删除
-	@Test
-	public void testDel() {
-		TUser user = new TUser();
-		user.setId(14);
-		int i = mapper.delete(user);
-		print("del --> " + i);
-	}
-	
-	// 根据条件删除
-	// DELETE FROM `t_user` WHERE state = ? 
-	@Test
-	public void deleteByQuery() {
-		Query query = new Query();
-		query.eq("state", 3);
-		int i = mapper.deleteByQuery(query);
-		print("deleteByQuery --> " + i);
-	}
-	
+
+    /**
+     * 根据主键删除
+     */
+    @Test
+    public void testDeleteById() {
+        int i = mapper.deleteById(14);
+        print("del --> " + i);
+    }
+
+    /**
+     * 根据对象删除
+     */
+    @Test
+    public void testDelete() {
+        TUser user = new TUser();
+        user.setId(15);
+        int i = mapper.delete(user);
+        print("del --> " + i);
+    }
+
+    /**
+     * 根据条件删除 DELETE FROM `t_user` WHERE state = ?
+     */
+    @Test
+    public void testDeleteByQuery() {
+        Query query = new Query();
+        query.eq("state", 3);
+        int i = mapper.deleteByQuery(query);
+        print("deleteByQuery --> " + i);
+    }
+
 }
