@@ -36,8 +36,26 @@
 		</if>
 	</select>
 	
+	<!-- 查询map -->
+    <select id="listMap" parameterType="map" resultType="map">
+        SELECT 
+            <foreach collection="columns" item="column" separator=",">
+                ${column}
+            </foreach>
+        FROM ${table.tableName} t
+        <include refid="common.join" />
+        <where>
+            <include refid="common.condition" />
+            #if(${table.hasLogicDeleteColumn})
+              AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+            #end
+        </where>
+        <include refid="common.orderBy" />
+        <include refid="common.limit" />
+    </select>
+	
 	<!-- 根据条件查询记录数 -->
-    <select id="countTotal" parameterType="com.gitee.fastmybatis.core.query.Query"
+    <select id="getCount" parameterType="com.gitee.fastmybatis.core.query.Query"
 		resultType="long">
 		SELECT ${countExpression} FROM "${table.tableName}" t
 		<include refid="common.join" />
@@ -78,7 +96,7 @@
 	</select>
 	
 	<!-- 根据属性获取单条记录 -->
-	<select id="getByProperty" resultMap="baseResultMap">
+	<select id="getByColumn" resultMap="baseResultMap">
 		SELECT
 			<include refid="baseColumns" />
 		FROM "${table.tableName}" t
@@ -90,7 +108,7 @@
 	</select>
 	
 	<!-- 根据属性获取多条记录 -->
-	<select id="listByProperty" resultMap="baseResultMap">
+	<select id="listByColumn" resultMap="baseResultMap">
 		SELECT
 			<include refid="baseColumns" />
 		FROM "${table.tableName}" t
@@ -201,22 +219,6 @@
 		</foreach>
 	</insert>
 
-
-	 <!-- 批量保存,保存指定字段 -->
-    <insert id="saveBatchWithColumns">
-		INSERT INTO "${table.tableName}"
-		<foreach collection="columns" item="column" open="(" close=")" separator=",">
-			${jq}{column.columnName}
-		</foreach>
-		VALUES 
-		<foreach collection="entitys" item="entity"  separator=",">
-        ( 
-        	<foreach collection="columns" item="column"  separator=",">
-        		#{entity.${column.alias} ${column.typeHandler}}
-        	</foreach>
-        )
-        </foreach>
-	</insert>
 	
 	<!-- 批量保存(兼容),保存全部字段 -->
     <insert id="saveMulti">
@@ -241,20 +243,6 @@
 		</foreach>
 	</insert>
 	
-	<!-- 批量保存(兼容),保存指定字段 -->
-    <insert id="saveMultiWithColumns">
-		INSERT INTO "${table.tableName}"
-		<foreach collection="columns" item="column" open="(" close=")" separator=",">
-			"${jq}{column.columnName}"
-		</foreach>
-		<foreach collection="entitys" item="entity"  separator="UNION ALL">
-        SELECT  
-        	<foreach collection="columns" item="column"  separator=",">
-        		#{entity.${column.alias} ${column.typeHandler}}
-        	</foreach>
-        </foreach>
-	</insert>
-
 	<!-- 更新,更新全部字段 -->
     <update id="update" parameterType="${context.className}">
     UPDATE "${table.tableName}"
@@ -291,6 +279,25 @@
     #if(${table.hasVersionColumn})
 		AND "${table.versionColumn.columnName}" = #{${table.versionColumn.javaFieldName}} 
     #end
+    </update>
+    
+    <!-- 根据指定条件更新 -->
+    <update id="updateByQuery">
+        UPDATE ${table.tableName}
+        <set>
+            #foreach($column in $columns) 
+                #if(!${column.isPk})  
+                    #if(${column.hasTypeHandlerUpdate})
+                        ${column.columnName}=${column.mybatisUpdateValuePrefix},
+                    #else
+                        <if test="entity.${column.javaFieldName} != null" >
+                        ${column.columnName}=${column.mybatisUpdateValuePrefix},
+                        </if>
+                    #end
+                #end          
+            #end
+        </set>
+        <include refid="common.updateWhere" />
     </update>
     
 	<!-- 根据主键删除记录 -->

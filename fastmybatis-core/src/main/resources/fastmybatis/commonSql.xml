@@ -2,57 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="common">
 
-	<!-- 自定义字段 -->
-	<sql id="selfColumns">
-		<foreach collection="columns" item="column" separator="," >
-           	${column}
-        </foreach>
-	</sql>
-	<!-- 其它表字段 -->
-	<sql id="otherTableColumns">
-		<if test="otherTableColumns!=null">
-		<trim prefix="," suffixOverrides=",">
-			<foreach collection="otherTableColumns" item="column" separator="," >
-            	${column}
-            </foreach>
-		</trim>
-		</if>
-	</sql>
-	
 	<sql id="sqlColumns">
-		<choose>
-            <when test="columns.size>0">
-           		<include refid="common.selfColumns" />
-            </when>
-            <otherwise>
-            	<include refid="baseColumns" />
-            </otherwise>
-		</choose>
-		
-		<include refid="common.otherTableColumns" />
+		<include refid="baseColumns" />
 	</sql>
 	
 	<sql id="orderBy">
-		<if test="orderable">
-			ORDER BY ${order}
+		<if test="query.orderable">
+			ORDER BY ${query.order}
 		</if>
 	</sql>
 	<sql id="limit">
-		<if test="!isQueryAll">
-			LIMIT #{start},#{limit}
+		<if test="!query.isQueryAll">
+			LIMIT #{query.start},#{query.limit}
 		</if>
 	</sql>
 	
 	<sql id="join">
-	   <if test="joinExpressions!=null">
-            <foreach collection="joinExpressions" item="joinExpressionsItem">
+	   <if test="query.joinExpressions!=null">
+            <foreach collection="query.joinExpressions" item="joinExpressionsItem">
                 ${joinExpressionsItem.joinSql}
             </foreach>
         </if>
 	</sql>
 	<sql id="condition">
-	   <if test="valueExpressions!=null">
-           <foreach collection="valueExpressions" item="valueExpressionsItem">
+	   <if test="query.valueExpressions!=null">
+           <foreach collection="query.valueExpressions" item="valueExpressionsItem">
                <if test="valueExpressionsItem.value != null">
                    ${valueExpressionsItem.joint}
                    ${valueExpressionsItem.column}
@@ -61,8 +35,8 @@
                </if>
            </foreach>
        </if>
-       <if test="listExpressions!=null">
-           <foreach collection="listExpressions" item="listExpressionsItem">
+       <if test="query.listExpressions!=null">
+           <foreach collection="query.listExpressions" item="listExpressionsItem">
                <if test="listExpressionsItem.value.size>0">
                    ${listExpressionsItem.joint}
                    ${listExpressionsItem.column}
@@ -74,8 +48,8 @@
                </if>
            </foreach>
        </if>
-       <if test="sqlExpressions!=null">
-           <foreach collection="sqlExpressions" item="sqlExpressionsItem">
+       <if test="query.sqlExpressions!=null">
+           <foreach collection="query.sqlExpressions" item="sqlExpressionsItem">
                ${sqlExpressionsItem.joint} 
                (${sqlExpressionsItem.sql})
            </foreach>

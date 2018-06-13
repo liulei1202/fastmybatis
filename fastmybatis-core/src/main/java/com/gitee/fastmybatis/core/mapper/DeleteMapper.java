@@ -1,5 +1,7 @@
 package com.gitee.fastmybatis.core.mapper;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.gitee.fastmybatis.core.query.Query;
 
 /**
@@ -29,5 +31,5 @@ public interface DeleteMapper<Entity, ID> extends Mapper<Entity> {
      * @param query
      * @return 受到影响的行数
      */
-    int deleteByQuery(Query query);
+    int deleteByQuery(@Param("query")Query query);
 }

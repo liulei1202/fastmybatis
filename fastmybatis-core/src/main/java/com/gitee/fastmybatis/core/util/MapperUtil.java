@@ -30,57 +30,57 @@ public class MapperUtil {
     /**
      * 分页查询
      * 
-     * @param schDao
-     *            查询dao
+     * @param mapper
+     *            查询mapper
      * @param bean
      *            查询bean
      * @return 返回PageInfo
      */
     @SuppressWarnings("unchecked")
-    public static <Entity> PageInfo<Entity> query(SchMapper<Entity, ?> schDao, Object bean) {
-        return query(schDao, Query.build(bean), PageInfo.class);
+    public static <Entity> PageInfo<Entity> query(SchMapper<Entity, ?> mapper, Object bean) {
+        return query(mapper, Query.build(bean), PageInfo.class);
     }
 
     /**
      * 分页查询
      * 
-     * @param schDao
-     *            查询dao
+     * @param mapper
+     *            查询mapper
      * @param searchParam
      *            查询pojo
      * @return 返回PageInfo
      */
     @SuppressWarnings("unchecked")
-    public static <Entity> PageInfo<Entity> query(SchMapper<Entity, ?> schDao, BaseParam searchParam) {
-        return query(schDao, Query.build(searchParam), PageInfo.class);
+    public static <Entity> PageInfo<Entity> query(SchMapper<Entity, ?> mapper, BaseParam searchParam) {
+        return query(mapper, Query.build(searchParam), PageInfo.class);
     }
 
     /**
      * 分页查询
      * 
-     * @param schDao
-     *            查询dao
+     * @param mapper
+     *            查询mapper
      * @param query
      *            查询条件
      * @return 返回PageInfo
      */
     @SuppressWarnings("unchecked")
-    public static <Entity> PageInfo<Entity> query(SchMapper<Entity, ?> schDao, Query query) {
-        return query(schDao, query, PageInfo.class);
+    public static <Entity> PageInfo<Entity> query(SchMapper<Entity, ?> mapper, Query query) {
+        return query(mapper, query, PageInfo.class);
     }
 
     /**
      * 分页查询
      * 
-     * @param schDao
-     *            查询dao
+     * @param mapper
+     *            查询mapper
      * @param query
      *            查询条件
      * @param pageResultClass
      *            结果类
      * @return 返回结果类
      */
-    public static <Entity, T extends PageResult<Entity>> T query(SchMapper<Entity, ?> schDao, Query query,
+    public static <Entity, T extends PageResult<Entity>> T query(SchMapper<Entity, ?> mapper, Query query,
             Class<T> pageResultClass) {
         T result = null;
         try {
@@ -98,13 +98,13 @@ public class MapperUtil {
             // 如果是查询全部则直接返回结果集条数
             // 如果是分页查询则还需要带入条件执行一下sql
             if (query.getIsQueryAll()) {
-                list = schDao.list(query);
+                list = mapper.list(query);
                 total = list.size();
             } else {
-                total = schDao.countTotal(query);
+                total = mapper.getCount(query);
                 // 如果有数据
                 if (total > 0) {
-                    list = schDao.list(query);
+                    list = mapper.list(query);
 
                     int start = query.getStart();
                     // 每页记录数
@@ -130,4 +130,5 @@ public class MapperUtil {
 
         return result;
     }
+    
 }

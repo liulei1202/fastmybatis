@@ -1,6 +1,7 @@
 package com.gitee.fastmybatis.core.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -30,7 +31,7 @@ public interface SchMapper<Entity, ID> extends Mapper<Entity> {
 	 * @param query 查询条件
 	 * @return 返回实体对象，没有返回null
 	 */
-	Entity getByQuery(Query query);
+	Entity getByQuery(@Param("query")Query query);
 	
 	/**
 	 * 根据字段查询一条记录
@@ -38,7 +39,15 @@ public interface SchMapper<Entity, ID> extends Mapper<Entity> {
 	 * @param value 字段值
 	 * @return 返回实体对象，没有返回null
 	 */
-	Entity getByProperty(@Param("column")String column,@Param("value")Object value);
+	Entity getByColumn(@Param("column")String column,@Param("value")Object value);
+	
+	/**
+     * 查询总记录数
+     * 
+     * @param query 查询条件
+     * @return 返回总记录数
+     */
+    long getCount(@Param("query")Query query);  
 	
 	/**
 	 * 根据字段查询集合
@@ -46,7 +55,7 @@ public interface SchMapper<Entity, ID> extends Mapper<Entity> {
 	 * @param value 字段值
 	 * @return 返回实体对象集合，没有返回空集合
 	 */
-	List<Entity> listByProperty(@Param("column")String column,@Param("value")Object value);
+	List<Entity> listByColumn(@Param("column")String column,@Param("value")Object value);
 	
 	/**
 	 * 条件查询
@@ -54,14 +63,14 @@ public interface SchMapper<Entity, ID> extends Mapper<Entity> {
 	 * @param query 查询条件
 	 * @return 返回实体对象集合，没有返回空集合
 	 */
-	List<Entity> list(Query query);
+	List<Entity> list(@Param("query")Query query);
 	
 	/**
-	 * 查询总记录数
-	 * 
+	 * 查询指定字段结果
+	 * @param columns 返回的字段
 	 * @param query 查询条件
-	 * @return 返回总记录数
+	 * @return 返回结果集
 	 */
-	long countTotal(Query query);	
-
+	List<Map<String, Object>> listMap(@Param("columns")List<String> columns, @Param("query")Query query);
+	
 }

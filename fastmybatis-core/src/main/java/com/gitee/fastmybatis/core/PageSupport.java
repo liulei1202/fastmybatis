@@ -43,7 +43,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
         List<Object> jsonObjList = new ArrayList<Object>(list.size());
 
         for (Entity entity : list) {
-            Map<String, Object> jsonObject = ClassUtil.convertObj2Map(entity);
+            Map<String, Object> jsonObject = ClassUtil.pojoToMap(entity);
             processor.process(entity, jsonObject);
             jsonObjList.add(jsonObject);
         }

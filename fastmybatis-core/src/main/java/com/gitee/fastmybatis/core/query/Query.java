@@ -2,7 +2,6 @@ package com.gitee.fastmybatis.core.query;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -31,38 +30,38 @@ import com.gitee.fastmybatis.core.query.param.SchSortableParam;
  * 查询类
  * <pre>
 根据主键查询：
-User user = dao.get(1);
+User user = mapper.get(1);
 
 查询姓名为张三的用户：
-User user = dao.getByProperty("username","张三");
+User user = mapper.getByColumn("username","张三");
 
 查询姓名为张三的用户返回列表:
-List<User> users = dao.listByProperty("username","张三");
+List<User> users = mapper.listByColumn("username","张三");
 
 查询姓名为张三，并且年龄为22岁的用户：
 Query query = new Query().eq("username","张三").eq("age",22);
-List<User> users = dao.find(query);
+List<User> users = mapper.list(query);
 
 查询年龄为10,20,30的用户：
 Query query = new Query().in("age",Arrays.asList(10,20,30));
-List<User> users = dao.find(query);
+List<User> users = mapper.list(query);
 
 查询注册日期大于2017-11-11的用户：
 Date regDate = ...
 Query query = new Query().gt("reg_date",regDate);
-List<User> users = dao.find(query);
+List<User> users = mapper.list(query);
 
 查询性别为男的，年龄大于等于20岁的用户，按年龄降序：
 Query query = new Query().eq("gender",1).ge("age",20).orderby("age",Sort.DESC);
-List<User> users = dao.find(query);
+List<User> users = mapper.list(query);
 
 分页查询：
 Query query = new Query().eq("age",10).page(1,10); // 第一页，每页10条数据
-List<User> users = dao.find(query);
+List<User> users = mapper.list(query);
 
 查询总记录数：
 Query query = new Query().eq("age",10).page(1,10); // 第一页，每页10条数据
-long total = dao.countTotal(query); // 该条件下总记录数
+long total = mapper.getCount(query); // 该条件下总记录数
  * </pre>
  * @author tanghc
  *
@@ -82,9 +81,6 @@ public class Query implements Queryable {
 	private List<ExpressionJoinable> joinExpressions;
 	private List<ExpressionListable> listExpressions;
 	private List<ExpressionSqlable> sqlExpressions;
-
-	private List<String> columns = Collections.emptyList();
-	private List<String> otherTableColumns;
 
 
 	/**
@@ -145,43 +141,6 @@ public class Query implements Queryable {
 		return new Query();
 	}
 
-	/**
-	 * 添加其它表的字段 query.addOtherColumn("t2.username as name");
-	 * 
-	 * @param column
-	 * @return
-	 */
-	public Query addOtherColumn(String column) {
-		if (otherTableColumns == null) {
-			otherTableColumns = new ArrayList<>();
-		}
-		otherTableColumns.add(column);
-		return this;
-	}
-
-	/**
-	 * 批量添加其它字段.
-	 * 
-	 * query.addOtherColumns(
-	 * "t2.username"
-	 * ,"t2.userage as age"
-	 * )
-	 * 
-	 * @param columns
-	 * @return
-	 */
-	public Query addOtherColumns(String... columns) {
-		for (String column : columns) {
-			this.addOtherColumn(column);
-		}
-		return this;
-	}
-
-	@Override
-	public List<String> getOtherTableColumns() {
-		return otherTableColumns;
-	}
-	
 	// ------ 设置分页信息 ------
 	
 	/**
@@ -249,16 +208,6 @@ public class Query implements Queryable {
 	@Override
 	public int getLimit() {
 		return this.limit;
-	}
-
-	/**
-	 * 
-	 * 同getStart()
-	 * 
-	 * @return
-	 */
-	public int getFirstResult() {
-		return this.getStart();
 	}
 
 	/**
@@ -486,15 +435,6 @@ public class Query implements Queryable {
 		} else {
 			return "";
 		}
-	}
-
-	@Override
-	public List<String> getColumns() {
-		return columns;
-	}
-
-	public void setColumns(List<String> columns) {
-		this.columns = columns;
 	}
 
 	//
