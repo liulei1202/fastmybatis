@@ -10,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
@@ -20,7 +21,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.gitee.fastmybatis.core.FastmybatisConfig;
 import com.gitee.fastmybatis.core.ext.SqlSessionFactoryBeanExt;
 import com.gitee.fastmybatis.core.support.DateFillInsert;
@@ -36,7 +36,7 @@ import com.gitee.fastmybatis.core.support.DateFillUpdate;
  * &lt;dependency&gt;
         &lt;groupId&gt;net.oschina.durcframework&lt;/groupId&gt;
         &lt;artifactId&gt;fastmybatis&lt;/artifactId&gt;
-        &lt;version&gt;1.8.4&lt;/version&gt;
+        &lt;version&gt;1.0.1&lt;/version&gt;
     &lt;/dependency&gt;
     3. 打开注释:
     @Configuration
@@ -81,7 +81,7 @@ public class DbMasterConfig {
     @Primary
     @ConfigurationProperties(prefix = prefix) // application.properteis中对应属性的前缀
     public DataSource dataSource() {
-        return DruidDataSourceBuilder.create().build();
+        return DataSourceBuilder.create().build();
     }
 
     @Bean

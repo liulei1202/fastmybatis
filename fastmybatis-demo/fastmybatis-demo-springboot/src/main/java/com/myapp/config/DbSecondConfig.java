@@ -10,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -19,7 +20,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.Assert;
 
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.gitee.fastmybatis.core.FastmybatisConfig;
 import com.gitee.fastmybatis.core.ext.SqlSessionFactoryBeanExt;
 import com.gitee.fastmybatis.core.support.DateFillInsert;
@@ -63,7 +63,7 @@ public class DbSecondConfig {
     @Bean(name = dataSourceName)
     @ConfigurationProperties(prefix = prefix) // application.properteis中对应属性的前缀
     public DataSource dataSourceMater() {
-        return DruidDataSourceBuilder.create().build();
+        return DataSourceBuilder.create().build();
     }
 
     @Bean

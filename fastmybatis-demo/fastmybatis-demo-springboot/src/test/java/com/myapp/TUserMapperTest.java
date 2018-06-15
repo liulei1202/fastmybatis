@@ -120,7 +120,7 @@ public class TUserMapperTest extends FastmybatisSpringbootApplicationTests {
             System.out.println(map);
         }
         // 将map集合转换成实体类集合
-        List<TUser> userList = ClassUtil.mapToList(list, TUser.class);
+        List<TUser> userList = ClassUtil.mapListToObjList(list, TUser.class);
         for (TUser tUser : userList) {
             System.out.println("id:" + tUser.getId() + ",username:" + tUser.getUsername());
         }
