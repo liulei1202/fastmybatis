@@ -33,7 +33,6 @@
     <properties>
         <java.version>1.7</java.version>
         <org.springframework-version>4.3.2.RELEASE</org.springframework-version>
-        <fastjson-version>1.2.47</fastjson-version>
         <mybatis.version>3.4.6</mybatis.version>
         <mybatis-spring-version>1.3.2</mybatis-spring-version>
         <jpa.version>1.0.0.Final</jpa.version>
@@ -72,13 +71,6 @@
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>${dom4j.version}</version>
-        </dependency>
-        <!-- json序列化 -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson-version}</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>

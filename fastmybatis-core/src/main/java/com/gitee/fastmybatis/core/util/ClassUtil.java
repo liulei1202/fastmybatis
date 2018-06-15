@@ -1,15 +1,14 @@
 package com.gitee.fastmybatis.core.util;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * 
@@ -20,7 +19,7 @@ public class ClassUtil {
     private ClassUtil() {
     };
 
-    private static String classPath = ClassUtil.class.getClassLoader().getResource("").getPath();
+    private static final String PREFIX_GET = "get";
 
     /**
      * 返回定义类时的泛型参数的类型. <br>
@@ -82,15 +81,6 @@ public class ClassUtil {
     }
 
     /**
-     * 获取class根目录
-     * 
-     * @return
-     */
-    public static String getClassRootPath() {
-        return classPath;
-    }
-
-    /**
      * 返回类名并且第一个字母小写
      * 
      * @param clazz
@@ -112,8 +102,24 @@ public class ClassUtil {
         if (pojo == null) {
             return Collections.emptyMap();
         }
-        String json = JSON.toJSONString(pojo);
-        return JSON.parseObject(json);
+        Method[] methods = pojo.getClass().getDeclaredMethods();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        try {
+            for (Method method : methods) {
+                String methodName = method.getName();
+
+                if (methodName.startsWith(PREFIX_GET) && method.getParameterTypes().length == 0) {
+                    String fieldName = buildFieldName(methodName);
+                    Object value = method.invoke(pojo);
+                    map.put(fieldName, value);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("pojoToMap失败", e);
+        }
+
+        return map;
     }
     
 
@@ -123,7 +129,7 @@ public class ClassUtil {
      * @param pojoClass 待转换的对象类型
      * @return 返回对象集合
      */
-    public static <T> List<T> mapToList(List<Map<String, Object>> list, Class<T> pojoClass) {
+    public static <T> List<T> mapListToObjList(List<Map<String, Object>> list, Class<T> pojoClass) {
         if(list == null) {
             return Collections.emptyList();
         }
@@ -141,8 +147,13 @@ public class ClassUtil {
      * @return 返回普通类
      */
     public static <T> T mapToPojo(Map<String, Object> map, Class<T> pojoClass) {
-        JSONObject jsonObj = new JSONObject(map);
-        return jsonObj.toJavaObject(pojoClass);
+        try {
+            T target = pojoClass.newInstance();
+            MyBeanUtil.copyProperties(map, target);
+            return target;
+        } catch (Exception e) {
+            throw new RuntimeException("实例化失败", e);
+        } 
     }
 
     /**
@@ -159,5 +170,10 @@ public class ClassUtil {
         }
         return ret;
     }
-
+    
+    // 构建列名
+    private static String buildFieldName(String methodName) {
+        return methodName.substring(3, 4).toLowerCase() + methodName.substring(4);
+    }
+    
 }
