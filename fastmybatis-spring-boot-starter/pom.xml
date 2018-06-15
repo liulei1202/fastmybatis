@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.oschina.durcframework</groupId>
 	<artifactId>fastmybatis-spring-boot-starter</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>fastmybatis-spring-boot-starter</name>
@@ -40,8 +40,8 @@
 		<mybatis-spring.version>1.3.1</mybatis-spring.version>
 		<spring-boot.version>2.0.2.RELEASE</spring-boot.version>
 		<!-- 变动版本 -->
-		<fastmybatis.version>0.1.0</fastmybatis.version>
-		<fastmybatis-autoconfigure.version>0.1.0</fastmybatis-autoconfigure.version>
+		<fastmybatis.version>1.0.0</fastmybatis.version>
+		<fastmybatis-autoconfigure.version>1.0.0</fastmybatis-autoconfigure.version>
 	</properties>
 
 	<dependencies>
