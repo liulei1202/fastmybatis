@@ -78,12 +78,17 @@ public enum Operator {
 	,nil("")
 	;
 	
+    
 	private String operator;
 
 	Operator(String operator) {
 		this.operator = operator;
 	}
 
+	/**
+	 * 返回操作符,{@literal =,>=,<... }
+	 * @return 返回操作符
+	 */
 	public String getOperator() {
 		return operator;
 	}

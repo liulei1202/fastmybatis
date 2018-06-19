@@ -3,7 +3,6 @@ package com.gitee.fastmybatis.core.query;
 /**
  * 排序方式
  * @author tanghc
- *
  */
 public enum Sort {
 /** 升序，从小到大 */

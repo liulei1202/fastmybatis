@@ -15,8 +15,10 @@ public class PageSortParam extends BaseParam implements SchPageableParam,SchSort
 	/** 每页记录数 */
 	private int pageSize = 20;
 
-	private String sort;
-	private String order;
+	/** 排序字段，数据库字段 */
+    private String sort;
+    /** 排序排序方式，asc或desc */
+    private String order;
 	
 	@Override
 	public Query toQuery() {

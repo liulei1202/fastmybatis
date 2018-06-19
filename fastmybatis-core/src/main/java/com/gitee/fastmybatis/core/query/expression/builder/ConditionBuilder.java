@@ -8,8 +8,7 @@ import java.util.List;
 import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
 import com.gitee.fastmybatis.core.query.annotation.Condition;
 import com.gitee.fastmybatis.core.query.expression.Expression;
-import com.gitee.fastmybatis.core.query.expression.ListExpression;
-import com.gitee.fastmybatis.core.query.expression.ValueExpression;
+import com.gitee.fastmybatis.core.query.expression.Expressions;
 
 /**
  * 条件生成
@@ -80,11 +79,11 @@ public class ConditionBuilder {
 
 		if (annotation == null) {
 			if (value.getClass().isArray()) {
-				expression = new ListExpression(columnName, (Object[]) value);
+				expression = Expressions.in(columnName, (Object[]) value);
 			} else if (value instanceof Collection) {
-				expression = new ListExpression(columnName, (Collection<?>) value);
+				expression = Expressions.in(columnName, (Collection<?>) value);
 			} else {
-				expression = new ValueExpression(columnName, value);
+				expression = Expressions.eq(columnName, value);
 			}
 		} else {
 			expression = ExpressionBuilder.buildExpression(annotation, columnName, value);

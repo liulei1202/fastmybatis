@@ -7,101 +7,89 @@ import java.util.HashSet;
 
 import com.gitee.fastmybatis.core.SqlConsts;
 
-
 /**
  * list或数组查询雕件
- * @author tanghc
- * 2011-10-28
+ * 
+ * @author tanghc 2011-10-28
  */
 public class ListExpression implements ExpressionListable {
 
-	private String column = "";
-	private String equal = SqlConsts.IN;
-	private Collection<?> value = Collections.EMPTY_LIST;
-	private String joint = SqlConsts.AND;
-	
+    private String column = "";
+    private String equal = SqlConsts.IN;
+    private Collection<?> value = Collections.EMPTY_LIST;
+    private String joint = SqlConsts.AND;
 
-	public ListExpression(String column, Collection<?> value) {
-		this.column = column;
-		this.value = value;
-	}
-	
-	public <T> ListExpression(String column,String equal, Collection<T> value,ValueConvert<T> valueConvert) {
-		this(column, value, valueConvert);
-		this.equal = equal;
-	}
-	
-	public <T> ListExpression(String column, Collection<T> value,ValueConvert<T> valueConvert) {
-		if(valueConvert == null) {
-			throw new NullPointerException("参数ValueConvert不能为null");
-		}
-		this.column = column;
-		Collection<Object> newSet = new HashSet<Object>();
-		for (T obj : value) {
-			newSet.add(valueConvert.convert(obj));
-		}
-		this.value = newSet;
-	}
-	
-	public ListExpression(String column, Object[] value) {
-		this.column = column;
-		this.value = Arrays.asList(value);
-	}
-	
-	public ListExpression(String column, String equal, Object[] value) {
-		this(column, value);
-		this.equal = equal;
-	}
-	public ListExpression(String joint,String column, String equal, Object[] value) {
-		this(column,equal, value);
-		this.joint = joint;
-	}
+    public ListExpression(String joint, String column, String equal, Collection<?> value) {
+        if (value == null || value.isEmpty()) {
+            throw new IllegalArgumentException("ListExpression构造方法参数value不能为空");
+        }
+        this.joint = joint;
+        this.equal = equal;
+        this.column = column;
+        this.value = value;
+    }
 
-	public ListExpression(String column, String equal, Collection<?> value) {
-		this(column, value);
-		this.equal = equal;
-	}
+    public <T> ListExpression(String joint, String column, String equal, Collection<T> value,
+            ValueConvert<T> valueConvert) {
+        this(joint, column, equal, buildValueConvert(value, valueConvert));
+    }
 
-	public ListExpression(String joint, String column, String equal,
-			Collection<?> value) {
-		this(column, equal, value);
-		this.joint = joint;
-	}
+    public <T> ListExpression(String joint, String column, String equal, T[] value, ValueConvert<T> valueConvert) {
+        this(joint, column, equal, Arrays.asList(value), valueConvert);
+    }
 
-	@Override
-	public String getColumn() {
-		return column;
-	}
+    public ListExpression(String joint, String column, String equal, Object[] value) {
+        this(joint, column, equal, Arrays.asList(value));
+    }
 
-	public void setColumn(String column) {
-		this.column = column;
-	}
+    private static <T> Collection<?> buildValueConvert(Collection<T> value, ValueConvert<T> valueConvert) {
+        if (value == null) {
+            return Collections.emptyList();
+        }
+        if (valueConvert == null) {
+            throw new NullPointerException("参数ValueConvert不能为null");
+        }
+        Collection<Object> newSet = new HashSet<Object>(value.size());
+        for (T obj : value) {
+            newSet.add(valueConvert.convert(obj));
+        }
+        return newSet;
+    }
 
-	@Override
-	public String getEqual() {
-		return equal;
-	}
+    @Override
+    public String getColumn() {
+        return column;
+    }
 
-	public void setEqual(String equal) {
-		this.equal = equal;
-	}
+    public void setColumn(String column) {
+        this.column = column;
+    }
 
-	@Override
-	public Collection<?> getValue() {
-		return value;
-	}
+    @Override
+    public String getEqual() {
+        return equal;
+    }
 
-	public void setValue(Collection<?> value) {
-		this.value = value;
-	}
+    public void setEqual(String equal) {
+        this.equal = equal;
+    }
 
-	@Override
-	public String getJoint() {
-		return joint;
-	}
+    @Override
+    public Collection<?> getValue() {
+        return value;
+    }
 
-	public void setJoint(String joint) {
-		this.joint = joint;
-	}
+    public void setValue(Collection<?> value) {
+        this.value = value;
+    }
+
+    @Override
+    public String getJoint() {
+        return joint;
+    }
+
+    public void setJoint(String joint) {
+        this.joint = joint;
+    }
 
 }
