@@ -213,6 +213,10 @@ long total = mapper.getCount(query); // 该条件下总记录数
 - fastmybatis-generator：代码生成工具，方便生成实体类和Mapper
 - fastmybatis-spring-boot-autoconfigure和fastmybatis-spring-boot-starter：springboot对应的的starter
 
+# 实战项目
+
+[easydoc](https://gitee.com/durcframework/easydoc) : 一个文档管理项目，采用markdown方式写作。
+
 # 意见交流
 
 Q群328419269
