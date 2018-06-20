@@ -1,4 +1,4 @@
-package component.app;
+package com.myapp;
 
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.Rollback;

@@ -15,8 +15,7 @@
 		<org.slf4j-version>1.7.21</org.slf4j-version>
 		<fastjson-version>1.2.15</fastjson-version>
 		<thymeleaf-spring4-version>3.0.3.RELEASE</thymeleaf-spring4-version>
-		<hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
-		<fastmybatis.version>1.0.1</fastmybatis.version>
+		<fastmybatis.version>1.0.2</fastmybatis.version>
 	</properties>
 
 	<dependencies>
@@ -59,12 +58,6 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
-		</dependency>
-		<!-- JSR303 -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>${hibernate-validator.version}</version>
 		</dependency>
 
 		<!-- Spring -->

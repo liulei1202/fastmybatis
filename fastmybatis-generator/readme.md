@@ -1,5 +1,5 @@
 # fastmybatis-generator
-fastmybatis对应的代码生成器,采用velocity模板生成.
+fastmybatis对应的代码生成器
 
 ## 使用方法
 - 下载项目
@@ -13,20 +13,21 @@ fastmybatis对应的代码生成器,采用velocity模板生成.
 以`t_user.properties`为例
 
 ```
-// 驱动
+
+# ===database config===
 driverClass=com.mysql.jdbc.Driver
-// 数据库连接
 jdbcUrl=jdbc:mysql://localhost:3306/stu?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
-// 数据库用户名密码
 username=root
 password=root
 
-// 数据库名
+# database name
 dbName=stu
-// 表名
-tableName=address
-// package
+# table name
+tableName=t_user
+# package name
 packageName=com.myapp
+
+deleteColumn=isdel
 
 ```
 
@@ -47,7 +48,7 @@ mapperClassSuffix=Mapper
 # folder name of entity class
 entityPackageName=entity
 
-# suffix of entity class.such as "Entity"
+# suffix of entity class, such as "Entity"
 entitySuffix=
 
 # if true,the entity class will implements Serializable

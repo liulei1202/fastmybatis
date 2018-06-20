@@ -1,4 +1,4 @@
-package component.app;
+package com.myapp;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -7,9 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -27,9 +26,9 @@ import com.myapp.mapper.TUserMapper;
  */
 public class TUserMapperTest extends TestBase {
 
-    @Resource
+    @Autowired
     TUserMapper mapper;
-    @Resource
+    @Autowired
     TransactionTemplate transactionTemplate;
 
     /**
@@ -143,6 +142,17 @@ public class TUserMapperTest extends TestBase {
 
         print("total:" + total);
     }
+    
+    @Test
+    public void testLike() {
+        Query query = new Query();
+        // 添加查询条件
+        query.gt("id", 1).ge("id", 2).le("id", 32).notEq("id", 12);
+
+        long total = mapper.getCount(query); // 获取总数
+
+        print("total:" + total);
+    }
 
     /**
      * 分页查询
@@ -201,7 +211,7 @@ public class TUserMapperTest extends TestBase {
      */
     @Test
     public void testJoinPage() {
-        Query query = Query.build()
+        Query query = new Query()
                 // 左连接查询,主表的alias默认为t
                 .join("LEFT JOIN user_info t2 ON t.id = t2.user_id").page(1, 5);
 

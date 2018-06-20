@@ -1,4 +1,4 @@
-package component.app;
+package com.myapp;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class EasyuiSupportTest extends TestBase {
 	@Test
 	public void testEasyuiGrid() {
 
-		Query query = Query.build().eq("state", 0);
+		Query query = new Query().eq("state", 0);
 
 		PageEasyui<TUser> page = MapperUtil.query(userMapper, query, PageEasyui.class);
 
