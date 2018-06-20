@@ -10,7 +10,7 @@ import java.util.List;
 import com.gitee.fastmybatis.core.handler.BaseFill;
 
 /**
- * 配置
+ * fastmybatis配置项
  * 
  * @author tanghc
  */
@@ -22,21 +22,30 @@ public class FastmybatisConfig {
 
     /** 驼峰转换下划线 */
     private boolean camel2underline = Boolean.TRUE;
+    
     /** 生成mapper的线程池大小 */
     private int mapperExecutorPoolSize = 20;
+    
     /** 模板文件classpath */
     private String templateClasspath;
+    
     /** 通用mapper路径 */
     private String commonSqlClasspath = "fastmybatis/commonSql.xml";
+    
     /** mapper文件保存文件夹地址，如：C:/mapper */
     private String mapperSaveDir;
+    
     private String countExpression = COUNT_EXPRESSION;
+    
     /** 全局模板classpath */
     private String globalVmLocation;
+    
     /** 逻辑删除,指定未删除时的值 */
     private String logicNotDeleteValue = "0";
+    
     /** 逻辑删除,删除后库数库据保存的值 */
     private String logicDeleteValue = "1";
+    
     /** 填充器 */
     private List<BaseFill<?>> fillList = new ArrayList<>(8);
 

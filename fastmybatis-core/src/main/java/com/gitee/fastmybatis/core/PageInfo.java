@@ -3,11 +3,9 @@ package com.gitee.fastmybatis.core;
 import java.util.List;
 
 /**
- * 查询结果
+ * 封装查询结果
  * 
  * @author tanghc
- *
- * @param <Entity>
  */
 public class PageInfo<Entity> extends PageSupport<Entity> {
     private static final long serialVersionUID = 5104636317609298856L;
