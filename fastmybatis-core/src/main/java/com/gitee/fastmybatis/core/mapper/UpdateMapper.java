@@ -28,7 +28,7 @@ public interface UpdateMapper<Entity> extends Mapper<Entity> {
 	/**
      * 根据条件批量更新
      * 
-     * @param entity 待更新的数据，可以是实体类，也可以是Map{@literal<}String,Object{@literal>}
+     * @param entity 待更新的数据，可以是实体类，也可以是Map&lt;String,Object&gt;
      * @param query 更新条件
      * @return 受影响行数
      */

@@ -7,7 +7,7 @@ package com.gitee.fastmybatis.core.query;
 public interface Sortable {
 	/**
 	 * 是否具备排序,是返回true
-	 * @return
+	 * @return true，具备排序
 	 */
 	boolean getOrderable();
 	

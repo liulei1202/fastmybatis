@@ -48,7 +48,7 @@ public enum FillType {
 	 *            总权限
 	 * @param right
 	 *            当前操作权限
-	 * @return
+	 * @return true，有权限
 	 */
 	private static boolean checkPower(int power, int right) {
 		int purview = (int) Math.pow(2, right);
