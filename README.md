@@ -98,14 +98,14 @@ List<Map<String, Object>> listMap(@Param("columns")List<String> columns, @Param(
  * 新增,新增所有字段
  * 
  * @param entity
- * @return 受到影响的行数
+ * @return 受影响行数
  */
 int save(Entity entity);
 
 /**
  * 新增（忽略null数据）
  * @param entity
- * @return 受到影响的行数
+ * @return 受影响行数
  */
 int saveIgnoreNull(Entity entity);
 
@@ -129,7 +129,7 @@ int saveMulti(@Param("entitys")List<Entity> entitys);
  * 修改,修改所有字段
  * 
  * @param entity
- * @return 受到影响的行数
+ * @return 受影响行数
  */
 int update(Entity entity);
 
@@ -137,7 +137,7 @@ int update(Entity entity);
  * 根据主键更新不为null的字段
  * 
  * @param entity
- * @return 受到影响的行数
+ * @return 受影响行数
  */
 int updateIgnoreNull(Entity entity);
 
@@ -146,7 +146,7 @@ int updateIgnoreNull(Entity entity);
  * 
  * @param entity 待更新的数据，可以是实体类，也可以是Map{@literal<String,Object>}
  * @param query 更新条件
- * @return 受到影响的行数
+ * @return 受影响行数
  */
 int updateByQuery(@Param("entity") Object entity, @Param("query") Query query);
 
@@ -154,7 +154,7 @@ int updateByQuery(@Param("entity") Object entity, @Param("query") Query query);
  * 删除
  * 
  * @param entity
- * @return 受到影响的行数
+ * @return 受影响行数
  */
 int delete(Entity entity);
 
@@ -162,7 +162,7 @@ int delete(Entity entity);
  * 根据id删除
  * 
  * @param id 主键id
- * @return 受到影响的行数
+ * @return 受影响行数
  */
 int deleteById(ID id);
 
@@ -170,7 +170,7 @@ int deleteById(ID id);
  * 根据条件删除
  * 
  * @param query
- * @return 受到影响的行数
+ * @return 受影响行数
  */
 int deleteByQuery(@Param("query")Query query);
 ```
