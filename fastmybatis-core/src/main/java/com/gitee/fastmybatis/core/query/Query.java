@@ -25,6 +25,7 @@ import com.gitee.fastmybatis.core.query.param.SchSortableParam;
 
 /**
  * 查询类
+ * 
  * <pre>
 查询姓名为张三，并且年龄为22岁的用户：
 Query query = new Query().eq("username","张三").eq("age",22);
@@ -51,18 +52,19 @@ List<User> users = mapper.list(query);
 Query query = new Query().eq("age",10).page(1,10); // 第一页，每页10条数据
 long total = mapper.getCount(query); // 该条件下总记录数
  * </pre>
+ * 
  * @author tanghc
- *
  */
 public class Query implements Queryable {
 
     private static final String REG_SQL_INJECT = "([';*--|])+";
-    
+    /** 分页起始位置 */
     private int start;
+    /** 分页大小 */
     private int limit;
     /** 排序信息 */
     private LinkedHashSet<String> orderInfo;
-
+    /** 额外参数，供xml使用 */
     private Map<String, Object> paramMap;
 
     private List<ExpressionValueable> valueExpressions;
@@ -71,7 +73,7 @@ public class Query implements Queryable {
     private List<ExpressionSqlable> sqlExpressions;
 
     // ------------ 基本条件 ------------
-    
+
     /**
      * 添加等于条件
      * 
@@ -79,7 +81,7 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query eq(String columnName, Object value) {
         this.addExpression(Expressions.eq(columnName, value));
@@ -93,7 +95,7 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query notEq(String columnName, Object value) {
         this.addExpression(Expressions.notEq(columnName, value));
@@ -107,7 +109,7 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query gt(String columnName, Object value) {
         this.addExpression(Expressions.gt(columnName, value));
@@ -116,9 +118,12 @@ public class Query implements Queryable {
 
     /**
      * 大于等于,>=
+     * 
      * @param columnName
+     *            数据库字段名
      * @param value
-     * @return 返回自身对象
+     *            值
+     * @return 返回Query对象
      */
     public Query ge(String columnName, Object value) {
         this.addExpression(Expressions.ge(columnName, value));
@@ -132,7 +137,7 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query lt(String columnName, Object value) {
         this.addExpression(Expressions.lt(columnName, value));
@@ -141,15 +146,18 @@ public class Query implements Queryable {
 
     /**
      * 小于等于,<=
+     * 
      * @param columnName
+     *            数据库字段名
      * @param value
-     * @return 返回自身对象
+     *            值
+     * @return 返回Query对象
      */
     public Query le(String columnName, Object value) {
         this.addExpression(Expressions.le(columnName, value));
         return this;
     }
-    
+
     /**
      * 添加两边模糊查询条件，两边模糊匹配，即name like '%value%'
      * 
@@ -157,15 +165,15 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值,不需要加%
-     * @return 返回自身对象
-     * @see #likeLeft(String, String)  左边模糊匹配
+     * @return 返回Query对象
+     * @see #likeLeft(String, String) 左边模糊匹配
      * @see #likeRight(String, String) 右边模糊匹配
      */
     public Query like(String columnName, String value) {
         this.addExpression(Expressions.like(columnName, value));
         return this;
     }
-    
+
     /**
      * 添加左模糊查询条件，左边模糊匹配，即name like '%value'
      * 
@@ -173,13 +181,13 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值,不需要加%
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query likeLeft(String columnName, String value) {
         this.addExpression(Expressions.likeLeft(columnName, value));
         return this;
     }
-    
+
     /**
      * 添加右模糊查询条件，右边模糊匹配，即name like 'value%'。mysql推荐用这种
      * 
@@ -187,7 +195,7 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值,不需要加%
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query likeRight(String columnName, String value) {
         this.addExpression(Expressions.likeRight(columnName, value));
@@ -201,7 +209,7 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query in(String columnName, Collection<?> value) {
         this.addExpression(Expressions.in(columnName, value));
@@ -215,7 +223,7 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public <T> Query in(String columnName, Collection<T> value, ValueConvert<T> valueConvert) {
         this.addExpression(Expressions.in(columnName, value, valueConvert));
@@ -229,7 +237,7 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query in(String columnName, Object[] value) {
         this.addExpression(Expressions.in(columnName, value));
@@ -243,7 +251,7 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query notIn(String columnName, Collection<?> value) {
         this.addExpression(Expressions.notIn(columnName, value));
@@ -257,7 +265,7 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public <T> Query notIn(String columnName, Collection<T> value, ValueConvert<T> valueConvert) {
         this.addExpression(Expressions.notIn(columnName, value, valueConvert));
@@ -271,7 +279,7 @@ public class Query implements Queryable {
      *            数据库字段名
      * @param value
      *            值
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query notIn(String columnName, Object[] value) {
         this.addExpression(Expressions.notIn(columnName, value));
@@ -283,7 +291,7 @@ public class Query implements Queryable {
      * 
      * @param sql
      *            自定义sql
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query sql(String sql) {
         this.addExpression(Expressions.sql(sql));
@@ -292,8 +300,10 @@ public class Query implements Queryable {
 
     /**
      * 字段不为null的条件
-     * @param column 数据库字段名
-     * @return 返回自身对象
+     * 
+     * @param column
+     *            数据库字段名
+     * @return 返回Query对象
      */
     public Query notNull(String column) {
         return this.sql(column + " IS NOT NULL");
@@ -301,8 +311,10 @@ public class Query implements Queryable {
 
     /**
      * 字段是null的条件
-     * @param column 数据库字段名
-     * @return 返回自身对象
+     * 
+     * @param column
+     *            数据库字段名
+     * @return 返回Query对象
      */
     public Query isNull(String column) {
         return this.sql(column + " IS NULL");
@@ -310,8 +322,10 @@ public class Query implements Queryable {
 
     /**
      * 不为空字符串
-     * @param column 数据库字段名
-     * @return 返回自身对象
+     * 
+     * @param column
+     *            数据库字段名
+     * @return 返回Query对象
      */
     public Query notEmpty(String column) {
         return this.sql(column + " IS NOT NULL AND " + column + " <> '' ");
@@ -319,8 +333,10 @@ public class Query implements Queryable {
 
     /**
      * 空字段条件，null或者空字符串
-     * @param column 数据库字段名
-     * @return 返回自身对象
+     * 
+     * @param column
+     *            数据库字段名
+     * @return 返回Query对象
      */
     public Query isEmpty(String column) {
         return this.sql(column + " IS NULL OR " + column + " = '' ");
@@ -328,7 +344,8 @@ public class Query implements Queryable {
 
     /**
      * 添加1=2条件
-     * @return 返回自身对象
+     * 
+     * @return 返回Query对象
      */
     public Query oneEqTwo() {
         return this.sql("1=2");
@@ -338,17 +355,18 @@ public class Query implements Queryable {
      * 添加关联条件
      * 
      * @param joinSql
-     * @return
+     * @return 返回Query对象
      */
     public Query join(String joinSql) {
         this.addExpression(Expressions.join(joinSql));
         return this;
     }
-    
+
     /**
      * 使用key/value进行多个等于的比对,相当于多个eq的效果
+     * 
      * @param map
-     * @return
+     * @return 返回Query对象
      */
     public Query allEq(LinkedHashMap<String, Object> map) {
         Set<String> keys = map.keySet();
@@ -358,11 +376,9 @@ public class Query implements Queryable {
         return this;
     }
     // ------------ 基本条件 end------------
-    
-    
-    
+
     // ------------ 设置分页信息 ------------
-    
+
     /**
      * 设置分页信息
      * 
@@ -370,7 +386,7 @@ public class Query implements Queryable {
      *            当前第几页,从1开始
      * @param pageSize
      *            每页结果集大小
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query page(int pageIndex, int pageSize) {
         if (pageIndex < 1) {
@@ -383,7 +399,7 @@ public class Query implements Queryable {
         int offset = pageSize;
         return this.limit(start, offset);
     }
-    
+
     /**
      * 设置分页信息,针对不规则分页。对应mysql分页语句：limit {start},{offset}
      * 
@@ -391,20 +407,19 @@ public class Query implements Queryable {
      *            记录起始位置
      * @param offset
      *            偏移量
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query limit(int start, int offset) {
-        if(start < 0) {
+        if (start < 0) {
             throw new IllegalArgumentException("public Query limit(int start, int offset)方法start必须大于等于0");
         }
-        if(offset < 1) {
+        if (offset < 1) {
             throw new IllegalArgumentException("public Query limit(int start, int offset)方法offset必须大于等于1");
         }
         this.start = start;
         this.limit = offset;
         return this;
     }
-
 
     @Override
     public int getStart() {
@@ -426,16 +441,17 @@ public class Query implements Queryable {
     }
 
     // ------------ 设置分页信息 end ------------
-    
-    
-    
+
     // ------------ 设置排序 ------------
-    
+
     /**
      * 字段排序
-     * @param sortname 数据库字段名
-     * @param sort 排序类型
-     * @return
+     * 
+     * @param sortname
+     *            数据库字段名
+     * @param sort
+     *            排序类型
+     * @return 返回Query对象
      */
     public Query orderby(String sortname, Sort sort) {
         return this.addSort(sortname, sort);
@@ -446,30 +462,33 @@ public class Query implements Queryable {
      * 
      * @param sortname
      *            数据库字段名
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query addSort(String sortname) {
         return this.addSort(sortname, SqlConsts.ASC);
     }
-    
+
     /**
-     * 字段排序
-     * @param sortname 数据库字段名
-     * @param sort 排序类型
-     * @return
+     * 添加字段排序
+     * 
+     * @param sortname
+     *            数据库字段名
+     * @param sort
+     *            排序类型
+     * @return 返回Query对象
      */
     public Query addSort(String sortname, Sort sort) {
         return this.addSort(sortname, sort.name());
     }
 
     /**
-     * 添加排序字段。
-     * 已废弃，推荐用：public Query addSort(String sortname, Sort sort)
+     * 添加排序字段。 已废弃，推荐用：public Query addSort(String sortname, Sort sort)
+     * 
      * @param sortname
      *            数据库字段名
      * @param sortorder
      *            排序方式,ASC,DESC
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     private Query addSort(String sortname, String sortorder) {
 
@@ -497,7 +516,7 @@ public class Query implements Queryable {
 
     @Override
     public String getOrder() {
-        if(orderInfo == null) {
+        if (orderInfo == null) {
             throw new NullPointerException("orderInfo为空,必须设置排序字段.");
         }
         StringBuilder sb = new StringBuilder();
@@ -516,7 +535,7 @@ public class Query implements Queryable {
      * 添加注解查询条件
      * 
      * @param searchEntity
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query addAnnotionExpression(Object searchEntity) {
         bindExpressionsFromBean(searchEntity, this);
@@ -525,17 +544,20 @@ public class Query implements Queryable {
 
     /**
      * 添加分页信息
+     * 
+     * @return 返回Query对象
      */
     public Query addPaginationInfo(SchPageableParam searchEntity) {
         int start = searchEntity.getStart();
         int limit = searchEntity.getLimit();
         return this.limit(start, limit);
     }
-    
-    /** 
+
+    /**
      * 添加排序信息
+     * 
      * @param searchEntity
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query addSortInfo(SchSortableParam searchEntity) {
         this.addSort(searchEntity.getDBSortname(), searchEntity.getSortorder());
@@ -546,19 +568,21 @@ public class Query implements Queryable {
      * 构建查询条件.
      * 
      * @param searchEntity
-     * @return 
+     * @return 返回Query对象
      */
     public static Query build(Object searchEntity) {
-        if(searchEntity instanceof BaseParam) {
-            return ((BaseParam)searchEntity).toQuery();
-        }else {
+        if (searchEntity instanceof BaseParam) {
+            return ((BaseParam) searchEntity).toQuery();
+        } else {
             return buildFromBean(searchEntity);
         }
     }
-    
+
     /**
      * 将bean中的字段转换成条件,字段名会统一转换成下划线形式.已废弃，改用Query.build(bean)
-     * <pre><code>
+     * 
+     * <pre>
+     * <code>
      * User user = new User();
      * user.setUserName("jim");
      * Query query = Query.buildFromBean(user);
@@ -566,28 +590,31 @@ public class Query implements Queryable {
      * 这样会组装成一个条件:where user_name='jim'
      * 更多功能可查看开发文档.
      * </pre>
+     * 
      * @param bean
-     * @return
+     * @return 返回Query对象
      */
     private static Query buildFromBean(Object bean) {
         Query query = new Query();
-        
+
         bindExpressionsFromBean(bean, query);
-        
+
         return query;
     }
-    
-    private static void bindExpressionsFromBean(Object bean,Query query) {
+
+    private static void bindExpressionsFromBean(Object bean, Query query) {
         List<Expression> expresList = ConditionBuilder.getUnderlineFieldBuilder().buildExpressions(bean);
 
         for (Expression expression : expresList) {
             query.addExpression(expression);
         }
     }
-    
+
     /**
      * 将bean中的字段转换成条件,不会将字段名转换成下划线形式.
-     * <pre><code>
+     * 
+     * <pre>
+     * <code>
      * User user = new User();
      * user.setUserName("jim");
      * Query query = Query.buildFromBeanByProperty(user);
@@ -595,8 +622,9 @@ public class Query implements Queryable {
      * 这样会组装成一个条件:where userName='jim'
      * 更多功能可查看开发文档.
      * </pre>
+     * 
      * @param bean
-     * @return
+     * @return 返回Query对象
      */
     public static Query buildFromBeanByProperty(Object bean) {
         Query query = new Query();
@@ -605,24 +633,32 @@ public class Query implements Queryable {
         for (Expression expression : expresList) {
             query.addExpression(expression);
         }
-        
+
         return query;
-    
+
     }
 
     @Override
     public Expressional addExpression(Expression expression) {
         if (expression instanceof ExpressionValueable) {
-            if(valueExpressions == null) {valueExpressions = new ArrayList<>();}
+            if (valueExpressions == null) {
+                valueExpressions = new ArrayList<>();
+            }
             valueExpressions.add((ExpressionValueable) expression);
         } else if (expression instanceof ExpressionListable) {
-            if(listExpressions == null) {listExpressions = new ArrayList<>();}
+            if (listExpressions == null) {
+                listExpressions = new ArrayList<>();
+            }
             listExpressions.add((ExpressionListable) expression);
         } else if (expression instanceof ExpressionJoinable) {
-            if(joinExpressions == null) {joinExpressions = new ArrayList<>();}
+            if (joinExpressions == null) {
+                joinExpressions = new ArrayList<>();
+            }
             joinExpressions.add((ExpressionJoinable) expression);
         } else if (expression instanceof ExpressionSqlable) {
-            if(sqlExpressions == null) {sqlExpressions = new ArrayList<>();}
+            if (sqlExpressions == null) {
+                sqlExpressions = new ArrayList<>();
+            }
             sqlExpressions.add((ExpressionSqlable) expression);
         }
 
@@ -639,9 +675,10 @@ public class Query implements Queryable {
 
     /**
      * 添加额外参数
+     * 
      * @param name
      * @param value
-     * @return 返回自身对象
+     * @return 返回Query对象
      */
     public Query addParam(String name, Object value) {
         if (this.paramMap == null) {
@@ -663,11 +700,13 @@ public class Query implements Queryable {
 
     /**
      * 查询全部
-     * @param queryAll true，则查询全部
-     * @return 返回自身对象
+     * 
+     * @param queryAll
+     *            true，则查询全部
+     * @return 返回Query对象
      */
     public Query setQueryAll(boolean queryAll) {
-        if(queryAll) {
+        if (queryAll) {
             this.limit = 0;
         }
         return this;
@@ -692,7 +731,5 @@ public class Query implements Queryable {
     public List<ExpressionSqlable> getSqlExpressions() {
         return this.sqlExpressions;
     }
-    
-    
-    
+
 }
