@@ -33,7 +33,7 @@ public class TableDefinition {
     /**
      * 返回表字段
      * 
-     * @return
+     * @return 返回表字段
      */
     public List<ColumnDefinition> getTableColumns() {
         List<ColumnDefinition> columns = this.getColumnDefinitions();
@@ -52,7 +52,7 @@ public class TableDefinition {
     /**
      * 返回所有定义的字段
      * 
-     * @return
+     * @return 返回所有定义的字段
      */
     public List<ColumnDefinition> getAllColumns() {
         return this.getColumnDefinitions();
@@ -61,7 +61,7 @@ public class TableDefinition {
     /**
      * 是否含有时间字段
      * 
-     * @return
+     * @return true，含有时间字段
      */
     public boolean getHasDateField() {
         List<ColumnDefinition> columns = getColumnDefinitions();
@@ -76,7 +76,7 @@ public class TableDefinition {
     /**
      * 是否含有BigDecimal字段
      * 
-     * @return
+     * @return true，含有BigDecimal字段
      */
     public boolean getHasBigDecimalField() {
         List<ColumnDefinition> columns = getColumnDefinitions();

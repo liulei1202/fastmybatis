@@ -22,15 +22,15 @@ public abstract class AbstractTypeHandlerAdapter<T> extends BaseTypeHandler<T> {
 	 * 解析数据库字段值，转成java对象值
 	 * 
 	 * @param columnValue
-	 * @return
+	 * @return 返回java对象值
 	 */
 	protected abstract T convertValue(Object columnValue);
 
 	/**
 	 * 保存到数据库的值
 	 * 
-	 * @param defaultValue
-	 * @return
+	 * @param defaultValue 默认值
+	 * @return 返回保存到数据库的值
 	 */
 	protected abstract Object getFillValue(T defaultValue);
 	

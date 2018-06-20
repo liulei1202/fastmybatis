@@ -65,7 +65,7 @@ public class FastmybatisConfig {
     /**
      * 是否执行驼峰转下划线. 如果配置了true，则java字段映射成数据库字段将自动转成下划线形式
      * 
-     * @return
+     * @return 配置了true，则java字段映射成数据库字段将自动转成下划线形式
      */
     public boolean isCamel2underline() {
         return camel2underline;

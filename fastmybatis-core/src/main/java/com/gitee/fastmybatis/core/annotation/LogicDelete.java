@@ -36,14 +36,14 @@ public @interface LogicDelete {
     /**
      * 未删除数据库保存的值,不指定默认为0
      * 
-     * @return
+     * @return 未删除数据库保存的值
      */
     String notDeleteValue() default "";
 
     /**
      * 删除后数据库保存的值,不指定默认为1
      * 
-     * @return
+     * @return 删除后数据库保存的值
      */
     String deleteValue() default "";
 

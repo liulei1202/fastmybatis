@@ -78,7 +78,7 @@ public class Generator {
 	 * 返回SQL上下文列表
 	 * 
 	 * @param tableNames
-	 * @return
+	 * @return 返回SQL上下文
 	 */
 	private SQLContext buildClientSQLContextList(ClientParam clientParam) {
 		Class<?> entityClass = clientParam.getEntityClass();

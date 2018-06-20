@@ -144,7 +144,7 @@ public class ColumnSelector {
 	/**
 	 * 构建列信息
 	 * @param field 字段信息
-	 * @return
+	 * @return 返回构建列信息
 	 */
 	protected ColumnDefinition buildColumnDefinition(Field field) {
 		ColumnDefinition columnDefinition = new ColumnDefinition();

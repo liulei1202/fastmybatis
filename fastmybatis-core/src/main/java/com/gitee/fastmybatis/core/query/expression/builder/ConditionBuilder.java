@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.util.Assert;
+
 import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
 import com.gitee.fastmybatis.core.query.annotation.Condition;
 import com.gitee.fastmybatis.core.query.expression.Expression;
@@ -45,12 +47,10 @@ public class ConditionBuilder {
 	 * 获取条件表达式
 	 * 
 	 * @param obj
-	 * @return
+	 * @return 返回表达式结合
 	 */
 	public List<Expression> buildExpressions(Object obj) {
-		if (obj == null) {
-			return null;
-		}
+	    Assert.notNull(obj, "buildExpressions(Object obj) obj can't be null.");
 		List<Expression> expList = new ArrayList<Expression>();
 		Method[] methods = obj.getClass().getDeclaredMethods();
 		try {

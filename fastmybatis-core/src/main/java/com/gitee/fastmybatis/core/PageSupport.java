@@ -36,7 +36,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
      * 将list中的entity对象处理成JSONObject对象 
      * @param list 
      * @param processor
-     * @return
+     * @return 返回新的结果集
      */
     public static <Entity> List<Object> processEntityToJSONObject(List<Entity> list,
             EntityProcessor<Entity> processor) {
@@ -58,7 +58,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
     /**
      * 上一页
      * 
-     * @return
+     * @return 返回上一页页码
      */
     public int fatchPrePageIndex() {
         return (pageIndex - 1 <= 0) ? 1 : pageIndex - 1;
@@ -67,7 +67,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
     /**
      * 下一页
      * 
-     * @return
+     * @return 返回下一页页码
      */
     public int fatchNextPageIndex() {
         return (pageIndex + 1 > pageCount) ? pageCount : pageIndex + 1;
@@ -76,7 +76,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
     /**
      * 首页
      * 
-     * @return
+     * @return 返回1
      */
     public int fatchFirstPageIndex() {
         return 1;
@@ -85,7 +85,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
     /**
      * 最后一页
      * 
-     * @return
+     * @return 返回最后一页页码
      */
     public int fatchLastPageIndex() {
         return pageCount;
@@ -94,7 +94,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
     /**
      * 结果集
      * 
-     * @return
+     * @return 返回结果集
      */
     public List<Entity> fatchList() {
         return list;
@@ -103,7 +103,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
     /**
      * 总记录数
      * 
-     * @return
+     * @return 返回总记录数
      */
     public long fatchTotal() {
         return total;
@@ -112,7 +112,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
     /**
      * 当前页索引,等同于getCurrentPageIndex()
      * 
-     * @return
+     * @return 返回当前页索引
      */
     public int fatchPageIndex() {
         return pageIndex;
@@ -121,12 +121,16 @@ public class PageSupport<Entity> implements PageResult<Entity> {
     /**
      * 每页显示几条记录
      * 
-     * @return
+     * @return 返回每页大小
      */
     public int fatchPageSize() {
         return pageSize;
     }
 
+    /**
+     * 起始页索引，从0开始
+     * @return 返回起始页索引
+     */
     public int fatchStart() {
         return start;
     }
@@ -134,7 +138,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
     /**
      * 共几页
      * 
-     * @return
+     * @return 返回总页数
      */
     public int fatchPageCount() {
         return pageCount;

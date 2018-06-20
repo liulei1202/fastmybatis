@@ -42,7 +42,7 @@ public class SQLContext {
 	/**
 	 * 返回Java类名
 	 * 
-	 * @return
+	 * @return 返回Java类名
 	 */
 	public String getJavaBeanName() {
 		return classSimpleName;
@@ -51,7 +51,7 @@ public class SQLContext {
 	/**
 	 * 返回Java类名且首字母小写
 	 * 
-	 * @return
+	 * @return 返回Java类名且首字母小写
 	 */
 	public String getJavaBeanNameLF() {
 		return FieldUtil.lowerFirstLetter(this.getJavaBeanName());

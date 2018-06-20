@@ -7,7 +7,6 @@ import com.gitee.fastmybatis.core.query.expression.Expression;
 /**
  * 表达式工厂,负责生成SQL条件表达式
  * @author tanghc
- *
  */
 public interface ExpressionFactory {
 	
@@ -17,7 +16,7 @@ public interface ExpressionFactory {
 	 * @param columnName 数据库字段名
 	 * @param operator 操作符
 	 * @param value 值
-	 * @return
+	 * @return 返回表达式对象
 	 */
 	Expression buildExpression(Joint joint, String columnName,Operator operator, Object value);
 }

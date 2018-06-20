@@ -84,7 +84,7 @@ public class ClassUtil {
      * 返回类名并且第一个字母小写
      * 
      * @param clazz
-     * @return
+     * @return 返回类名并且第一个字母小写
      */
     public static String getClassSimpleName(Class<?> clazz) {
         String className = clazz.getSimpleName();

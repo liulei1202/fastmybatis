@@ -28,10 +28,10 @@ public class ClassClient {
 
 	/**
 	 * 生成mybatis文件
-	 * 
-	 * @param mapperClass
-	 * @param dbType
-	 * @return
+	 * @param mapperClass Mapper的class对象
+	 * @param templateLocation 模板路径
+	 * @param globalVmLocation 全局模板路径
+	 * @return 返回xml内容
 	 */
 	public String genMybatisXml(Class<?> mapperClass, String templateLocation,String globalVmLocation) {
 		if (logger.isDebugEnabled()) {

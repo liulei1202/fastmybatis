@@ -123,7 +123,7 @@ public class JavaTypeUtil {
 	
 	/**
 	 * 返回java字段类型
-	 * @return
+	 * @return 返回java字段类型集合
 	 */
 	public static Set<String> getJavaTypes() {
 		return javaTypeSet;

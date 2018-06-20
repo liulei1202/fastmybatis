@@ -4,7 +4,6 @@ package com.gitee.fastmybatis.core.handler;
  * 字段枚举类型父类.
  * 如果javaBean字段要实现枚举类型，枚举类必须实现BaseEnum。如：
  * <pre>
- * {@literal
  * public enum UserInfoType implements BaseEnum&lt;String&gt;{
 	INVALID("0"),VALID("1")
 	;
@@ -15,14 +14,11 @@ package com.gitee.fastmybatis.core.handler;
 		this.status = type;
 	}
 	
-	
-	@Override
 	public String getCode() {
 		return status;
 	}
 
 }
- * }
  * </pre>
  * 
  * 

@@ -21,7 +21,6 @@ import org.springframework.util.ClassUtils;
 /**
  * class扫描
  * @author tanghc
- *
  */
 public class ClassScanner {
 	
@@ -57,7 +56,7 @@ public class ClassScanner {
 	/**
 	 * 将符合条件的Bean以Class集合的形式返回
 	 * 
-	 * @return
+	 * @return 返回Mapper的class集合
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
@@ -89,7 +88,7 @@ public class ClassScanner {
 	 * 
 	 * @param reader
 	 * @param readerFactory
-	 * @return
+	 * @return 返回true表示它是一个Mapper
 	 * @throws IOException
 	 */
 	private boolean matchesEntityTypeFilter(MetadataReader reader, MetadataReaderFactory readerFactory)

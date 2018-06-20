@@ -431,15 +431,6 @@ public class Query implements Queryable {
         return this.limit;
     }
 
-    /**
-     * 同getLimit()
-     * 
-     * @return
-     */
-    public int getPageSize() {
-        return this.getLimit();
-    }
-
     // ------------ 设置分页信息 end ------------
 
     // ------------ 设置排序 ------------

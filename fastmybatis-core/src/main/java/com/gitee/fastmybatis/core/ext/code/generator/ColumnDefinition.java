@@ -118,7 +118,7 @@ public class ColumnDefinition {
     /**
      * 是否是乐观锁字段
      * 
-     * @return
+     * @return true是
      */
     public boolean getIsVersion() {
         return this.isVersion;
@@ -131,7 +131,7 @@ public class ColumnDefinition {
     /**
      * 是否是自增主键
      * 
-     * @return
+     * @return true，是
      */
     public boolean getIsIdentityPk() {
         return isPk && isIdentity;
@@ -140,7 +140,7 @@ public class ColumnDefinition {
     /**
      * 返回java字段名,并且第一个字母大写
      * 
-     * @return
+     * @return 返回java字段名,并且第一个字母大写
      */
     public String getJavaFieldNameUF() {
         return FieldUtil.upperFirstLetter(getJavaFieldName());
@@ -149,7 +149,7 @@ public class ColumnDefinition {
     /**
      * 返回java字段
      * 
-     * @return
+     * @return 返回java字段
      */
     public String getJavaFieldName() {
         return javaFieldName;
@@ -162,7 +162,7 @@ public class ColumnDefinition {
     /**
      * 获得装箱类型,Integer,Float
      * 
-     * @return
+     * @return 获得装箱类型,Integer,Float
      */
     public String getJavaTypeBox() {
         return JavaTypeUtil.convertToJavaBoxType(type);

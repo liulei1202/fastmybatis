@@ -14,7 +14,6 @@ import com.gitee.fastmybatis.core.query.Operator;
  * 条件表达式,作用在bean的get方法上
  * 
  * @author tanghc
- *
  */
 @Documented
 @Target({ ElementType.METHOD })
@@ -37,14 +36,14 @@ public @interface Condition {
 	/**
 	 * 连接符
 	 * 
-	 * @return
+	 * @return 返回连接符
 	 */
 	Operator operator() default Operator.nil;
 	
 	/**
      * 是否忽略，设置true，@Condition将不起作用
      * 
-     * @return
+     * @return 返回true，@Condition将不起作用
      */
 	boolean ignore() default false;
 }

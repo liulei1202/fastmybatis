@@ -12,7 +12,7 @@ public interface DeleteMapper<Entity, ID> extends Mapper<Entity> {
      * 删除
      * 
      * @param entity
-     * @return 受到影响的行数
+     * @return 受影响行数
      */
     int delete(Entity entity);
 
@@ -21,7 +21,7 @@ public interface DeleteMapper<Entity, ID> extends Mapper<Entity> {
      * 
      * @param id
      *            主键id
-     * @return 受到影响的行数
+     * @return 受影响行数
      */
     int deleteById(ID id);
 
@@ -29,7 +29,7 @@ public interface DeleteMapper<Entity, ID> extends Mapper<Entity> {
      * 根据条件删除
      * 
      * @param query
-     * @return 受到影响的行数
+     * @return 受影响行数
      */
     int deleteByQuery(@Param("query")Query query);
 }

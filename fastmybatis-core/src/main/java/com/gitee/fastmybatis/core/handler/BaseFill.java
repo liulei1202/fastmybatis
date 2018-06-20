@@ -13,7 +13,7 @@ public abstract class BaseFill<T> extends AbstractTypeHandlerAdapter<T> {
 
 	/**
 	 * 字段名
-	 * @return
+	 * @return 返回数据库字段名
 	 */
 	public abstract String getColumnName();
 	
@@ -21,7 +21,7 @@ public abstract class BaseFill<T> extends AbstractTypeHandlerAdapter<T> {
 	 * 操作类型<br>
 	 * 字段插入后不能修改用FillType.INSERT，如：create_time字段<br>
 	 * 字段插入后能修改用FillType.UPDATE，如：update_time字段
-	 * @return
+	 * @return 返回填充类型
 	 */
 	public abstract FillType getFillType();
 	
@@ -35,7 +35,7 @@ public abstract class BaseFill<T> extends AbstractTypeHandlerAdapter<T> {
 	
 	/**
 	 * 优先值，越小的值优先
-	 * @return
+	 * @return 返回优先值
 	 */
 	public int getOrder() {
 		return Integer.MAX_VALUE;
@@ -46,7 +46,7 @@ public abstract class BaseFill<T> extends AbstractTypeHandlerAdapter<T> {
 	 * @param entityClass 实体类class
 	 * @param field 字段信息
 	 * @param columnName 给定的数据库字段名
-	 * @return
+	 * @return 返回true，作用此填充器
 	 */
 	public boolean match(Class<?> entityClass, Field field, String columnName) {
 		boolean isTargetClass = this.containClass(entityClass);
@@ -57,7 +57,7 @@ public abstract class BaseFill<T> extends AbstractTypeHandlerAdapter<T> {
 	/**
 	 * 是否能够作用到指定字段
 	 * @param columnName 给定的数据库字段名
-	 * @return
+	 * @return 返回true，作用此填充器
 	 */
 	public boolean match(String columnName) {
 		return this.getColumnName().equals(columnName);
@@ -66,7 +66,7 @@ public abstract class BaseFill<T> extends AbstractTypeHandlerAdapter<T> {
 	/**
 	 * 是否作用在entityClass上
 	 * @param entityClass 给定的entityClass
-	 * @return
+	 * @return 返回true作用在entityClass
 	 */
 	public boolean containClass(Class<?> entityClass) {
 		Class<?>[] classes = this.getTargetEntityClasses();

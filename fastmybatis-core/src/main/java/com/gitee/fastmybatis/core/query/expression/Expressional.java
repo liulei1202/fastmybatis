@@ -14,7 +14,7 @@ public interface Expressional {
      * 
      * @param expression
      *            表达式对象
-     * @return
+     * @return 返回Expressional对象
      */
     Expressional addExpression(Expression expression);
 
