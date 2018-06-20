@@ -21,6 +21,8 @@ import javax.persistence.Table;
 import javax.persistence.GenerationType;
 #end
 
+import lombok.Data;
+
 #if("$!{table.comment}" != "" )
 /**
   表:${table.tableName} ${table.comment}

@@ -2,11 +2,14 @@
 
 fastmybatis是一个mybatis开发框架，目的为简化mybatis的开发，让开发更高效。
 
-- 无需编写xml文件即可完成CRUD操作。
+- 零配置快速上手
+- 无需编写xml文件即可完成CRUD操作
 - 支持mysql，sqlserver，oracle，postgresql,sqlite
-- 支持自定义sql，sql语句可以写在配置文件中，同样支持mybatis标签。
-- 支持与spring-boot集成。
-- 轻量级，无侵入性，可与传统mybatis用法共存。
+- 支持自定义sql，sql语句可以写在配置文件中，同样支持mybatis标签
+- 支持与spring-boot集成
+- 轻量级，无侵入性，可与传统mybatis用法共存
+
+[fastmybatis与MyBatis generator对比](https://gitee.com/durcframework/fastmybatis/wikis/pages?title=fastmybatis%E4%B8%8EMyBatis%20generator%E5%AF%B9%E6%AF%94&parent=)
 
 # 快速开始（springboot）
 
@@ -210,7 +213,7 @@ long total = mapper.getCount(query); // 该条件下总记录数
 
 - fastmybatis-core：框架源代码
 - fastmybatis-demo：对应demo
-- fastmybatis-generator：代码生成工具，方便生成实体类和Mapper
+- fastmybatis-generator：代码生成工具，方便生成实体类和Mapper（可生成lombok风格实体类）
 - fastmybatis-spring-boot-autoconfigure和fastmybatis-spring-boot-starter：springboot对应的的starter
 
 # 实战项目

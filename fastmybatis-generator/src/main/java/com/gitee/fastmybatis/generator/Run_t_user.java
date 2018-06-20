@@ -3,7 +3,7 @@ package com.gitee.fastmybatis.generator;
 import com.gitee.fastmybatis.generator.client.Client;
 
 /**
- * 代码生成执行程序
+ * 生成单表数据
  */
 public class Run_t_user {
 	
