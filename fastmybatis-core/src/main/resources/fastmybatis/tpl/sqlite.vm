@@ -27,7 +27,9 @@
         <where>
             <include refid="common.condition" />
             #if(${table.hasLogicDeleteColumn})
+            <if test="!query.forceQuery">
               AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+            </if>
             #end
         </where>
 		<include refid="common.orderBy" />
@@ -60,7 +62,9 @@
         <where>
             <include refid="common.condition" />
             #if(${table.hasLogicDeleteColumn})
+            <if test="!query.forceQuery">
               AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+            </if>
             #end
         </where>
     </select>
@@ -86,7 +90,9 @@
         <where>
             <include refid="common.condition" />
             #if(${table.hasLogicDeleteColumn})
+            <if test="!query.forceQuery">
               AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+            </if>
             #end
         </where>
 		<include refid="common.orderBy" />

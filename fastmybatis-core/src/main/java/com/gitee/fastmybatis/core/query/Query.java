@@ -62,10 +62,15 @@ public class Query implements Queryable {
     private int start;
     /** 分页大小 */
     private int limit;
+    
     /** 排序信息 */
     private LinkedHashSet<String> orderInfo;
+    
     /** 额外参数，供xml使用 */
     private Map<String, Object> paramMap;
+    
+    /** 强力查询，设置为true，将无视删除字段 */
+    private boolean forceQuery;
 
     private List<ExpressionValueable> valueExpressions;
     private List<ExpressionJoinable> joinExpressions;
@@ -721,6 +726,30 @@ public class Query implements Queryable {
     @Override
     public List<ExpressionSqlable> getSqlExpressions() {
         return this.sqlExpressions;
+    }
+
+    public boolean getForceQuery() {
+        return forceQuery;
+    }
+
+    /**
+     * 开启强力查询，将无视逻辑删除字段
+     * @return 返回Query对象
+     * @see com.gitee.fastmybatis.core.annotation.LogicDelete 逻辑删除注解
+     */
+    public Query enableForceQuery() {
+        this.forceQuery = true;
+        return this;
+    }
+    
+    /**
+     * 关闭强力查询，逻辑删除字段生效
+     * @return 返回Query对象
+     * @see com.gitee.fastmybatis.core.annotation.LogicDelete 逻辑删除注解
+     */
+    public Query disableForceQuery() {
+        this.forceQuery = false;
+        return this;
     }
 
 }

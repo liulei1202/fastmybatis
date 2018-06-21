@@ -24,7 +24,7 @@ public class FastmybatisConfig {
     private boolean camel2underline = Boolean.TRUE;
     
     /** 生成mapper的线程池大小 */
-    private int mapperExecutorPoolSize = 20;
+    private int mapperExecutorPoolSize = 5;
     
     /** 模板文件classpath */
     private String templateClasspath;

@@ -19,8 +19,8 @@ public class MapperUtil {
     /**
      * 分页数算法:页数 = (总记录数 + 每页记录数 - 1) / 每页记录数
      * 
-     * @param total
-     * @param pageSize
+     * @param total 总记录数
+     * @param pageSize 每页记录数
      * @return 返回页数
      */
     private static int calcPageCount(long total, int pageSize) {
@@ -48,7 +48,7 @@ public class MapperUtil {
      *            查询mapper
      * @param searchParam
      *            查询pojo
-     * @return 返回PageInfo
+     * @return 返回PageInfo，里面存放结果以及分页信息
      */
     @SuppressWarnings("unchecked")
     public static <Entity> PageInfo<Entity> query(SchMapper<Entity, ?> mapper, BaseParam searchParam) {
@@ -62,7 +62,7 @@ public class MapperUtil {
      *            查询mapper
      * @param query
      *            查询条件
-     * @return 返回PageInfo
+     * @return 返回PageInfo，里面存放结果以及分页信息
      */
     @SuppressWarnings("unchecked")
     public static <Entity> PageInfo<Entity> query(SchMapper<Entity, ?> mapper, Query query) {

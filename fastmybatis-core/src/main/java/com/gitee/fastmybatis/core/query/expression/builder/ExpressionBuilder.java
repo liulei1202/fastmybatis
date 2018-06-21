@@ -51,7 +51,7 @@ public class ExpressionBuilder {
         ExpressionFactory expressionFactory = factoryMap.get(operator);
 
         String column = annotation.column();
-        if ("".equals(column)) {
+        if (column == null || "".equals(column.trim())) {
             column = columnName;
         }
 

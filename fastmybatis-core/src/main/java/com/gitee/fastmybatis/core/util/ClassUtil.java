@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
  * @author tanghc
  */
 public class ClassUtil {
@@ -121,16 +120,18 @@ public class ClassUtil {
 
         return map;
     }
-    
 
     /**
      * map集合转换成对象集合
-     * @param list map集合
-     * @param pojoClass 待转换的对象类型
+     * 
+     * @param list
+     *            map集合
+     * @param pojoClass
+     *            待转换的对象类型
      * @return 返回对象集合
      */
     public static <T> List<T> mapListToObjList(List<Map<String, Object>> list, Class<T> pojoClass) {
-        if(list == null) {
+        if (list == null) {
             return Collections.emptyList();
         }
         List<T> retList = new ArrayList<>(list.size());
@@ -139,11 +140,14 @@ public class ClassUtil {
         }
         return retList;
     }
-    
+
     /**
      * 将map对象转换成普通类
-     * @param map map对象
-     * @param pojoClass 普通类
+     * 
+     * @param map
+     *            map对象
+     * @param pojoClass
+     *            普通类
      * @return 返回普通类
      */
     public static <T> T mapToPojo(Map<String, Object> map, Class<T> pojoClass) {
@@ -153,12 +157,14 @@ public class ClassUtil {
             return target;
         } catch (Exception e) {
             throw new RuntimeException("实例化失败", e);
-        } 
+        }
     }
 
     /**
      * 是否是数组或结合类
-     * @param value 待检测对象
+     * 
+     * @param value
+     *            待检测对象
      * @return true，是结合或数组
      */
     public static boolean isArrayOrCollection(Object value) {
@@ -170,10 +176,10 @@ public class ClassUtil {
         }
         return ret;
     }
-    
+
     // 构建列名
     private static String buildFieldName(String methodName) {
         return methodName.substring(3, 4).toLowerCase() + methodName.substring(4);
     }
-    
+
 }
