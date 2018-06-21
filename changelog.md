@@ -2,7 +2,7 @@
 
 # 1.0.3
 
-- 添加强制查询功能
+- 添加强制查询功能，见TUserMapperTest.testForceQuery()
 
 # 1.0.2
 
