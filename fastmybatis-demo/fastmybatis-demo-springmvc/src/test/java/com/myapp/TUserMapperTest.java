@@ -120,6 +120,7 @@ public class TUserMapperTest extends TestBase {
         }
         // 将map集合转换成实体类集合
         List<TUser> userList = ClassUtil.mapListToObjList(list, TUser.class);
+        System.out.println("userList.size():" + userList.size());
         for (TUser tUser : userList) {
             System.out.println("id:" + tUser.getId() + ",username:" + tUser.getUsername());
         }
@@ -453,6 +454,18 @@ public class TUserMapperTest extends TestBase {
         query.eq("state", 3);
         int i = mapper.deleteByQuery(query);
         print("deleteByQuery --> " + i);
+    }
+    
+    /**
+     * 强力查询，将无视逻辑删除字段
+     */
+    @Test
+    public void testForceQuery() {
+        Query query = new Query().eq("id", 3)
+                .enableForceQuery()
+                ;
+        TUser user = mapper.getByQuery(query);
+        this.print(user);
     }
 
 }

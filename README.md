@@ -43,7 +43,7 @@ public void testGetById() {
 
 ```
 /**
- * 根据对象查询,可以传主键值,也可以传整个对象
+ * 根据主键查询
  * 
  * @param id
  * @return 返回实体对象，没有返回null

@@ -454,5 +454,17 @@ public class TUserMapperTest extends FastmybatisSpringbootApplicationTests {
         int i = mapper.deleteByQuery(query);
         print("deleteByQuery --> " + i);
     }
+    
+    /**
+     * 强力查询，将无视逻辑删除字段
+     */
+    @Test
+    public void testForceQuery() {
+        Query query = new Query().eq("id", 3)
+                .enableForceQuery()
+                ;
+        TUser user = mapper.getByQuery(query);
+        this.print(user);
+    }
 
 }
