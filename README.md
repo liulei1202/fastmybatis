@@ -20,7 +20,7 @@ fastmybatis是一个mybatis开发框架，目的为简化mybatis的开发，让�
 <dependency>
     <groupId>net.oschina.durcframework</groupId>
     <artifactId>fastmybatis-spring-boot-starter</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 - 假设数据库有张`t_user`表，添加对应的实体类`TUser.java`和Mapper`TUserMapper.java`
