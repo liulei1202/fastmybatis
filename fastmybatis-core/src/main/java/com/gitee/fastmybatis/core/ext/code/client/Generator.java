@@ -12,6 +12,7 @@ import org.apache.velocity.VelocityContext;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
+import com.gitee.fastmybatis.core.ext.code.NotEntityException;
 import com.gitee.fastmybatis.core.ext.code.generator.SQLContext;
 import com.gitee.fastmybatis.core.ext.code.generator.TableDefinition;
 import com.gitee.fastmybatis.core.ext.code.generator.TableSelector;
@@ -26,7 +27,7 @@ public class Generator {
 	
 	private static final Charset UTF8 = Charsets.toCharset("UTF-8");
 	
-	public String generateCode(ClientParam clientParam) throws FileNotFoundException {
+	public String generateCode(ClientParam clientParam) throws FileNotFoundException, NotEntityException {
 		InputStream templateInputStream = this.buildTemplateInputStream(clientParam);
 		SQLContext sqlContext = this.buildClientSQLContextList(clientParam);
 		VelocityContext context = new VelocityContext();
@@ -79,9 +80,13 @@ public class Generator {
 	 * 
 	 * @param tableNames
 	 * @return 返回SQL上下文
+	 * @throws NotEntityException 
 	 */
-	private SQLContext buildClientSQLContextList(ClientParam clientParam) {
+	private SQLContext buildClientSQLContextList(ClientParam clientParam) throws NotEntityException {
 		Class<?> entityClass = clientParam.getEntityClass();
+		if(entityClass == Object.class || entityClass == Void.class) {
+		    throw new NotEntityException();
+		}
 		TableSelector tableSelector = new TableSelector(entityClass,clientParam.getConfig());
 
 		TableDefinition tableDefinition = tableSelector.getTableDefinition();

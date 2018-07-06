@@ -6,6 +6,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
 import com.gitee.fastmybatis.core.FastmybatisConfig;
+import com.gitee.fastmybatis.core.ext.code.NotEntityException;
 
 /**
  * @author tanghc
@@ -13,6 +14,13 @@ import com.gitee.fastmybatis.core.FastmybatisConfig;
 public class ClassClient {
 
 	private static Log logger = LogFactory.getLog(ClassClient.class);
+	
+	private static String EMPTY_XML = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+	        + "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">"+
+            "<mapper namespace=\"%s\"> "+
+            " <!--_ext_mapper_--> "+
+            " <!--_global_vm_--> "+
+            "</mapper>";
 
 	private Generator generator = new Generator();
 	
@@ -49,7 +57,9 @@ public class ClassClient {
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(), e);
 			throw new RuntimeException(e);
-		}
+		} catch (NotEntityException e) {
+            return String.format(EMPTY_XML, mapperClass.getName());
+        }
 	}
 
 }
