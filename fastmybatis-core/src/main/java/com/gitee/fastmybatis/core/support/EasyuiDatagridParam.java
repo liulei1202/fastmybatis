@@ -1,5 +1,6 @@
 package com.gitee.fastmybatis.core.support;
 
+import com.gitee.fastmybatis.core.query.annotation.Condition;
 import com.gitee.fastmybatis.core.query.param.PageSortParam;
 
 /**
@@ -10,6 +11,7 @@ public class EasyuiDatagridParam extends PageSortParam {
     private int page;
     private int rows;
 
+    @Condition(ignore = true)
     public int getPage() {
         return page;
     }
@@ -19,6 +21,7 @@ public class EasyuiDatagridParam extends PageSortParam {
         this.setPageIndex(page);
     }
 
+    @Condition(ignore = true)
     public int getRows() {
         return rows;
     }
