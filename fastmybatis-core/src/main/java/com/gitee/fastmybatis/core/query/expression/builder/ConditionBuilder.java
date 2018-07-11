@@ -20,6 +20,7 @@ import com.gitee.fastmybatis.core.query.expression.Expressions;
  */
 public class ConditionBuilder {
 	private static final String PREFIX_GET = "get";
+	private static final String GETCLASS_NAME = "getClass";
 
 	private static ConditionBuilder underlineFieldBuilder = new ConditionBuilder(true);
 	private static ConditionBuilder camelFieldBuilder = new ConditionBuilder(false);
@@ -52,11 +53,11 @@ public class ConditionBuilder {
 	public List<Expression> buildExpressions(Object obj) {
 	    Assert.notNull(obj, "buildExpressions(Object obj) obj can't be null.");
 		List<Expression> expList = new ArrayList<Expression>();
-		Method[] methods = obj.getClass().getDeclaredMethods();
+		Method[] methods = obj.getClass().getMethods();
 		try {
 			for (Method method : methods) {
 				if (couldBuildExpression(method)) {
-					Object value = method.invoke(obj, new Object[] {});
+					Object value = method.invoke(obj);
 					if (value == null) {
 						continue;
 					}
@@ -106,7 +107,11 @@ public class ConditionBuilder {
 
 	/** 能否构建表达式 */
 	private static boolean couldBuildExpression(Method method) {
-		return method.getReturnType() != Void.TYPE && method.getName().startsWith(PREFIX_GET);
+	    if(method.getReturnType() == Void.TYPE) {
+	        return false;
+	    }
+	    String methodName = method.getName();
+		return (!GETCLASS_NAME.equals(methodName)) && methodName.startsWith(PREFIX_GET);
 	}
 
 }
