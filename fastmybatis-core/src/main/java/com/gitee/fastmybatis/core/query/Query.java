@@ -415,6 +415,10 @@ public class Query implements Queryable {
      * @return 返回Query对象
      */
     public Query limit(int start, int offset) {
+        if(offset == 0) {
+            this.setQueryAll(true);
+            return this;
+        }
         if (start < 0) {
             throw new IllegalArgumentException("public Query limit(int start, int offset)方法start必须大于等于0");
         }
