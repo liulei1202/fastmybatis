@@ -3,6 +3,9 @@ package com.gitee.fastmybatis.core.util;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -10,6 +13,9 @@ import java.util.Set;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.util.Assert;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 对象拷贝
@@ -100,8 +106,6 @@ public class MyBeanUtil extends org.springframework.beans.BeanUtils {
                         boolean canCopy = propertyName.equals(buildFieldName(methodName)) // 字段名一样
                                 && methodParams.length == 1 // 并且只有一个参数
                                 && methodParams[0].isInstance(val); // val是methodParams[0]或他的子类
-
-                       
                         
                         if (canCopy) {
                             try {
@@ -120,6 +124,55 @@ public class MyBeanUtil extends org.springframework.beans.BeanUtils {
         }
 
     }
+    
+    /**
+     * 将实体对象转换成Map
+     * 
+     * @param pojo
+     *            实体类
+     * @return 返回map
+     */
+    public static Map<String, Object> pojoToMap(Object pojo) {
+        if (pojo == null) {
+            return Collections.emptyMap();
+        }
+        String json = JSON.toJSONString(pojo);
+        return JSON.parseObject(json);
+    }
+    
+    /**
+     * 将map对象转换成普通类
+     * 
+     * @param map
+     *            map对象
+     * @param pojoClass
+     *            普通类
+     * @return 返回普通类
+     */
+    public static <T> T mapToPojo(Map<String, Object> map, Class<T> pojoClass) {
+        return new JSONObject(map).toJavaObject(pojoClass);
+    }
+
+    /**
+     * map集合转换成对象集合
+     * 
+     * @param list
+     *            map集合
+     * @param pojoClass
+     *            待转换的对象类型
+     * @return 返回对象集合
+     */
+    public static <T> List<T> mapListToObjList(List<Map<String, Object>> list, Class<T> pojoClass) {
+        if (list == null) {
+            return Collections.emptyList();
+        }
+        List<T> retList = new ArrayList<>(list.size());
+        for (Map<String, Object> map : list) {
+            retList.add(mapToPojo(map, pojoClass));
+        }
+        return retList;
+    }
+
 
     // 构建列名
     private static String buildFieldName(String methodName) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.gitee.fastmybatis.core.util.ClassUtil;
+import com.gitee.fastmybatis.core.util.MyBeanUtil;
 
 /**
  * @author tanghc
@@ -43,7 +43,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
         List<Object> jsonObjList = new ArrayList<Object>(list.size());
 
         for (Entity entity : list) {
-            Map<String, Object> jsonObject = ClassUtil.pojoToMap(entity);
+            Map<String, Object> jsonObject = MyBeanUtil.pojoToMap(entity);
             processor.process(entity, jsonObject);
             jsonObjList.add(jsonObject);
         }

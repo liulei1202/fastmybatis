@@ -1,12 +1,8 @@
 package com.gitee.fastmybatis.core.util;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +13,6 @@ public class ClassUtil {
 
     private ClassUtil() {
     };
-
-    private static final String PREFIX_GET = "get";
 
     /**
      * 返回定义类时的泛型参数的类型. <br>
@@ -91,38 +85,19 @@ public class ClassUtil {
     }
 
     /**
-     * 将实体对象转换成Map
+     * 将实体对象转换成Map。已废弃，使用MyBeanUtil.pojoToMap(pojo)
      * 
      * @param pojo
      *            实体类
      * @return 返回map
      */
+    @Deprecated
     public static Map<String, Object> pojoToMap(Object pojo) {
-        if (pojo == null) {
-            return Collections.emptyMap();
-        }
-        Method[] methods = pojo.getClass().getDeclaredMethods();
-        Map<String, Object> map = new HashMap<String, Object>();
-
-        try {
-            for (Method method : methods) {
-                String methodName = method.getName();
-
-                if (methodName.startsWith(PREFIX_GET) && method.getParameterTypes().length == 0) {
-                    String fieldName = buildFieldName(methodName);
-                    Object value = method.invoke(pojo);
-                    map.put(fieldName, value);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("pojoToMap失败", e);
-        }
-
-        return map;
+        return MyBeanUtil.pojoToMap(pojo);
     }
 
     /**
-     * map集合转换成对象集合
+     * map集合转换成对象集合。已废弃，使用MyBeanUtil.mapListToObjList(list, pojoClass);
      * 
      * @param list
      *            map集合
@@ -130,19 +105,13 @@ public class ClassUtil {
      *            待转换的对象类型
      * @return 返回对象集合
      */
+    @Deprecated
     public static <T> List<T> mapListToObjList(List<Map<String, Object>> list, Class<T> pojoClass) {
-        if (list == null) {
-            return Collections.emptyList();
-        }
-        List<T> retList = new ArrayList<>(list.size());
-        for (Map<String, Object> map : list) {
-            retList.add(mapToPojo(map, pojoClass));
-        }
-        return retList;
+        return MyBeanUtil.mapListToObjList(list, pojoClass);
     }
 
     /**
-     * 将map对象转换成普通类
+     * 将map对象转换成普通类。已废弃，使用MyBeanUtil.mapToPojo(map, pojoClass);
      * 
      * @param map
      *            map对象
@@ -150,14 +119,9 @@ public class ClassUtil {
      *            普通类
      * @return 返回普通类
      */
+    @Deprecated
     public static <T> T mapToPojo(Map<String, Object> map, Class<T> pojoClass) {
-        try {
-            T target = pojoClass.newInstance();
-            MyBeanUtil.copyProperties(map, target);
-            return target;
-        } catch (Exception e) {
-            throw new RuntimeException("实例化失败", e);
-        }
+        return MyBeanUtil.mapToPojo(map, pojoClass);
     }
 
     /**
@@ -175,11 +139,6 @@ public class ClassUtil {
             ret = true;
         }
         return ret;
-    }
-
-    // 构建列名
-    private static String buildFieldName(String methodName) {
-        return methodName.substring(3, 4).toLowerCase() + methodName.substring(4);
     }
 
 }
