@@ -16,8 +16,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 import com.gitee.fastmybatis.core.PageInfo;
 import com.gitee.fastmybatis.core.query.Query;
 import com.gitee.fastmybatis.core.query.Sort;
-import com.gitee.fastmybatis.core.util.ClassUtil;
 import com.gitee.fastmybatis.core.util.MapperUtil;
+import com.gitee.fastmybatis.core.util.MyBeanUtil;
 import com.myapp.entity.TUser;
 import com.myapp.mapper.TUserMapper;
 
@@ -119,7 +119,7 @@ public class TUserMapperTest extends TestBase {
             System.out.println(map);
         }
         // 将map集合转换成实体类集合
-        List<TUser> userList = ClassUtil.mapListToObjList(list, TUser.class);
+        List<TUser> userList = MyBeanUtil.mapListToObjList(list, TUser.class);
         System.out.println("userList.size():" + userList.size());
         for (TUser tUser : userList) {
             System.out.println("id:" + tUser.getId() + ",username:" + tUser.getUsername());
