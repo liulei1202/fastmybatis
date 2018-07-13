@@ -40,7 +40,7 @@
         <mybatis-spring.version>1.3.2</mybatis-spring.version>
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
         <!-- 变动版本 -->
-        <fastmybatis.version>1.0.7</fastmybatis.version>
+        <fastmybatis.version>1.0.8</fastmybatis.version>
     </properties>
     
     <dependencies>
