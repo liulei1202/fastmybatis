@@ -45,11 +45,15 @@ public class MapperLocationsBuilder {
 
 	private static Log LOGGER = LogFactory.getLog(MapperLocationsBuilder.class);
 	private static final String ENCODE = "UTF-8";
+	
+	private static final String EMPTY = "";
 	private static final String XML_SUFFIX = ".xml";
 	private static final String NODE_MAPPER = "mapper";
 	private static final String MAPPER_START = "<mapper>";
 	private static final String MAPPER_END = "</mapper>";
 	private static final String MAPPER_EMPTY = "<mapper/>";
+	private static final String ATTR_NAMESPACE = "namespace";
+	
 
 	private static final String EXT_MAPPER_PLACEHOLDER = "<!--_ext_mapper_-->";
 	private static final String TEMPLATE_SUFFIX = ".vm";
@@ -59,7 +63,7 @@ public class MapperLocationsBuilder {
 
 	private FastmybatisConfig config = new FastmybatisConfig();
 
-	private Attribute namespace;
+	private Attribute namespace = new DOMAttribute(new QName(ATTR_NAMESPACE));
 
 	private String dbName;
 
@@ -70,7 +74,6 @@ public class MapperLocationsBuilder {
 	 *            实体类的包目录.指定哪些包需要被扫描,支持多个包"package.a,package.b"并对每个包都会递归搜索
 	 */
 	public Resource[] build(String basePackage) {
-		init();
 		try {
 			String[] basePackages = StringUtils.tokenizeToStringArray(basePackage,
 			        ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
@@ -88,12 +91,7 @@ public class MapperLocationsBuilder {
 		}
 	}
 
-	private void init() {
-		namespace = new DOMAttribute(new QName("namespace"));
-	}
-
 	private void distroy() {
-		namespace = null;
 		mapperResourceStore.clear();
 	}
 
@@ -240,22 +238,78 @@ public class MapperLocationsBuilder {
 	private String mergeExtMapperFile(Class<?> mapperClass, String xml) {
 		// 自定义文件
 		String mapperFileName = mapperClass.getSimpleName() + XML_SUFFIX;
+		// 先找跟自己同名的xml，如:UserMapper.java -> UserMapper.xml
 		MapperResourceDefinition mapperResourceDefinition = this.getMapperFile(mapperFileName);
+		StringBuilder extXml = new StringBuilder();
 
 		if (mapperResourceDefinition != null) {
 			// 追加内容
 			String extFileContent = this.getExtFileContent(mapperResourceDefinition.getResource());
-			xml = xml.replace(EXT_MAPPER_PLACEHOLDER, extFileContent);
+			extXml.append(extFileContent);
 
 			mapperResourceDefinition.setMerged(true);
 		}
+		// 再找namespace一样的xml
+		try {
+            String otherMapperXml = this.buildOtherMapperContent(mapperClass, this.mapperResourceStore.values());
+            extXml.append(otherMapperXml);
+        } catch (Exception e) {
+            LOGGER.error("加载额外Mapp文件出错", e);
+            throw new RuntimeException(e);
+        }
+		
+		xml = xml.replace(EXT_MAPPER_PLACEHOLDER, extXml.toString());
 
 		return xml;
 	}
+	
+	/** 
+                    一个Mapper.java可以对应多个Mapper.xml。只要namespace相同，就会把它们的内容合并，最终形成一个完整的MapperResource<br>
+                   这样做的好处是每人维护一个文件相互不干扰，至少在提交代码是不会冲突，同时也遵循了开闭原则。
+	 */
+	private String buildOtherMapperContent(Class<?> mapperClass, Collection<MapperResourceDefinition> mapperResourceDefinitions) throws Exception {
+	    StringBuilder xml = new StringBuilder();
+	    
+	    for (MapperResourceDefinition mapperResourceDefinition : mapperResourceDefinitions) {
+            if(mapperResourceDefinition.isMerged()) {
+                continue;
+            }
+            Resource resource = mapperResourceDefinition.getResource();
+            InputStream in = resource.getInputStream();
+            Document document = this.buildSAXReader().read(in);
+            Element mapperNode = document.getRootElement();
+            
+            Attribute attrNamespance = mapperNode.attribute(ATTR_NAMESPACE);
+            String namespaceValue = attrNamespance == null ? null : attrNamespance.getValue();
+            
+            if(StringUtils.isEmpty(namespaceValue)) {
+                throw new Exception("Mapper文件[" + mapperResourceDefinition.getFilename() + "]的namespace不能为空。");
+            }
+            
+            if(mapperClass.getName().equals(attrNamespance.getValue())) {
+                String rootNodeName = mapperNode.getName();
 
-	private String getExtFileContent(Resource mapperLocation) {
+                if (!NODE_MAPPER.equals(rootNodeName)) {
+                    throw new Exception("mapper文件必须含有<mapper>节点,是否缺少<mapper></mapper>?");
+                }
+                
+                mapperNode.remove(namespace);
+
+                String contentXml = mapperNode.asXML();
+                // 去除首尾mapper标签
+                contentXml = contentXml.replace(MAPPER_START, EMPTY).replace(MAPPER_END, EMPTY).replace(MAPPER_EMPTY, EMPTY);
+                xml.append(contentXml);
+                mapperResourceDefinition.setMerged(true);
+            }
+        }
+	    
+	    return xml.toString();
+	    
+	}
+
+	private String getExtFileContent(Resource resource) {
 		try {
-			InputStream in = mapperLocation.getInputStream();
+			InputStream in = resource.getInputStream();
 			Document document = this.buildSAXReader().read(in);
 			Element mapperNode = document.getRootElement();
 
@@ -269,13 +323,12 @@ public class MapperLocationsBuilder {
 
 			String rootXml = mapperNode.asXML();
 			// 去除首尾mapper标签
-			String empty = "";
-			rootXml = rootXml.replace(MAPPER_START, empty).replace(MAPPER_END, empty).replace(MAPPER_EMPTY, empty);
+			rootXml = rootXml.replace(MAPPER_START, EMPTY).replace(MAPPER_END, EMPTY).replace(MAPPER_EMPTY, EMPTY);
 
 			return rootXml;
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
-			throw new RuntimeException("加载资源文件出错,[" + mapperLocation.getFilename() + "]," + e.getMessage());
+			throw new RuntimeException("加载资源文件出错,[" + resource.getFilename() + "]," + e.getMessage());
 		}
 	}
 
