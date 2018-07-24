@@ -5,9 +5,9 @@ fastmybatis是一个mybatis开发框架，目的为简化mybatis的开发，让�
 - 零配置快速上手
 - 无需编写xml文件即可完成CRUD操作
 - 支持mysql，sqlserver，oracle，postgresql,sqlite
-- 支持自定义sql，sql语句可以写在配置文件中，同样支持mybatis标签
-- 支持与spring-boot集成
-- 轻量级，无侵入性，可与传统mybatis用法共存
+- 支持自定义sql，sql语句可写在注解中或xml中
+- 支持与spring-boot集成，依赖starter即可
+- 轻量级，无侵入性，是官方mybatis的一种扩展
 
 [fastmybatis与MyBatis generator对比](https://gitee.com/durcframework/fastmybatis/wikis/pages?title=fastmybatis%E4%B8%8EMyBatis%20generator%E5%AF%B9%E6%AF%94&parent=)
 
@@ -20,7 +20,7 @@ fastmybatis是一个mybatis开发框架，目的为简化mybatis的开发，让�
 <dependency>
     <groupId>net.oschina.durcframework</groupId>
     <artifactId>fastmybatis-spring-boot-starter</artifactId>
-    <version>1.0.3</version>
+    <version>最新版本（见changelog.md）</version>
 </dependency>
 ```
 - 假设数据库有张`t_user`表，添加对应的实体类`TUser.java`和Mapper`TUserMapper.java`
@@ -212,14 +212,16 @@ long total = mapper.getCount(query); // 该条件下总记录数
 # 工程介绍
 
 - [fastmybatis-core](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-core)：框架源代码
-- [fastmybatis-demo](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-demo)：对应demo
+- [fastmybatis-demo](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-demo)：对应demo（springboot,springmvc）
 - [fastmybatis-generator](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-generator)：代码生成工具，方便生成实体类和Mapper（可生成lombok风格实体类）
 - [fastmybatis-spring-boot-autoconfigure](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-spring-boot-autoconfigure)和[fastmybatis-spring-boot-starter](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-spring-boot-starter)：springboot对应的的starter
 
-# 实战项目
-
-[easydoc](https://gitee.com/durcframework/easydoc) : 一个文档管理项目，采用markdown方式写作。
 
 # 意见交流
 
 Q群328419269
+
+# 相关文档
+
+ - [自定义SQL](https://gitee.com/durcframework/fastmybatis/wikis/%E8%87%AA%E5%AE%9A%E4%B9%89SQL?sort_id=441600)
+ - [fastmybatis与MyBatis generator对比](https://gitee.com/durcframework/fastmybatis/wikis/pages?title=fastmybatis%E4%B8%8EMyBatis%20generator%E5%AF%B9%E6%AF%94&parent=)
