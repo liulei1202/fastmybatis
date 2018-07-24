@@ -269,7 +269,7 @@ public class MapperLocationsBuilder {
 	 */
 	private String buildOtherMapperContent(Class<?> mapperClass, Collection<MapperResourceDefinition> mapperResourceDefinitions) throws Exception {
 	    StringBuilder xml = new StringBuilder();
-	    
+	    String trueNamespace = mapperClass.getName();
 	    for (MapperResourceDefinition mapperResourceDefinition : mapperResourceDefinitions) {
             if(mapperResourceDefinition.isMerged()) {
                 continue;
@@ -286,7 +286,7 @@ public class MapperLocationsBuilder {
                 throw new Exception("Mapper文件[" + mapperResourceDefinition.getFilename() + "]的namespace不能为空。");
             }
             
-            if(mapperClass.getName().equals(attrNamespance.getValue())) {
+            if(trueNamespace.equals(attrNamespance.getValue())) {
                 String rootNodeName = mapperNode.getName();
 
                 if (!NODE_MAPPER.equals(rootNodeName)) {
