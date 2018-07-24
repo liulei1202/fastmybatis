@@ -111,7 +111,7 @@ public class TUserMapperTest extends TestBase {
         query.eq("username", "张三");
 
         // 自定义字段
-        List<String> columns = Arrays.asList("t.id", "t.username as username");
+        List<String> columns = Arrays.asList("t.id", "t.username as username","t.add_time as addTime", "t.money");
         // 查询，返回一个Map集合
         List<Map<String, Object>> list = mapper.listMap(columns, query);
 
@@ -239,7 +239,7 @@ public class TUserMapperTest extends TestBase {
      */
     @Test
     public void testSelfSql2() {
-        TUser user = mapper.selectByName("张三");
+        TUser user = mapper.selectByName3("张三");
         print(user);
     }
 

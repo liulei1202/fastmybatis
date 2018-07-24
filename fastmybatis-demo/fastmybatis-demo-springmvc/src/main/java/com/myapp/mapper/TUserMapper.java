@@ -20,4 +20,9 @@ public interface TUserMapper extends CrudMapper<TUser, Integer> {
 
     // 自定义sql，写在xml中
     TUser selectByName(@Param("username") String username);  
+    
+ // 自定义sql，写在xml中
+    TUser selectByName2(@Param("username") String username);  
+    // 自定义sql，写在xml中
+    TUser selectByName3(@Param("username") String username);  
 }
