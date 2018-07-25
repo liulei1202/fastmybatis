@@ -174,7 +174,7 @@ public class MybatisAutoConfiguration {
 	public FastmybatisConfig fastmybatisConfig() {
 		FastmybatisConfig config = new FastmybatisConfig();
 
-		MyBeanUtil.copyProperties(this.properties, config);
+		MyBeanUtil.copyPropertiesIgnoreNull(this.properties, config);
 		
 		if(this.properties.getFill() != null) {
 			config.setFills(this.buildFills(this.properties.getFill()));
