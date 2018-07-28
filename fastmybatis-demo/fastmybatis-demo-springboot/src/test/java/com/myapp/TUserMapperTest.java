@@ -16,8 +16,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 import com.gitee.fastmybatis.core.PageInfo;
 import com.gitee.fastmybatis.core.query.Query;
 import com.gitee.fastmybatis.core.query.Sort;
-import com.gitee.fastmybatis.core.util.ClassUtil;
 import com.gitee.fastmybatis.core.util.MapperUtil;
+import com.gitee.fastmybatis.core.util.MyBeanUtil;
 import com.myapp.dao.TUserMapper;
 import com.myapp.entity.TUser;
 
@@ -119,7 +119,7 @@ public class TUserMapperTest extends FastmybatisSpringbootApplicationTests {
             System.out.println(map);
         }
         // 将map集合转换成实体类集合
-        List<TUser> userList = ClassUtil.mapListToObjList(list, TUser.class);
+        List<TUser> userList = MyBeanUtil.mapListToObjList(list, TUser.class);
         for (TUser tUser : userList) {
             System.out.println("id:" + tUser.getId() + ",username:" + tUser.getUsername());
         }
@@ -222,6 +222,29 @@ public class TUserMapperTest extends FastmybatisSpringbootApplicationTests {
             System.out.println(user.getId() + " " + user.getUsername());
         }
         System.out.println("==============");
+    }
+    
+    /**
+     * 联表查询，并返回指定字段
+     * <pre>
+     * SELECT t2.user_id userId , t.username , t2.city
+     * FROM `t_user` t 
+     * LEFT JOIN user_info t2 ON t.id = t2.user_id WHERE t.isdel = 0 
+     * </pre>
+     */
+    @Test
+    public void testJoinColumn() {
+        Query query = new Query();
+        // 左连接查询,主表的alias默认为t
+        query.join("LEFT JOIN user_info t2 ON t.id = t2.user_id");
+        // 指定返回字段
+        List<String> column = Arrays.asList("t2.user_id userId", "t.username", "t2.city");
+        // 查询结果返回到map中
+        List<Map<String, Object>> mapList = mapper.listMap(column, query);
+        // 再将map转换成实体bean
+        List<UserInfoVo> list = MyBeanUtil.mapListToObjList(mapList, UserInfoVo.class);
+        
+        this.print(list);
     }
 
     /**
