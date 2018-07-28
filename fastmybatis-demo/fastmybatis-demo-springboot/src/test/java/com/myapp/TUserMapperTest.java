@@ -194,7 +194,7 @@ public class TUserMapperTest extends FastmybatisSpringbootApplicationTests {
      */
     @Test
     public void testOrder() {
-        Query query = new Query().addSort("id", Sort.ASC).addSort("state", Sort.DESC);
+        Query query = new Query().orderby("id", Sort.ASC).orderby("state", Sort.DESC);
 
         List<TUser> list = mapper.list(query);
         print(list);

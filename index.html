@@ -1,0 +1,1495 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>fastmybatis开发文档</title>
+        <link rel="stylesheet" href="./static/highlight/styles/vs.css">
+		<script src="./static/highlight/highlight.pack.js"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+        <link rel="stylesheet" type="text/css" href="./static/github2-rightpart.css" media="all">
+        <link rel="stylesheet" type="text/css" href="./static/github1-contents.css">
+        <link rel="stylesheet" href="./static/zTreeStyle.css" type="text/css">
+        <style>
+            .ztree li a.curSelectedNode {
+                padding-top: 0px;
+                background-color: #FFE6B0;
+                color: black;
+                height: 16px;
+                border: 1px #FFB951 solid;
+                opacity: 0.8;
+            }
+            .ztree{
+                overflow: auto;
+                height:100%;
+                min-height: 200px;
+                top: 0px;
+            }
+            .task-list{list-style-type: disc !important;}
+            .container{margin: 0px !important;}
+            #readme .markdown-body, #readme .plain{border:0px !important;}
+        </style>
+    </head>
+    <body>
+        <div>
+            <div style="width:30%;">
+                <ul id="tree" class="ztree" style="overflow: auto; position: fixed; z-index: 2147483647; border: 0px none; left: 0px; bottom: 0px;">
+                <!-- 目录内容在网页另存为之后将插入到此处 -->
+                </ul>
+            </div>
+            <div id="readme" style="width:70%;margin-left:25%;">
+                <article class="markdown-body">
+
+
+<!-- 请把你的html正文部分粘贴到此处，在浏览器中打开之后将会自动生成目录。如果想要将目录保留并嵌入到此文档中，只需在浏览器中“另存为->网页，全部”即可 -->
+<div class="ui container">
+    <div id="project-title">
+      <div class="title-wrap">
+        <div class="left">
+          <i class="icon eye"></i>
+          文档预览:
+          fastmybatis
+        </div>
+        <div class="right">
+          Export by Gitee
+        </div>
+      </div>
+    </div>
+
+    <div class="ui container" id="wiki-preview-container">
+      <div id="wiki-preview">
+        <div class="ui segment">
+          <div id="page-detail" class="markdown-body">
+            <div class='title'>Home</div><div class='content'><p>Welcome to the Gitee wiki!</p>
+</div><div class='title'>完整测试用例</div><div class='content'><div class="white"><div class="highlight"><pre>/**
+ * mapper测试
+ */
+public class TUserMapperTest extends FastmybatisSpringbootApplicationTests {
+
+    @Autowired
+    TUserMapper mapper;
+    @Autowired
+    TransactionTemplate transactionTemplate;
+
+    /**
+     * 根据主键查询
+     * 
+     * &lt;pre&gt;
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t 
+     * WHERE `id` = ? LIMIT 1
+     * &lt;/pre&gt;
+     */
+    @Test
+    public void testGetById() {
+        TUser user = mapper.getById(3);
+        print(user);
+    }
+
+    /**
+     * 根据条件查询一条记录
+     * 
+     * &lt;pre&gt;
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t 
+     * WHERE id = ? AND money &gt; ? LIMIT 1
+     * &lt;/pre&gt;
+     */
+    @Test
+    public void testGetByQuery() {
+        // 查询ID=3,金额大于1的用户
+        Query query = new Query().eq("id", 3).gt("money", 1);
+
+        TUser user = mapper.getByQuery(query);
+        print(user);
+    }
+
+    /**
+     * 根据字段查询一条记录
+     * 
+     * &lt;pre&gt;
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t 
+     * WHERE t.`username` = ? LIMIT 1
+     * &lt;/pre&gt;
+     */
+    @Test
+    public void testGetByColumn() {
+        TUser user = mapper.getByColumn("username", "王五");
+        print(user);
+    }
+
+    /**
+     * 根据条件查询列表
+     * 
+     * &lt;pre&gt;
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t 
+     * WHERE state = ? AND money IN ( ? , ? , ? )
+     * &lt;/pre&gt;
+     */
+    @Test
+    public void testList() {
+        Query query = new Query().eq("state", 0).in("money", Arrays.asList(100, 1.0, 3));
+        List&lt;TUser&gt; list = mapper.list(query);
+        for (TUser tUser : list) {
+            print(tUser);
+        }
+    }
+
+    /**
+     * 返回自定义字段
+     * 
+     * &lt;pre&gt;
+     * SELECT t.id , t.username as username FROM `t_user` t WHERE username = ?
+     * &lt;/pre&gt;
+     */
+    @Test
+    public void testListMap() {
+        Query query = new Query();
+        // 添加查询条件
+        query.eq("username", "张三");
+
+        // 自定义字段
+        List&lt;String&gt; columns = Arrays.asList("t.id", "t.username as username");
+        // 查询，返回一个Map集合
+        List&lt;Map&lt;String, Object&gt;&gt; list = mapper.listMap(columns, query);
+
+        for (Map&lt;String, Object&gt; map : list) {
+            System.out.println(map);
+        }
+        // 将map集合转换成实体类集合
+        List&lt;TUser&gt; userList = ClassUtil.mapListToObjList(list, TUser.class);
+        for (TUser tUser : userList) {
+            System.out.println("id:" + tUser.getId() + ",username:" + tUser.getUsername());
+        }
+    }
+
+    /**
+     * 获取记录数
+     * 
+     * &lt;pre&gt;
+     * SELECT count(*) FROM `t_user` t WHERE username = ?
+     * &lt;/pre&gt;
+     */
+    @Test
+    public void testGetCount() {
+        Query query = new Query();
+        // 添加查询条件
+        query.eq("username", "张三");
+
+        long total = mapper.getCount(query); // 获取总数
+
+        print("total:" + total);
+    }
+
+    /**
+     * 分页查询
+     * 
+     * &lt;pre&gt;
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t 
+     * WHERE username = ? LIMIT ?,?
+     * &lt;/pre&gt;
+     */
+    @Test
+    public void testPageInfo() {
+        Query query = new Query();
+        // 添加查询条件
+        query.eq("username", "张三").page(1, 2) // 分页查询，按页码分，通常使用这种。
+        // .limit(start, offset) // 分页查询，这种是偏移量分页
+        ;
+
+        // 分页信息
+        PageInfo&lt;TUser&gt; pageInfo = MapperUtil.query(mapper, query);
+
+        List&lt;TUser&gt; list = pageInfo.getList(); // 结果集
+        long total = pageInfo.getTotal(); // 总记录数
+        int pageCount = pageInfo.getPageCount(); // 共几页
+
+        System.out.println("total:" + total);
+        System.out.println("pageCount:" + pageCount);
+        print(list);
+    }
+
+    /**
+     * 排序
+     * 
+     * &lt;pre&gt;
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t 
+     * ORDER BY id ASC,state DESC
+     * &lt;/pre&gt;
+     */
+    @Test
+    public void testOrder() {
+        Query query = new Query().addSort("id", Sort.ASC).addSort("state", Sort.DESC);
+
+        List&lt;TUser&gt; list = mapper.list(query);
+        print(list);
+    }
+
+    /**
+     * 联表分页
+     * 
+     * &lt;pre&gt;
+     * SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` 
+     * FROM `t_user` t LEFT JOIN user_info t2 ON t.id = t2.user_id 
+     * WHERE t.isdel = 0 LIMIT ?,?
+     * &lt;/pre&gt;
+     */
+    @Test
+    public void testJoinPage() {
+        Query query = Query.build()
+                // 左连接查询,主表的alias默认为t
+                .join("LEFT JOIN user_info t2 ON t.id = t2.user_id").page(1, 5);
+
+        List&lt;TUser&gt; list = mapper.list(query);
+
+        System.out.println("==============");
+        for (TUser user : list) {
+            System.out.println(user.getId() + " " + user.getUsername());
+        }
+        System.out.println("==============");
+    }
+
+    /**
+     * 自定义sql方式1
+     */
+    @Test
+    public void testSelfSql1() {
+        int i = mapper.updateById(1, "张三");
+        print("updateById--&gt; " + i);
+    }
+
+    /**
+     * 自定义sql方式2，见TUserMapper.xml
+     */
+    @Test
+    public void testSelfSql2() {
+        TUser user = mapper.selectByName("张三");
+        print(user);
+    }
+
+    /**
+     * 添加-保存所有字段
+     */
+    @Test
+    public void testSave() {
+        TUser user = new TUser();
+        user.setId(30);
+        user.setAddTime(new Date());
+        user.setIsdel(false);
+        user.setLeftMoney(22.1F);
+        user.setMoney(new BigDecimal(100.5));
+        user.setRemark("备注");
+        user.setState((byte)0);
+        user.setUsername("张三");
+
+        mapper.save(user);
+
+        print("添加后的主键:" + user.getId());
+
+        print(user);
+    }
+
+    /**
+     * 添加-保存非空字段
+     */
+    @Test
+    public void testSaveIgnoreNull() {
+        TUser user = new TUser();
+        user.setAddTime(new Date());
+        user.setIsdel(true);
+        user.setMoney(new BigDecimal(100.5));
+        user.setState((byte)0);
+        user.setUsername("张三notnull");
+        user.setLeftMoney(null);
+        user.setRemark(null);
+
+        mapper.saveIgnoreNull(user);
+
+        print("添加后的主键:" + user.getId());
+        print(user);
+    }
+
+    /**
+     * 批量添加.支持mysql,sqlserver2008。如需支持其它数据库使用saveMulti方法
+     * 
+     * &lt;pre&gt;
+     * INSERT INTO person (id, name, age) VALUES (1, 'Kelvin', 22), (2, 'ini_always', 23);
+     * &lt;/pre&gt;
+     */
+    @Test
+    public void testInsertBatch() {
+        List&lt;TUser&gt; users = new ArrayList&lt;&gt;();
+
+        for (int i = 0; i &lt; 3; i++) { // 创建3个对象
+            TUser user = new TUser();
+            user.setUsername("username" + i);
+            user.setMoney(new BigDecimal(i));
+            user.setRemark("remark" + i);
+            user.setState((byte)0);
+            user.setIsdel(false);
+            user.setAddTime(new Date());
+            user.setLeftMoney(200F);
+            users.add(user);
+        }
+
+        int i = mapper.saveBatch(users); // 返回成功数
+
+        System.out.println("saveBatch --&gt; " + i);
+    }
+
+    /**
+     * 批量添加,兼容更多数据库版本,采用union all
+     * 
+     * &lt;pre&gt;
+     * INSERT INTO `t_user` ( `username` , `state` , `isdel` , `remark` , `add_time` , `money` , `left_money` ) 
+     * SELECT ? , ? , ? , ? , ? , ? , ? 
+     * UNION ALL 
+     * SELECT ? , ? , ? , ? , ? , ? , ? 
+     * UNION ALL 
+     * SELECT ? , ? , ? , ? , ? , ? , ?
+     * &lt;/pre&gt;
+     */
+    @Test
+    public void testInsertMulti() {
+        List&lt;TUser&gt; users = new ArrayList&lt;&gt;();
+
+        for (int i = 0; i &lt; 3; i++) { // 创建3个对象
+            TUser user = new TUser();
+            user.setUsername("username" + i);
+            user.setMoney(new BigDecimal(i));
+            user.setRemark("remark" + i);
+            user.setState((byte)0);
+            user.setIsdel(false);
+            user.setAddTime(new Date());
+            user.setLeftMoney(200F);
+            users.add(user);
+        }
+
+        int i = mapper.saveMulti(users); // 返回成功数
+
+        System.out.println("saveMulti --&gt; " + i);
+    }
+
+    /**
+     * 事务回滚
+     */
+    @Test
+    public void testUpdateTran() {
+        TUser user = transactionTemplate.execute(new TransactionCallback&lt;TUser&gt;() {
+            @Override
+            public TUser doInTransaction(TransactionStatus arg0) {
+                try {
+                    TUser user = mapper.getById(3);
+                    user.setUsername("王五1");
+                    user.setMoney(user.getMoney().add(new BigDecimal(0.1)));
+                    user.setIsdel(true);
+
+                    int i = mapper.update(user);
+                    print("testUpdate --&gt; " + i);
+                    int j = 1 / 0; // 模拟错误
+                    return user;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    arg0.setRollbackOnly();
+                    return null;
+                }
+            }
+
+        });
+
+        print(user);
+    }
+
+    /**
+     * 更新所有字段
+     */
+    @Test
+    public void testUpdate() {
+        TUser user = mapper.getById(3);
+        user.setUsername("李四");
+        user.setMoney(user.getMoney().add(new BigDecimal(0.1)));
+        user.setState((byte)1);
+        user.setIsdel(true);
+
+        int i = mapper.update(user);
+        print("testUpdate --&gt; " + i);
+    }
+
+    /**
+     * 更新不为null的字段 UPDATE [t_user] SET [username]=?, [isdel]=? WHERE [id] = ?
+     */
+    @Test
+    public void testUpdateIgnoreNull() {
+        TUser user = new TUser();
+        user.setId(3);
+        user.setUsername("王五");
+        user.setState((byte)2);
+        user.setIsdel(false);
+        int i = mapper.updateIgnoreNull(user);
+        print("updateNotNull --&gt; " + i);
+    }
+
+    /**
+     * 根据条件更新。将状态为2的数据姓名更新为李四
+     * UPDATE `t_user` SET `username`=?, `add_time`=? WHERE state = ? 
+     */
+    @Test
+    public void testUpdateByQuery() {
+        Query query = new Query().eq("state", 2);
+        // 方式1
+        TUser user = new TUser();
+        user.setUsername("李四");
+        int i = mapper.updateByQuery(user, query);
+        print("updateByQuery --&gt; " + i);
+
+       /* // 方式2
+        Map&lt;String, Object&gt; map = new HashMap&lt;String, Object&gt;();
+        map.put("username", "李四2");
+        i = mapper.updateByQuery(map, query);
+        print("updateByQuery --&gt; " + i);*/
+    }
+
+    /**
+     * 根据主键删除
+     */
+    @Test
+    public void testDeleteById() {
+        int i = mapper.deleteById(14);
+        print("del --&gt; " + i);
+    }
+
+    /**
+     * 根据对象删除
+     */
+    @Test
+    public void testDelete() {
+        TUser user = new TUser();
+        user.setId(15);
+        int i = mapper.delete(user);
+        print("del --&gt; " + i);
+    }
+
+    /**
+     * 根据条件删除 DELETE FROM `t_user` WHERE state = ?
+     */
+    @Test
+    public void testDeleteByQuery() {
+        Query query = new Query();
+        query.eq("state", 3);
+        int i = mapper.deleteByQuery(query);
+        print("deleteByQuery --&gt; " + i);
+    }
+
+}
+</pre></div></div></div><div class='title'>Mapper方法列表</div><div class='content'><div class="white"><div class="highlight"><pre>/**
+ * 根据主键查询
+ * 
+ * @param id
+ * @return 返回实体对象，没有返回null
+ */
+Entity getById(ID id);
+
+/**
+ * 根据条件查找单条记录
+ * @param query 查询条件
+ * @return 返回实体对象，没有返回null
+ */
+Entity getByQuery(@Param("query")Query query);
+
+/**
+ * 根据字段查询一条记录
+ * @param column 数据库字段名
+ * @param value 字段值
+ * @return 返回实体对象，没有返回null
+ */
+Entity getByColumn(@Param("column")String column,@Param("value")Object value);
+
+/**
+ * 查询总记录数
+ * 
+ * @param query 查询条件
+ * @return 返回总记录数
+ */
+long getCount(@Param("query")Query query);  
+
+/**
+ * 根据字段查询集合
+ * @param column 数据库字段名
+ * @param value 字段值
+ * @return 返回实体对象集合，没有返回空集合
+ */
+List&lt;Entity&gt; listByColumn(@Param("column")String column,@Param("value")Object value);
+
+/**
+ * 条件查询
+ * 
+ * @param query 查询条件
+ * @return 返回实体对象集合，没有返回空集合
+ */
+List&lt;Entity&gt; list(@Param("query")Query query);
+
+/**
+ * 查询指定字段结果
+ * @param columns 返回的字段
+ * @param query 查询条件
+ * @return 返回结果集
+ */
+List&lt;Map&lt;String, Object&gt;&gt; listMap(@Param("columns")List&lt;String&gt; columns, @Param("query")Query query);
+
+/**
+ * 新增,新增所有字段
+ * 
+ * @param entity
+ * @return 受到影响的行数
+ */
+int save(Entity entity);
+
+/**
+ * 新增（忽略null数据）
+ * @param entity
+ * @return 受到影响的行数
+ */
+int saveIgnoreNull(Entity entity);
+
+/**
+ * 批量添加,只支持mysql,sqlserver2008及以上数据库.&lt;br&gt;
+ * &lt;strong&gt;若要兼容其它版本数据库,请使用saveMulti()方法&lt;/strong&gt;
+ * @param entitys
+ * @return
+ */
+int saveBatch(@Param("entitys")List&lt;Entity&gt; entitys);
+
+/**
+ * 批量添加,兼容更多的数据库版本.&lt;br&gt;
+ * 此方式采用union all的方式批量insert,如果是mysql或sqlserver2008及以上推荐saveBatch()方法.
+ * @param entitys
+ * @return
+ */
+int saveMulti(@Param("entitys")List&lt;Entity&gt; entitys);
+
+/**
+ * 修改,修改所有字段
+ * 
+ * @param entity
+ * @return 受到影响的行数
+ */
+int update(Entity entity);
+
+/**
+ * 根据主键更新不为null的字段
+ * 
+ * @param entity
+ * @return 受到影响的行数
+ */
+int updateIgnoreNull(Entity entity);
+
+/**
+ * 根据条件批量更新
+ * 
+ * @param entity 待更新的数据，可以是实体类，也可以是Map{@literal&lt;String,Object&gt;}
+ * @param query 更新条件
+ * @return 受到影响的行数
+ */
+int updateByQuery(@Param("entity") Object entity, @Param("query") Query query);
+
+/**
+ * 删除
+ * 
+ * @param entity
+ * @return 受到影响的行数
+ */
+int delete(Entity entity);
+
+/**
+ * 根据id删除
+ * 
+ * @param id 主键id
+ * @return 受到影响的行数
+ */
+int deleteById(ID id);
+
+/**
+ * 根据条件删除
+ * 
+ * @param query
+ * @return 受到影响的行数
+ */
+int deleteByQuery(@Param("query")Query query);
+</pre></div></div></div><div class='title'>fastmybatis与MyBatis generator对比</div><div class='content'><p>fastmybatis与MyBatis generator对比</p>
+<h1><a class="anchor" id="查询对比_1" href="#查询对比_1"></a>查询对比</h1><h2><a class="anchor" id="1-模糊搜索用户名-_1" href="#1-模糊搜索用户名-_1"></a>1.模糊搜索用户名：</h2>
+<ul class="task-list">
+<li>MyBatis generator</li>
+</ul>
+<div class="white"><div class="highlight"><pre>String name = "明";
+UserExample ex = new UserExample();
+ex.createCriteria().andNameLike('%'+name+'%');
+List&lt;User&gt; userList = userDao.selectByExample(ex);
+</pre></div></div>
+<ul class="task-list">
+<li>fastmybatis</li>
+</ul>
+<div class="white"><div class="highlight"><pre>String name = "明";
+Query query = new Query().like("name",name);
+List&lt;User&gt; userList = userMapper.list(query);
+</pre></div></div><h2><a class="anchor" id="2-通过某个字段排序-_1" href="#2-通过某个字段排序-_1"></a>2.通过某个字段排序：</h2>
+<ul class="task-list">
+<li>MyBatis generator</li>
+</ul>
+<div class="white"><div class="highlight"><pre>String orderByClause = "id DESC";
+UserExample ex = new UserExample();
+ex.setOrderByClause(orderByClause);
+List&lt;User&gt; userList = userDao.selectByExample(ex);
+</pre></div></div>
+<ul class="task-list">
+<li>fastmybatis</li>
+</ul>
+<div class="white"><div class="highlight"><pre>Query query = new Query().orderby("id",Sort.DESC);
+List&lt;User&gt; userList = userMapper.list(query);
+</pre></div></div><h2><a class="anchor" id="3-条件搜索-不确定条件的个数-_1" href="#3-条件搜索-不确定条件的个数-_1"></a>3.条件搜索，不确定条件的个数：</h2>
+<ul class="task-list">
+<li>MyBatis generator</li>
+</ul>
+<div class="white"><div class="highlight"><pre>UserExample ex = new UserExample();
+Criteria criteria = ex.createCriteria();
+if(StringUtils.isNotBlank(user.getAddress())){
+    criteria.andAddressEqualTo(user.getAddress());
+}
+if(StringUtils.isNotBlank(user.getName())){
+    criteria.andNameEqualTo(user.getName());
+}
+List&lt;User&gt; userList = userDao.selectByExample(ex);
+</pre></div></div>
+<ul class="task-list">
+<li>fastmybatis</li>
+</ul>
+<div class="white"><div class="highlight"><pre>Query query = new Query()
+if(StringUtils.isNotBlank(user.getAddress())){
+    query.eq("address",user.getAddress());
+}
+if(StringUtils.isNotBlank(user.getName())){
+    query.eq("name",user.getName());
+}
+List&lt;User&gt; userList = userMapper.list(query);
+</pre></div></div>
+<p>一个个加太麻烦，还可以这样：</p>
+<div class="white"><div class="highlight"><pre>Query query = Query.build(user); // user中不为空的字段添加到条件中
+List&lt;User&gt; userList = userMapper.list(query);
+</pre></div></div><h2><a class="anchor" id="4-分页搜索列表-_1" href="#4-分页搜索列表-_1"></a>4.分页搜索列表：</h2>
+<ul class="task-list">
+<li>MyBatis generator</li>
+</ul>
+<div class="white"><div class="highlight"><pre>pager.setPageNum(1);
+pager.setPageSize(5);
+UserExample ex = new UserExample();
+ex.setPage(pager);
+List&lt;User&gt; userList = userDao.selectByExample(ex);
+</pre></div></div>
+<ul class="task-list">
+<li>fastmybatis</li>
+</ul>
+<div class="white"><div class="highlight"><pre>Query query = new Query().page(1, 5);
+List&lt;User&gt; userList = userMapper.list(query);
+</pre></div></div><h1><a class="anchor" id="代码生成对比_1" href="#代码生成对比_1"></a>代码生成对比</h1>
+<ul class="task-list">
+<li>MyBatis generator需要配置generatorConfig.xml，配置较为繁琐，生成的代码量多</li>
+<li>fastmybatis有配套的代码生成工具，配置简单，只需生成实体类和Mapper文件</li>
+</ul>
+</div><div class='title'>自定义SQL</div><div class='content'><h1><a class="anchor" id="自定义sql_2" href="#自定义sql_2"></a>自定义SQL</h1><h2><a class="anchor" id="方式1_3" href="#方式1_3"></a>方式1</h2>
+<p>直接写在Mapper.java中</p>
+<div class="white"><div class="highlight"><pre>public interface TUserMapper extends CrudMapper&lt;TUser, Integer&gt; {
+
+    // 自定义sql，官方自带，不需要写xml
+    /**
+     * 修改用户名
+     * @param id
+     * @param username
+     * @return 返回影响行数
+     */
+    @Update("update t_user set username = #{username} where id = #{id}")
+    int updateById(@Param("id") int id, @Param("username") String username);
+
+}
+</pre></div></div>
+<p>简单SQL可采用这种形式。</p>
+<h2><a class="anchor" id="方式2_3" href="#方式2_3"></a>方式2</h2>
+<p>fastmybatis提供的Mapper已经满足大部分的操作需求，但是有些复杂的sql语句还是需要写在xml文件中。fastmybatis同样支持将sql语句写在xml中，具体配置如下：</p>
+
+<ul class="task-list">
+<li>在application.properties添加一句，指定xml文件存放路径</li>
+</ul>
+<div class="white"><div class="highlight"><pre>mybatis.mapper-locations=classpath:/mybatis/mapper/*.xml
+</pre></div></div>
+<ul class="task-list">
+<li>在resources/mybatis/mapper目录下新建一个xml文件TUserMapper.xml，内容如下：</li>
+</ul>
+<div class="white"><div class="highlight"><pre><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="cp">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+<span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">"com.mayapp.mapper.TUserMapper"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">"selectByName"</span> <span class="na">parameterType=</span><span class="s">"String"</span> <span class="na">resultMap=</span><span class="s">"baseResultMap"</span><span class="nt">&gt;</span>
+        select * from t_user t where t.username = #{username} limit 1
+    <span class="nt">&lt;/select&gt;</span>
+
+<span class="nt">&lt;/mapper&gt;</span>
+</pre></div></div>
+<p>这个xml文件跟其它的mybatis配置文件一样，baseResultMap没有看到定义，但是确实存在，因为这个是fastmybatis提供的一个内置resultMap。</p>
+
+<ul class="task-list">
+<li>
+<p>在TUseroMapper.java中添加：</p>
+<div class="white"><div class="highlight"><pre><span class="n">TUser</span> <span class="nf">selectByName</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"username"</span><span class="o">)</span><span class="n">String</span> <span class="n">username</span><span class="o">);</span>
+</pre></div></div>
+</li>
+<li><p>编写单元测试用例</p></li>
+</ul>
+<div class="white"><div class="highlight"><pre><span class="nd">@Test</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSelectByName</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">TUser</span> <span class="n">user</span> <span class="o">=</span> <span class="n">dao</span><span class="o">.</span><span class="na">selectByName</span><span class="o">(</span><span class="s">"张三"</span><span class="o">);</span>
+
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">getUsername</span><span class="o">());</span>
+<span class="o">}</span>
+
+</pre></div></div></div><div class='title'>指定返回字段</div><div class='content'><p>默认的查询是返回所有字段的，如果要返回指定字段，可使用Mapper中的<code>listMap</code>方法：</p>
+<div class="white"><div class="highlight"><pre>    /**
+     * 查询指定字段结果，Map里面key对应字段名，value对应值&lt;br&gt;
+     * 使用ClassUtil.mapListToObjList(listMap, Class pojoClass)方法将List&amp;lt;Map&amp;gt;转换成List&amp;lt;Entity&amp;gt;
+     * @param columns
+     *            返回的字段
+     * @param query
+     *            查询条件
+     * @return 返回结果集,没有返回空list
+     * @see com.gitee.fastmybatis.core.util.ClassUtil#mapListToObjList(List, Class) ClassUtil.mapListToObjList(List, Class)
+     */
+    List&lt;Map&lt;String, Object&gt;&gt; listMap(@Param("columns") List&lt;String&gt; columns, @Param("query") Query query);
+</pre></div></div>
+<ul class="task-list">
+<li>第一个参数指定需要返回的列名，如："username","add_time as addTime"</li>
+<li>第二个参数是查询条件</li>
+</ul>
+
+<p>具体例子：</p>
+<div class="white"><div class="highlight"><pre>Query query = new Query();
+query.eq().eq().. // 添加条件
+
+List&lt;Map&lt;String, Object&gt;&gt; listMap = limitAppConfigMapper.listMap(Arrays.asList(
+                "t.id"
+                , "t.app as app"
+                , "t.name as username"
+                , "t.version"                
+        ), query);
+        // 便捷工具，将List&lt;Map&gt;转成List&lt;pojo&gt;        
+        List&lt;LimitAppConfigVo&gt; retList = MyBeanUtil.mapListToObjList(listMap, LimitAppConfigVo.class);
+</pre></div></div>
+<p>可结合此方法实现数据权限功能</p>
+</div><div class='title'>fastmybatis开发文档</div><div class='content'><h1><a class="anchor" id="fastmybatis开发文档_1" href="#fastmybatis开发文档_1"></a>fastmybatis开发文档</h1>
+<p>fastmybatis是一个mybatis开发框架，其宗旨为：简单、快速、有效。</p>
+
+<ul class="task-list">
+<li>零配置快速上手</li>
+<li>无需编写xml文件即可完成CRUD操作</li>
+<li>支持mysql，sqlserver，oracle，postgresql,sqlite</li>
+<li>支持自定义sql，sql语句可写在注解中或xml中</li>
+<li>支持与spring-boot集成，依赖starter即可</li>
+<li>轻量级，无侵入性，是官方mybatis的一种扩展</li>
+</ul>
+<h1><a class="anchor" id="快速开始-springboot-_1" href="#快速开始-springboot-_1"></a>快速开始（springboot）</h1>
+<ul class="task-list">
+<li>新建一个springboot项目</li>
+<li>pom.xml添加fastmybatis-spring-boot-starter</li>
+</ul>
+<div class="white"><div class="highlight"><pre>&lt;dependency&gt;
+    &lt;groupId&gt;net.oschina.durcframework&lt;/groupId&gt;
+    &lt;artifactId&gt;fastmybatis-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;最新版本（见changelog.md）&lt;/version&gt;
+&lt;/dependency&gt;
+</pre></div></div>
+<ul class="task-list">
+<li>假设数据库有张<code>t_user</code>表，添加对应的实体类<code>TUser.java</code>和Mapper<code>TUserMapper.java</code>(可用fastmybatis-generator来生成)</li>
+<li>在<code>application.propertis</code>中配置数据库连接</li>
+<li>编写测试用例</li>
+</ul>
+<div class="white"><div class="highlight"><pre>@Autowired
+TUserMapper mapper;
+
+// 根据主键查询
+@Test
+public void testGetById() {
+    TUser user = mapper.getById(3);
+    System.out.println(user);
+}
+</pre></div></div><h1><a class="anchor" id="查询_1" href="#查询_1"></a>查询</h1>
+<p>本小节主要讲解fastmybatis的查询功能。fastmybatis提供丰富的查询方式，满足日常查询所需。</p>
+<h2><a class="anchor" id="分页查询_1" href="#分页查询_1"></a>分页查询</h2><h3><a class="anchor" id="方式1_4" href="#方式1_4"></a>方式1</h3>
+<p>前端传递两个分页参数pageIndex，pageSize</p>
+<div class="white"><div class="highlight"><pre>    // http://localhost:8080/page1?pageIndex=1&amp;pageSize=10
+    @GetMapping("page1")
+    public List&lt;TUser&gt; page1(int pageIndex,int pageSize) {
+        Query query = new Query();
+        query.page(pageIndex, pageSize);
+        List&lt;TUser&gt; list = mapper.list(query);
+        return list;
+    }
+</pre></div></div><h3><a class="anchor" id="方式2_4" href="#方式2_4"></a>方式2</h3>
+<p>PageParam里面封装了pageIndex，pageSize参数</p>
+<div class="white"><div class="highlight"><pre>    // http://localhost:8080/page2?pageIndex=1&amp;pageSize=10
+    @GetMapping("page2")
+    public List&lt;TUser&gt; page2(PageParam param) {
+        Query query = param.toQuery();
+        List&lt;TUser&gt; list = mapper.list(query);
+        return list;
+    }
+</pre></div></div><h3><a class="anchor" id="返回结果集和总记录数_1" href="#返回结果集和总记录数_1"></a>返回结果集和总记录数</h3>
+<p>方式1和方式2只能查询结果集，通常我们查询还需返回记录总数并返回给前端，fastmybatis的处理方式如下：</p>
+<div class="white"><div class="highlight"><pre>// http://localhost:8080/page3?pageIndex=1&amp;pageSize=10
+    @GetMapping("page3")
+    public Map&lt;String,Object&gt; page3(PageParam param) {
+        Query query = param.toQuery();
+        List&lt;TUser&gt; list = mapper.list(query);
+        long total = mapper.getCount(query);
+
+        Map&lt;String,Object&gt; result = new HashMap&lt;String, Object&gt;();
+        result.put("list", list);
+        result.put("total", total);
+
+        return result;
+    }
+</pre></div></div>
+<p>fastmybatis提供一种更简洁的方式来处理：</p>
+<div class="white"><div class="highlight"><pre>// http://localhost:8080/page4?pageIndex=1&amp;pageSize=10
+    @GetMapping("page4")
+    public PageInfo&lt;TUser&gt; page4(PageParam param) {
+        PageInfo&lt;TUser&gt; pageInfo = MapperUtil.query(mapper, query);
+        return result;
+    }
+</pre></div></div>
+<p>PageInfo里面包含了List，total信息，还包含了一些额外信息，完整数据如下：</p>
+<div class="white"><div class="highlight"><pre>{
+    "currentPageIndex": 1, // 当前页
+    "firstPageIndex": 1, // 首页
+    "lastPageIndex": 2, // 尾页
+    "list": [     // 结果集
+        {},
+        {}
+    ],
+    "nextPageIndex": 2, // 下一页
+    "pageCount": 2, // 总页数
+    "pageIndex": 1, // 当前页
+    "pageSize": 10, // 每页记录数
+    "prePageIndex": 1, // 上一页
+    "start": 0,
+    "total": 20 // 总记录数
+}
+</pre></div></div><h2><a class="anchor" id="根据参数字段查询_1" href="#根据参数字段查询_1"></a>根据参数字段查询</h2><h3><a class="anchor" id="查询姓名为张三的用户_1" href="#查询姓名为张三的用户_1"></a>查询姓名为张三的用户</h3><div class="white"><div class="highlight"><pre>// http://localhost:8080/sch?username=张三
+    @GetMapping("sch")
+    public List&lt;TUser&gt; sch(String username) {
+        Query query = new Query();
+        query.eq("username", username);
+        List&lt;TUser&gt; list = mapper.list(query);
+        return list;
+    }
+</pre></div></div><h3><a class="anchor" id="查询姓名为张三并且拥有的钱大于100块_1" href="#查询姓名为张三并且拥有的钱大于100块_1"></a>查询姓名为张三并且拥有的钱大于100块</h3><div class="white"><div class="highlight"><pre>// http://localhost:8080/sch2?username=张三
+    @GetMapping("sch2")
+    public List&lt;TUser&gt; sch2(String username) {
+        Query query = new Query();
+        query.eq("username", username).gt("money", 100);
+        List&lt;TUser&gt; list = mapper.list(query);
+        return list;
+    }
+</pre></div></div><h3><a class="anchor" id="查询姓名为张三并带分页_1" href="#查询姓名为张三并带分页_1"></a>查询姓名为张三并带分页</h3><div class="white"><div class="highlight"><pre>// http://localhost:8080/sch3?username=张三&amp;pageIndex=1&amp;pageSize=5
+    @GetMapping("sch3")
+    public List&lt;TUser&gt; sch3(String username,PageParam param) {
+        Query query = param.toQuery();
+        query.eq("username", username);
+        List&lt;TUser&gt; list = mapper.list(query);
+        return list;
+    }
+</pre></div></div><h3><a class="anchor" id="查询钱最多的前三名_1" href="#查询钱最多的前三名_1"></a>查询钱最多的前三名</h3><div class="white"><div class="highlight"><pre>// http://localhost:8080/sch4
+    @GetMapping("sch4")
+    public List&lt;TUser&gt; sch4() {
+        Query query = new Query();
+        query.orderby("money", Sort.DESC) // 按金额降序
+            .page(1, 3);
+        List&lt;TUser&gt; list = mapper.list(query);
+        return list;
+    }
+</pre></div></div><h3><a class="anchor" id="将参数放在对象中查询_1" href="#将参数放在对象中查询_1"></a>将参数放在对象中查询</h3><div class="white"><div class="highlight"><pre>// http://localhost:8080/sch5?username=张三
+    @GetMapping("sch5")
+    public List&lt;TUser&gt; sch5(UserParam userParam) {
+        Query query = userParam.toQuery();
+        query.eq("username", userParam.getUsername());
+        List&lt;TUser&gt; list = mapper.list(query);
+        return list;
+    }
+</pre></div></div>
+<p>UserParam继承PageSortParam类，表示支持分页和排序查询</p>
+<h3><a class="anchor" id="使用普通bean查询_1" href="#使用普通bean查询_1"></a>使用普通bean查询</h3>
+<p>假设有个User类如下</p>
+<div class="white"><div class="highlight"><pre>public class User {
+    private Integer id;
+    private String userName;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+}
+</pre></div></div>
+<p>我们将这个类作为查询参数,那么在springmvc中可以这样写:</p>
+<div class="white"><div class="highlight"><pre>@GetMapping(path="findUserBean.do")
+public List&lt;User&gt; findUser(User user) {
+    Query query = Query.build(user);
+    List&lt;User&gt; list = dao.find(query);
+    return list;
+}
+</pre></div></div>
+<p>Query query = Query.build(user);这句是将User中的属性转换成对应条件,假设userName的值为"jim",那么会封装成一个条件where user_name='jim'</p>
+
+<p>浏览器输入链接:<a target="_blank" href="http://localhost:8080/fastmybatis-springmvc/findUserBean.do?userName=jim">http://localhost:8080/fastmybatis-springmvc/findUserBean.do?userName=jim</a>
+后台将会执行如下SQL:</p>
+<div class="white"><div class="highlight"><pre>SELECT id,user_name FROM user t WHERE t.user_name = ?
+</pre></div></div>
+<p>?的值为jim</p>
+<h3><a class="anchor" id="-condition注解_1" href="#-condition注解_1"></a>@Condition注解</h3>
+<p>@Condition注解用来强化查询，有了这个注解可以生成各种查询条件。</p>
+
+<p>@Condition注解有三个属性：</p>
+
+<ul class="task-list">
+<li>joint：表达式之间的连接符,AND|OR,默认AND</li>
+<li>column：数据库字段名，可选</li>
+<li>operator：连接符枚举，存放了等于、大于、小于等连接符</li>
+</ul>
+
+<p>如果要查询id大于2的用户只需在get方法上加上一个@Condition注解即可:</p>
+<div class="white"><div class="highlight"><pre>@Condition(operator=Operator.gt)
+public Integer getId() {
+    return this.id;
+}
+</pre></div></div>
+<p>这样，当id有值时，会封装成一个<strong>where id&gt;2</strong>的条件</p>
+
+<ul class="task-list">
+<li>需要注意的是，如果不指定column属性，系统会默认取get方法中属性名，然后转换成数据库字段名。如果需要指定数据库字段名的话，可以使用@Condition的column属性。</li>
+</ul>
+
+<p>public Integer get++UserName++() {
+    return this.userName;
+}</p>
+
+<p>这种情况下会取下划线部分字段，然后转换成数据库字段名。</p>
+<div class="white"><div class="highlight"><pre>@Condition(column="username") // 显示指定字段名
+public Integer getUserName() {
+    return this.userName;
+}
+</pre></div></div>
+<p>使用@Condition可以生产更加灵活的条件查询,比如需要查询日期为2017-12-1~2017-12-10日的记录,我们可以这样写:</p>
+<div class="white"><div class="highlight"><pre>@Condition(column="add_date",operator=Operator.ge)
+public Date getStartDate() {
+    return this.startDate;
+}
+
+@Condition(column="add_date",operator=Operator.lt)
+public Date getEndDate() {
+    return this.endDate;
+}
+</pre></div></div>
+<p>转换成SQL语句:</p>
+<div class="white"><div class="highlight"><pre>t.add_date&gt;='2017-12-1' AND t.add_date&lt;'2017-12-10'
+</pre></div></div><h4><a class="anchor" id="in查询_1" href="#in查询_1"></a>IN查询</h4>
+<p>假设前端页面传来多个值比如checkbox勾选多个id=[1,2],那么我们在User类里面可以用Integer[]或List来接收.</p>
+<div class="white"><div class="highlight"><pre>private Integer[] idArr;
+
+public void setIdArr(Integer[] idArr) {this.idArr = idArr;}
+
+@Condition(column="id")
+public Integer[] getIdArr() {return this.idArr;}
+</pre></div></div>
+<p>这样会生成where id IN(1,2)条件。</p>
+<h2><a class="anchor" id="排序查询_1" href="#排序查询_1"></a>排序查询</h2>
+<p>// 根据添加时间倒序</p>
+<div class="white"><div class="highlight"><pre>Query query = new Query();
+query.orderby("create_time",Sort.DESC);
+dao.find(query);
+</pre></div></div><h2><a class="anchor" id="多表关联查询_1" href="#多表关联查询_1"></a>多表关联查询</h2>
+<p>多表关联查询使用的地方很多，比如需要关联第二张表，获取第二张表的几个字段，然后返回给前端。</p>
+
+<p>fastmybatis的用法如下：</p>
+
+<p>假如我们需要关联第二张表<code>user_info</code>，筛选出user_info中的城市为杭州的数据。</p>
+<div class="white"><div class="highlight"><pre>Query query = new Query()
+        // 左连接查询,主表的alias默认为t
+        .join("LEFT JOIN user_info t2 ON t.id = t2.user_id").page(1, 5)
+        .eq("t2.city","杭州");
+
+List&lt;TUser&gt; list = mapper.list(query);
+
+System.out.println("==============");
+for (TUser user : list) {
+    System.out.println(user.getId() + " " + user.getUsername());
+}
+System.out.println("==============");
+</pre></div></div><h3><a class="anchor" id="多表关联返回指定字段_1" href="#多表关联返回指定字段_1"></a>多表关联返回指定字段</h3>
+<p>有时候不需要全部字段，需要取表1中的几个字段，然后取表2中的几个字段，fastmybatis实现方式如下：</p>
+<div class="white"><div class="highlight"><pre>Query query = new Query();
+// 左连接查询,主表的alias默认为t
+query.join("LEFT JOIN user_info t2 ON t.id = t2.user_id");
+// 指定返回字段
+List&lt;String&gt; column = Arrays.asList("t2.user_id as userId", "t.username", "t2.city");
+// 查询结果返回到map中
+List&lt;Map&lt;String, Object&gt;&gt; mapList = mapper.listMap(column, query);
+// 再将map转换成实体bean
+List&lt;UserInfoVo&gt; list = MyBeanUtil.mapListToObjList(mapList, UserInfoVo.class);
+</pre></div></div>
+<p>执行的SQL语句对应如下：</p>
+<div class="white"><div class="highlight"><pre>SELECT t2.user_id as userId , t.username , t2.city
+FROM `t_user` t 
+LEFT JOIN user_info t2 ON t.id = t2.user_id
+</pre></div></div><h2><a class="anchor" id="使用-select查询_1" href="#使用-select查询_1"></a>使用@Select查询</h2>
+<p>@Select注解是mybatis官方提供的一个功能，fastmybatis可以理解为是官方的一种扩展，因此同样支持此功能。
+在Mapper中添加如下代码：</p>
+<div class="white"><div class="highlight"><pre>@Select("select * from t_user where id=#{id}")
+TUser selectById(@Param("id") int id);
+</pre></div></div>
+<p>编写测试用例</p>
+<div class="white"><div class="highlight"><pre>@Test
+public void testSelectById() {
+    TUser user = dao.selectById(3);
+
+    System.out.println(user.getUsername());
+}
+</pre></div></div>
+<p>对于简单的SQL，可以用这种方式实现。除了@Select之外，还有<a href="/update" class="gfm gfm-team_member ">@JohnnyStrong </a>，<a href="/insert" class="gfm gfm-team_member ">@难得糊涂2015 </a>，<a href="/delete" class="gfm gfm-team_member ">@删除 </a>，这里就不多做演示了。</p>
+<h2><a class="anchor" id="query类详解_1" href="#query类详解_1"></a>Query类详解</h2>
+<p>Query是一个查询参数类，配合Mapper一起使用。</p>
+<h3><a class="anchor" id="参数介绍_1" href="#参数介绍_1"></a>参数介绍</h3>
+<p>Query里面封装了一系列查询参数，主要分为以下几类：</p>
+
+<ul class="task-list">
+<li>分页参数：设置分页</li>
+<li>排序参数：设置排序字段</li>
+<li>条件参数：设置查询条件</li>
+<li>字段参数：可返回指定字段</li>
+</ul>
+
+<p>下面逐个讲解每个参数的用法。</p>
+<h3><a class="anchor" id="分页参数_1" href="#分页参数_1"></a>分页参数</h3>
+<p>一般来说分页的使用比较简单，通常是两个参数，
+pageIndex：当前页索引，pageSize：每页几条数据。
+Query类使用<strong>page(pageIdnex, pageSize)</strong>方法来设置。
+假如我们要查询第二页，每页10条数据，代码可以这样写：</p>
+<div class="white"><div class="highlight"><pre>Query query = new Query();
+query.page(2, 10);
+List&lt;User&gt; list = dao.find(query);
+</pre></div></div>
+<p>如果要实现不规则分页，可以这样写：</p>
+<div class="white"><div class="highlight"><pre>Query query = new Query();
+query.limit(3, 5) // 对应mysql：limit 3,5
+</pre></div></div><h3><a class="anchor" id="排序参数_1" href="#排序参数_1"></a>排序参数</h3><div class="white"><div class="highlight"><pre>orderby(String sortname, Sort sort)
+</pre></div></div>
+<p>其中sortname为数据库字段，非javaBean属性</p>
+
+<ul class="task-list">
+<li>orderby(String sortname, Sort sort)则可以指定排序方式，Sort为排序方式枚举
+假如要按照添加时间倒序，可以这样写：</li>
+</ul>
+<div class="white"><div class="highlight"><pre>Query query = new Query();
+query.orderby("create_time",Sort.DESC);
+mapper.list(query);
+</pre></div></div>
+<p>添加多个排序字段可以在后面追加：</p>
+<div class="white"><div class="highlight"><pre>query.orderby("create_time",Sort.DESC).orderby("id",Sort.ASC);
+</pre></div></div><h3><a class="anchor" id="条件参数_1" href="#条件参数_1"></a>条件参数</h3>
+<p>条件参数是用的最多一个，因为在查询中往往需要加入各种条件。
+fastmybatis在条件查询上面做了一些封装，这里不做太多讲解，只讲下基本的用法，以后会单独开一篇文章来介绍。感兴趣的同学可以自行查看源码，也不难理解。</p>
+
+<p>条件参数使用非常简单，Query对象封装一系列常用条件查询。</p>
+
+<ul class="task-list">
+<li>等值查询eq(String columnName, Object value)，columnName为数据库字段名，value为查询的值
+假设我们要查询姓名为张三的用户，可以这样写：</li>
+</ul>
+<div class="white"><div class="highlight"><pre>Query query = new Query();
+query.eq("username","张三");
+List&lt;User&gt; list = mapper.list(query);
+</pre></div></div>
+<p>通过方法名即可知道eq表示等于'='，同理lt表示小于&lt;,gt表示大于&gt;</p>
+
+<table>
+
+<tr>
+<th>查询方式</th>
+<th>说明</th>
+</tr>
+
+
+<tr>
+<td>eq</td>
+<td>等于=</td>
+</tr>
+<tr>
+<td>gt</td>
+<td>大于&gt;</td>
+</tr>
+<tr>
+<td>lt</td>
+<td>小于&lt;</td>
+</tr>
+<tr>
+<td>ge</td>
+<td>大于等于&gt;=</td>
+</tr>
+<tr>
+<td>le</td>
+<td>小于等于&lt;=</td>
+</tr>
+<tr>
+<td>notEq</td>
+<td>不等于&lt;&gt;</td>
+</tr>
+<tr>
+<td>like</td>
+<td>模糊查询</td>
+</tr>
+<tr>
+<td>in</td>
+<td>in()查询</td>
+</tr>
+<tr>
+<td>notIn</td>
+<td>not in()查询</td>
+</tr>
+<tr>
+<td>isNull</td>
+<td>NULL值查询</td>
+</tr>
+<tr>
+<td>notNull</td>
+<td>IS NOT NULL</td>
+</tr>
+<tr>
+<td>notEmpty</td>
+<td>字段不为空，非NULL且有内容</td>
+</tr>
+<tr>
+<td>isEmpty</td>
+<td>字段为NULL或者为''</td>
+</tr>
+
+</table>
+
+<p>如果上述方法还不能满足查询需求的话，我们可以使用自定sql的方式来编写查询条件，方法为：</p>
+<div class="white"><div class="highlight"><pre>Query query = new Query();
+query.sql(" username='Jim' OR username='Tom'");
+</pre></div></div>
+<p><strong>注意</strong>：sql()方法不会处理sql注入问题，因此尽量少用。</p>
+<h1><a class="anchor" id="自定义sql_3" href="#自定义sql_3"></a>自定义SQL</h1><h2><a class="anchor" id="方式1_5" href="#方式1_5"></a>方式1</h2>
+<p>直接写在Mapper.java中</p>
+<div class="white"><div class="highlight"><pre>public interface TUserMapper extends CrudMapper&lt;TUser, Integer&gt; {
+
+    // 自定义sql，官方自带，不需要写xml
+    /**
+     * 修改用户名
+     * @param id
+     * @param username
+     * @return 返回影响行数
+     */
+    @Update("update t_user set username = #{username} where id = #{id}")
+    int updateById(@Param("id") int id, @Param("username") String username);
+
+}
+</pre></div></div>
+<p>简单SQL可采用这种形式。</p>
+<h2><a class="anchor" id="方式2_5" href="#方式2_5"></a>方式2</h2>
+<p>fastmybatis提供的Mapper已经满足大部分的操作需求，但是有些复杂的sql语句还是需要写在xml文件中。fastmybatis同样支持将sql语句写在xml中，具体配置如下：</p>
+
+<ul class="task-list">
+<li>在application.properties添加一句，指定xml文件存放路径</li>
+</ul>
+<div class="white"><div class="highlight"><pre>mybatis.mapper-locations=classpath:/mybatis/mapper/*.xml
+</pre></div></div>
+<ul class="task-list">
+<li>在resources/mybatis/mapper目录下新建一个xml文件TUserMapper.xml，内容如下：</li>
+</ul>
+<div class="white"><div class="highlight"><pre><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="cp">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+<span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">"com.mayapp.mapper.TUserMapper"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">"selectByName"</span> <span class="na">parameterType=</span><span class="s">"String"</span> <span class="na">resultMap=</span><span class="s">"baseResultMap"</span><span class="nt">&gt;</span>
+        select * from t_user t where t.username = #{username} limit 1
+    <span class="nt">&lt;/select&gt;</span>
+
+<span class="nt">&lt;/mapper&gt;</span>
+</pre></div></div>
+<p>这个xml文件跟其它的mybatis配置文件一样，baseResultMap没有看到定义，但是确实存在，因为这个是fastmybatis提供的一个内置resultMap。</p>
+
+<ul class="task-list">
+<li>
+<p>在TUseroMapper.java中添加：</p>
+<div class="white"><div class="highlight"><pre><span class="n">TUser</span> <span class="nf">selectByName</span><span class="o">(</span><span class="nd">@Param</span><span class="o">(</span><span class="s">"username"</span><span class="o">)</span><span class="n">String</span> <span class="n">username</span><span class="o">);</span>
+</pre></div></div>
+</li>
+<li><p>编写单元测试用例</p></li>
+</ul>
+<div class="white"><div class="highlight"><pre><span class="nd">@Test</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSelectByName</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">TUser</span> <span class="n">user</span> <span class="o">=</span> <span class="n">dao</span><span class="o">.</span><span class="na">selectByName</span><span class="o">(</span><span class="s">"张三"</span><span class="o">);</span>
+
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">getUsername</span><span class="o">());</span>
+<span class="o">}</span>
+
+</pre></div></div><h3><a class="anchor" id="多文件同一个namespace_1" href="#多文件同一个namespace_1"></a>多文件同一个namespace</h3>
+<p>在以往的开发过程中，一个Mapper对应一个xml文件（namespace）。如果多人同时在一个xml中写SQL的话会造成各种冲突（虽然能够最终被解决）。</p>
+
+<p>fastmybatis打破这种常规，允许不同的xml文件定义相同的namespace，程序启动时会自动把他们的内容合并到同一个文件当中去。</p>
+
+<ul class="task-list">
+<li>张三的UserMapper_zs.xml</li>
+</ul>
+<div class="white"><div class="highlight"><pre><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="cp">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+<span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">"com.mayapp.mapper.TUserMapper"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">"selectByName"</span> <span class="na">parameterType=</span><span class="s">"String"</span> <span class="na">resultMap=</span><span class="s">"baseResultMap"</span><span class="nt">&gt;</span>
+        select * from t_user t where t.username = #{username} limit 1
+    <span class="nt">&lt;/select&gt;</span>
+
+<span class="nt">&lt;/mapper&gt;</span>
+</pre></div></div>
+<ul class="task-list">
+<li>李四的UserMapper_ls.xml</li>
+</ul>
+<div class="white"><div class="highlight"><pre><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="cp">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+<span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">"com.mayapp.mapper.TUserMapper"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">"updateUser"</span> <span class="na">parameterType=</span><span class="s">"String"</span> <span class="na">resultMap=</span><span class="s">"baseResultMap"</span><span class="nt">&gt;</span>
+        update t_user set username = #{username} where id=#{id}
+    <span class="nt">&lt;/select&gt;</span>
+
+<span class="nt">&lt;/mapper&gt;</span>
+</pre></div></div>
+<p>最终会合并成</p>
+<div class="white"><div class="highlight"><pre><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="cp">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+<span class="nt">&lt;mapper</span> <span class="na">namespace=</span><span class="s">"com.mayapp.mapper.TUserMapper"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- 张三部分 --&gt;</span>
+    <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">"selectByName"</span> <span class="na">parameterType=</span><span class="s">"String"</span> <span class="na">resultMap=</span><span class="s">"baseResultMap"</span><span class="nt">&gt;</span>
+        select * from t_user t where t.username = #{username} limit 1
+    <span class="nt">&lt;/select&gt;</span>
+
+    <span class="c">&lt;!-- 李四部分 --&gt;</span>
+    <span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">"updateUser"</span> <span class="na">parameterType=</span><span class="s">"String"</span> <span class="na">resultMap=</span><span class="s">"baseResultMap"</span><span class="nt">&gt;</span>
+        update t_user set username = #{username} where id=#{id}
+    <span class="nt">&lt;/select&gt;</span>
+
+<span class="nt">&lt;/mapper&gt;</span>
+</pre></div></div>
+<p>这样也体现了开闭原则，即新增一个功能只需要新增一个文件就行，不需要修改原来的文件。</p>
+
+<p>如果SQL写多了还可以把它们进行分类，放到不同的xml中，便于管理。</p>
+
+<p><strong>注：</strong>合并动作是在启动时进行的，并不会生成一个真实的文件。</p>
+<h1><a class="anchor" id="字段自动填充_1" href="#字段自动填充_1"></a>字段自动填充</h1><h2><a class="anchor" id="填充器设置_1" href="#填充器设置_1"></a>填充器设置</h2>
+<p>假设数据库表里面有两个时间字段gmt_create,gmt_update。</p>
+
+<p>当进行insert操作时gmt_create，gmt_update字段需要更新。当update时，gmt_update字段需要更新。</p>
+
+<p>通常的做法是通过Entity手动设置：</p>
+<div class="white"><div class="highlight"><pre>User user = new User();
+user.setGmtCreate(new Date());
+user.setGmtUpdate(new Date());
+</pre></div></div>
+<p>因为表设计的时候大部分都有这两个字段，所以对每张表都进行手动设置的话很容易错加、漏加。
+fastmybatis提供了两个辅助类DateFillInsert和DateFillUpdate，用来处理添加修改时的时间字段自动填充。配置了这两个类之后，时间字段将会自动设置。</p>
+
+<p>配置方式如下：</p>
+<div class="white"><div class="highlight"><pre>EasymybatisConfig config = new EasymybatisConfig();
+
+    config.setFills(Arrays.asList(
+            new DateFillInsert()
+            ,new DateFillUpdate()
+            ));
+</pre></div></div>
+<p>在spring的xml中配置如下:</p>
+<div class="white"><div class="highlight"><pre>&lt;bean id="sqlSessionFactory"
+        class="com.gitee.fastmybatis.core.ext.SqlSessionFactoryBeanExt"&gt;
+        &lt;property name="dataSource" ref="dataSource" /&gt;
+        &lt;property name="configLocation"&gt;
+            &lt;value&gt;classpath:mybatis/mybatisConfig.xml&lt;/value&gt;
+        &lt;/property&gt;
+        &lt;property name="mapperLocations"&gt;
+            &lt;list&gt;
+                &lt;value&gt;classpath:mybatis/mapper/*.xml&lt;/value&gt;
+            &lt;/list&gt;
+        &lt;/property&gt;
+
+        &lt;!-- 以下是附加属性 --&gt;
+
+        &lt;!-- dao所在的包名,跟MapperScannerConfigurer的basePackage一致 
+            多个用;隔开
+        --&gt;
+        &lt;property name="basePackage" value="com.myapp.dao" /&gt;
+        &lt;property name="config"&gt;
+            &lt;bean class="com.gitee.fastmybatis.core.EasymybatisConfig"&gt;
+                                &lt;!-- 定义填充器 --&gt;
+                &lt;property name="fills"&gt;
+                    &lt;list&gt;
+                                        &lt;bean class="com.gitee.fastmybatis.core.support.DateFillInsert"/&gt;
+                                        &lt;bean class="com.gitee.fastmybatis.core.support.DateFillUpdate"/&gt;
+                    &lt;/list&gt;
+                &lt;/property&gt;
+            &lt;/bean&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+</pre></div></div>
+<p>springboot中可以这样定义:</p>
+
+<p>在application.properties中添加：</p>
+<div class="white"><div class="highlight"><pre>mybatis.fill.com.gitee.fastmybatis.core.support.DateFillInsert=
+mybatis.fill.com.gitee.fastmybatis.core.support.DateFillUpdate=
+</pre></div></div>
+<p>如果要指定字段名，可以写成：</p>
+<div class="white"><div class="highlight"><pre>mybatis.fill.com.gitee.fastmybatis.core.support.DateFillInsert=add_time
+</pre></div></div><h2><a class="anchor" id="自定义填充器_1" href="#自定义填充器_1"></a>自定义填充器</h2>
+<p>除了使用fastmybatis默认提供的填充之外，我们还可以自定义填充。</p>
+
+<p>自定义填充类要继承FillHandler类。
+ 表示填充字段类型，如Date，String，BigDecimal，Boolean。</p>
+<h3><a class="anchor" id="实战-springboot-_1" href="#实战-springboot-_1"></a>实战(springboot)</h3>
+<p>现在有个remark字段，需要在insert时初始化为“备注默认内容”，新建一个StringRemarkFill类如下：</p>
+<div class="white"><div class="highlight"><pre>public class StringRemarkFill extends FillHandler&lt;String&gt; {
+
+    @Override
+    public String getColumnName() {
+        return "remark";
+    }
+
+    @Override
+    public FillType getFillType() {
+        return FillType.INSERT;
+    }
+
+    @Override
+    protected Object getFillValue(String defaultValue) {
+        return "备注默认内容";
+    }
+
+}
+</pre></div></div>
+<p>StringRemarkFill类中有三个重写方法：</p>
+
+<ul class="task-list">
+<li>getColumnName() ： 指定表字段名</li>
+<li>getFillType() ： 填充方式，FillType.INSERT:仅insert时填充； FillType.UPDATE：insert，update时填充</li>
+<li>getFillValue(String defaultValue) ：返回填充内容</li>
+</ul>
+
+<p>然后在application.properties中添加：</p>
+<div class="white"><div class="highlight"><pre>mybatis.fill.com.xx.StringRemarkFill=
+</pre></div></div>
+<p>这样就配置完毕了，调用dao.save(user);时会自动填充remark字段。</p>
+<h2><a class="anchor" id="指定目标类_1" href="#指定目标类_1"></a>指定目标类</h2>
+<p>上面说到StringRemarkFill填充器，它作用在所有实体类上，也就是说实体类如果有remark字段都会自动填充。这样显然是不合理的，解决办法是指定特定的实体类。只要重写FillHandler类的getTargetEntityClasses()方法即可。</p>
+<div class="white"><div class="highlight"><pre>@Override
+public Class&lt;?&gt;[] getTargetEntityClasses() {
+    return new Class&lt;?&gt;[] { TUser.class };
+}
+</pre></div></div>
+<p>这样就表示作用在TUser类上，多个类可以追加。最终代码如下：</p>
+<div class="white"><div class="highlight"><pre>public class StringRemarkFill extends FillHandler&lt;String&gt; {
+
+    @Override
+    public String getColumnName() {
+        return "remark";
+    }
+
+    @Override
+    public Class&lt;?&gt;[] getTargetEntityClasses() {
+        return new Class&lt;?&gt;[] { TUser.class }; // 只作用在TUser类上
+    }
+
+    @Override
+    public FillType getFillType() {
+        return FillType.INSERT;
+    }
+
+    @Override
+    protected Object getFillValue(String defaultValue) {
+        return "备注默认内容"; // insert时填充的内容
+    }
+
+}
+</pre></div></div>
+<p>关于自动填充的原理是基于mybatis的TypeHandler实现的，这里就不多做介绍了。感兴趣的同学可以查看FillHandler源码。</p>
+</div>
+          </div>
+        </div>
+      </div>
+      </div>
+  </div>
+<!-- ***********************************************************内容分割线****************************************************************** -->
+                </article>
+            </div>
+        </div>
+    <script src="./static/jquery-1.10.2.min.js"></script>
+    <script src="./static/jquery.ztree.all-3.5.min.js"></script>
+    <script src="./static/jquery.ztree_toc.min.js"></script>
+    <script type="text/javascript">
+    var title = document.title;
+        $(document).ready(function(){
+            $('#tree').ztree_toc({
+            	_header_nodes: [{ id:1, pId:0, name:title,open:false}],  // 第一个节点
+            	ztreeSetting: {
+            		view: {
+        				dblClickExpand: false,
+        				showLine: true,
+        				showIcon: false,
+        				selectedMulti: false
+        			},
+        			data: {
+        				simpleData: {
+        					enable: true,
+        					idKey : "id",
+        					pIdKey: "pId"
+        					// rootPId: "0"
+        				}
+        			},
+            		callback: {
+        				beforeClick: function(treeId, treeNode) {
+        					$('a').removeClass('curSelectedNode');
+        					if(treeNode.id == 1){
+        						$('body').scrollTop(0);
+        					}
+        					if($.fn.ztree_toc.defaults.is_highlight_selected_line == true) {
+        						$('#' + treeNode.id).css('color' ,'red').fadeOut("slow" ,function() {
+        							$(this).show().css('color','black');
+        						});
+        					}
+        				}
+        			}            		
+            	},
+                is_auto_number:true, // 菜单是否显示编号，如果markdown标题没有数字标号可以设为true
+                documment_selector:'.markdown-body',
+                is_expand_all: true // 菜单全部展开
+            });
+            // 代码高亮
+            $('.highlight').each(function(i, block) {
+          	    hljs.highlightBlock(block);
+          	});
+        });
+    </script>
+    </body>
+</html>
