@@ -223,6 +223,5 @@ Q群328419269
 
 # 相关文档
 
-- [自定义SQL](https://gitee.com/durcframework/fastmybatis/wikis/%E8%87%AA%E5%AE%9A%E4%B9%89SQL?sort_id=441600)
-- [指定返回字段](https://gitee.com/durcframework/fastmybatis/wikis/%E6%8C%87%E5%AE%9A%E8%BF%94%E5%9B%9E%E5%AD%97%E6%AE%B5?sort_id=551744)
+- [开发文档](https://durcframework.gitee.io/fastmybatis/)
 - [fastmybatis与MyBatis generator对比](https://gitee.com/durcframework/fastmybatis/wikis/pages?title=fastmybatis%E4%B8%8EMyBatis%20generator%E5%AF%B9%E6%AF%94&parent=)
