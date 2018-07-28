@@ -66,17 +66,6 @@
 		<property name="basePackage" value="com.myapp.mapper" />
 		<property name="config">
 			<bean class="com.gitee.fastmybatis.core.FastmybatisConfig">
-				<!-- 
-				/* 驼峰转下划线形式，默认是true
-				 开启后java字段映射成数据库字段将自动转成下划线形式
-				 如：userAge -> user_age
-				 如果数据库设计完全遵循下划线形式，可以启用
-				 这样可以省略Entity中的注解，@Table，@Column都可以不用，只留
-				@Id
-				@GeneratedValue 
-				参见：UserInfo.java
-				*/-->
-				<property name="camel2underline" value="true"/>
 				<property name="fills">
 				    <list>
 				        <bean class="com.gitee.fastmybatis.core.support.DateFillUpdate">
