@@ -3,6 +3,8 @@ package com.gitee.fastmybatis.generator.generator;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.gitee.fastmybatis.generator.entity.DataBaseConfig;
 import com.gitee.fastmybatis.generator.util.FieldUtil;
 import com.gitee.fastmybatis.generator.util.UUIDUtil;
@@ -52,7 +54,12 @@ public class TableDefinition {
 	 * @return
 	 */
 	public String getJavaBeanNameLF(){
+		// 表名
 		String tableName = getTableName();
+		
+		tableName = this.removeTablePrefix(tableName);
+		tableName = this.removeTableSuffix(tableName);
+		
 		tableName = FieldUtil.underlineFilter(tableName);
 		// 去掉"."，sqlserver会返回schema.tableName形式
 		boolean showSchema = dataBaseConfig.isShowSchema();
@@ -63,6 +70,28 @@ public class TableDefinition {
 			tableName = FieldUtil.removeBeforeDot(tableName);
 		}
 		return FieldUtil.lowerFirstLetter(tableName);
+	}
+	
+	// 删除前缀
+	private String removeTablePrefix(String tableName) {
+		String tablePrefix = (String)dataBaseConfig.getParam().get("tablePrefix");
+		if(StringUtils.isNotBlank(tablePrefix)) {
+			if(tableName.startsWith(tablePrefix)) {
+				tableName = tableName.substring(tablePrefix.length());
+			}
+		}
+		return tableName;
+	}
+	
+	// 删除后缀
+	private String removeTableSuffix(String tableName) {
+		String tableSuffix = (String)dataBaseConfig.getParam().get("tableSuffix");
+		if(StringUtils.isNotBlank(tableSuffix)) {
+			if(tableName.endsWith(tableSuffix)) {
+				tableName = tableName.substring(0, tableSuffix.length() + 1);
+			}
+		}
+		return tableName;
 	}
 	
 	/**

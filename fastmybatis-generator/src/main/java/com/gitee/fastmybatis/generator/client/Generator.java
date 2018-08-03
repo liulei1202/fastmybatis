@@ -36,6 +36,9 @@ public class Generator {
 		FileUtil.deleteDir(new File(dest));
 		
 		for (TableDefinition td : allTable) {
+			if(td.getPkColumn() == null) {
+				throw new RuntimeException("表" + td.getTableName() + "没有设置主键");
+			}
 			clientParam.setTableName(td.getTableName());
 			this.generateCode(clientParam, dest);
 		}

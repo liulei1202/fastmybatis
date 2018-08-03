@@ -27,6 +27,7 @@ public class FormatUtil {
             return output.toString();
         } catch (Exception e) {
             e.printStackTrace();
+            System.err.println(input);
             return input;
         }
     }
