@@ -370,6 +370,38 @@ public class TUserMapperTest extends FastmybatisSpringbootApplicationTests {
     }
 
     /**
+     * 批量添加,兼容更多数据库版本,忽略重复行,采用union
+     *
+     * <pre>
+     * INSERT INTO `t_user` ( `username` , `state` , `isdel` , `remark` , `add_time` , `money` , `left_money` )
+     * SELECT ? , ? , ? , ? , ? , ? , ?
+     * UNION
+     * SELECT ? , ? , ? , ? , ? , ? , ?
+     * UNION
+     * SELECT ? , ? , ? , ? , ? , ? , ?
+     * </pre>
+     */
+    @Test
+    public void testInsertMultiSet() {
+        List<TUser> users = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) { // 创建3个重复对象
+            TUser user = new TUser();
+            user.setUsername("username" + 1);
+            user.setMoney(new BigDecimal(1));
+            user.setRemark("remark" + 1);
+            user.setState((byte)0);
+            user.setIsdel(false);
+            user.setAddTime(new Date());
+            user.setLeftMoney(200F);
+            users.add(user);
+        }
+
+        int i = mapper.saveMultiSet(users); // 返回成功数
+
+        System.out.println("saveMulti --> " + i);
+    }
+    /**
      * 事务回滚
      */
     @Test

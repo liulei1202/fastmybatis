@@ -259,7 +259,31 @@
         FROM dual
 		</foreach>
 	</insert>
-	
+
+	<!-- 批量保存(兼容),保存全部字段,忽略重复行 -->
+    <insert id="saveMultiSet">
+		INSERT INTO ${table.tableName}
+		(
+ #set ($i=0)
+        #foreach($column in $columns)
+            #if(!${column.isIdentityPk})
+        #if($i > 0),#end ${column.columnName}
+#set($i=$i +1)
+            #end
+        #end
+          )
+		<foreach collection="entitys" item="entity"  separator="UNION">
+        SELECT  #set ($i=0)
+        #foreach($column in $columns)
+            #if(!${column.isIdentityPk})
+         	#if($i > 0),#end ${column.mybatisInsertValuePrefix}
+         	#set($i=$i +1)
+            #end
+        #end
+        FROM dual
+		</foreach>
+	</insert>
+
 	<!-- 更新,更新全部字段 -->
     <update id="update" parameterType="${context.className}">
     UPDATE ${table.tableName}
