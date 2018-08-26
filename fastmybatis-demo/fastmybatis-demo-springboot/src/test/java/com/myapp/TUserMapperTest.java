@@ -169,6 +169,7 @@ public class TUserMapperTest extends FastmybatisSpringbootApplicationTests {
         // 添加查询条件
         query.eq("username", "张三").page(1, 2) // 分页查询，按页码分，通常使用这种。
         // .limit(start, offset) // 分页查询，这种是偏移量分页
+        // .setTotal(4);//手动设置总记录数，可选，设置后可减少一次sql请求
         ;
 
         // 分页信息

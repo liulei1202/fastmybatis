@@ -23,4 +23,16 @@ public interface Pageable {
      * @return 是否查询全部
      */
     boolean getIsQueryAll();
+
+    /**
+     * 返回总记录数
+     * @return 返回总记录数
+     */
+    int getTotal();
+
+    /**
+     * 是否设置总记录数
+     * @return 返回是否设置总记录数
+     */
+    boolean getIsSetTotal();
 }
