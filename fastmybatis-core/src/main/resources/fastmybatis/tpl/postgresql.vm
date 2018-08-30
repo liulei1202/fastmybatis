@@ -33,13 +33,13 @@
             #end
         </where>
 		<include refid="common.orderBy" />
-		<if test="!isQueryAll">
-			LIMIT #{limit} OFFSET #{start}
+		<if test="!query.isQueryAll">
+			LIMIT #{query.limit} OFFSET #{query.start}
 		</if>
 	</select>
 	
 	<!-- 查询map -->
-    <select id="listMap" parameterType="map" resultType="map">
+    <select id="listMap" resultType="map">
         SELECT 
             <foreach collection="columns" item="column" separator=",">
                 ${column}
@@ -53,7 +53,9 @@
             #end
         </where>
         <include refid="common.orderBy" />
-        <include refid="common.limit" />
+        <if test="!query.isQueryAll">
+			LIMIT #{query.limit} OFFSET #{query.start}
+		</if>
     </select>
 	
 	<!-- 根据条件查询记录数 -->

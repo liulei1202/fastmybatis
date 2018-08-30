@@ -37,7 +37,7 @@
 	</select>
 	
 	<!-- 查询map -->
-	<select id="listMap" parameterType="map" resultType="map">
+	<select id="listMap" resultType="map">
         SELECT 
             <foreach collection="columns" item="column" separator=",">
                 ${column}

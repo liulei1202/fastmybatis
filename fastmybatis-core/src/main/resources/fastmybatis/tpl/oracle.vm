@@ -39,31 +39,43 @@
                         </where>
 						<include refid="common.orderBy" />
 				) tt
-				<if test="!isQueryAll">
-				WHERE ROWNUM &lt;= (#{start}  + #{limit})
+				<if test="!query.isQueryAll">
+				WHERE ROWNUM &lt;= (#{query.start}  + #{query.limit})
 				</if>
 		) table_alias
-		<if test="!isQueryAll">
-		WHERE table_alias.rowno &gt;= (#{start}+1)
+		<if test="!query.isQueryAll">
+		WHERE table_alias.rowno &gt;= (#{query.start}+1)
 		</if>
 	</select>
 	
 	<!-- 查询map -->
-    <select id="listMap" parameterType="map" resultType="map">
-        SELECT 
-            <foreach collection="columns" item="column" separator=",">
-                ${column}
-            </foreach>
-        FROM ${table.tableName} t
-        <include refid="common.join" />
-        <where>
-            <include refid="common.condition" />
-            #if(${table.hasLogicDeleteColumn})
-              AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
-            #end
-        </where>
-        <include refid="common.orderBy" />
-        <include refid="common.limit" />
+    <select id="listMap" resultType="map">
+        SELECT *
+		FROM 
+		(
+				SELECT tt.*, ROWNUM AS rowno
+		    FROM ( 
+						SELECT 
+				            <foreach collection="columns" item="column" separator=",">
+				                ${column}
+				            </foreach>
+				        FROM ${table.tableName} t
+				        <include refid="common.join" />
+				        <where>
+				            <include refid="common.condition" />
+				            #if(${table.hasLogicDeleteColumn})
+				              AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+				            #end
+				        </where>
+				        <include refid="common.orderBy" />
+				) tt
+				<if test="!query.isQueryAll">
+				WHERE ROWNUM &lt;= (#{query.start}  + #{query.limit})
+				</if>
+		) table_alias
+		<if test="!query.isQueryAll">
+		WHERE table_alias.rowno &gt;= (#{query.start}+1)
+		</if>
     </select>
 	
 	<!-- 根据条件查询记录数 -->

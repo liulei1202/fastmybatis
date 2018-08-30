@@ -20,7 +20,7 @@
 	<!-- 根据条件查询记录 -->
 	<select id="list" parameterType="com.gitee.fastmybatis.core.query.Query"
 		resultMap="baseResultMap">
-		<if test="!isQueryAll">
+		<if test="!query.isQueryAll">
 			SELECT t0.* FROM (
 		</if>
 		SELECT row_number() over(
@@ -42,14 +42,14 @@
             </if>
             #end
         </where>
- 		<if test="!isQueryAll">
-			) t0 WHERE t0.row BETWEEN (#{start,jdbcType=INTEGER} +1) AND
-			(#{start,jdbcType=INTEGER}  + #{limit,jdbcType=INTEGER})
+ 		<if test="!query.isQueryAll">
+			) t0 WHERE t0.row BETWEEN (#{query.start,jdbcType=INTEGER} +1) AND
+			(#{query.start,jdbcType=INTEGER}  + #{query.limit,jdbcType=INTEGER})
 		</if>
 	</select>
 	
 	<!-- 查询map -->
-    <select id="listMap" parameterType="map" resultType="map">
+    <select id="listMap" resultType="map">
         SELECT 
             <foreach collection="columns" item="column" separator=",">
                 ${column}
@@ -63,7 +63,10 @@
             #end
         </where>
         <include refid="common.orderBy" />
-        <include refid="common.limit" />
+        <if test="!query.isQueryAll">
+			) t0 WHERE t0.row BETWEEN (#{query.start,jdbcType=INTEGER} +1) AND
+			(#{query.start,jdbcType=INTEGER}  + #{query.limit,jdbcType=INTEGER})
+		</if>
     </select>
 	
 	<!-- 根据条件查询记录数 -->
