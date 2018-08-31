@@ -47,7 +47,7 @@ public interface SaveMapper<Entity> extends Mapper<Entity> {
 
     /**
      * 批量保存,兼容更多的数据库版本,忽略重复行.<br>
-     * 此方式采用union的方式批量insert,如果是mysql或sqlserver2008及以上推荐saveBatch()方法.
+     * 此方式采用union的方式批量insert.
      *
      * @param entitys
      * @return 受影响行数
