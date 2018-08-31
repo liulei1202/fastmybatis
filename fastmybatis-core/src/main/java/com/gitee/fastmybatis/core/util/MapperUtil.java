@@ -101,7 +101,13 @@ public class MapperUtil {
                 list = mapper.list(query);
                 total = list.size();
             } else {
-                total = mapper.getCount(query);
+                if (query.getIsSetTotal()){
+                    //如果设置了total总记录数，直接获取该total
+                    total = query.getTotal();
+                }else {
+                    //如果没有设置total，先去count执行一下sql
+                    total = mapper.getCount(query);
+                }
                 // 如果有数据
                 if (total > 0) {
                     list = mapper.list(query);

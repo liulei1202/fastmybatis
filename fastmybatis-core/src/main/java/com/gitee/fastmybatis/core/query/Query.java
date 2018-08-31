@@ -62,7 +62,9 @@ public class Query implements Queryable {
     private int start;
     /** 分页大小 */
     private int limit;
-    
+    /** 总记录数，默认为-1，表示没有设置总记录数 */
+    private int total = -1;
+
     /** 排序信息 */
     private LinkedHashSet<String> orderInfo;
     
@@ -433,6 +435,23 @@ public class Query implements Queryable {
     @Override
     public int getStart() {
         return this.start;
+    }
+
+    @Override
+    public int getTotal() {
+        return total;
+    }
+
+    @Override
+    public boolean getIsSetTotal(){
+        if (total != -1 ){
+            return true;//不为-1，设置了总记录数
+        }
+        return false;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     @Override

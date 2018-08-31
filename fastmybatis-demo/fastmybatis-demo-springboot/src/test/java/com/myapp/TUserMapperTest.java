@@ -169,6 +169,7 @@ public class TUserMapperTest extends FastmybatisSpringbootApplicationTests {
         // 添加查询条件
         query.eq("username", "张三").page(1, 2) // 分页查询，按页码分，通常使用这种。
         // .limit(start, offset) // 分页查询，这种是偏移量分页
+        // .setTotal(4);//手动设置总记录数，可选，设置后可减少一次sql请求
         ;
 
         // 分页信息
@@ -368,6 +369,38 @@ public class TUserMapperTest extends FastmybatisSpringbootApplicationTests {
         System.out.println("saveMulti --> " + i);
     }
 
+    /**
+     * 批量添加,兼容更多数据库版本,忽略重复行,采用union
+     *
+     * <pre>
+     * INSERT INTO `t_user` ( `username` , `state` , `isdel` , `remark` , `add_time` , `money` , `left_money` )
+     * SELECT ? , ? , ? , ? , ? , ? , ?
+     * UNION
+     * SELECT ? , ? , ? , ? , ? , ? , ?
+     * UNION
+     * SELECT ? , ? , ? , ? , ? , ? , ?
+     * </pre>
+     */
+    @Test
+    public void testInsertMultiSet() {
+        List<TUser> users = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) { // 创建3个重复对象
+            TUser user = new TUser();
+            user.setUsername("username" + 1);
+            user.setMoney(new BigDecimal(1));
+            user.setRemark("remark" + 1);
+            user.setState((byte)0);
+            user.setIsdel(false);
+            user.setAddTime(new Date());
+            user.setLeftMoney(200F);
+            users.add(user);
+        }
+
+        int i = mapper.saveMultiSet(users); // 返回成功数
+
+        System.out.println("saveMulti --> " + i);
+    }
     /**
      * 事务回滚
      */
