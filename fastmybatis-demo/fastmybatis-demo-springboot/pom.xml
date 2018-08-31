@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.3.RELEASE</version>
+		<version>2.0.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -22,7 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<fastmybatis-spring-boot-starter.version>1.0.11</fastmybatis-spring-boot-starter.version>
+		<fastmybatis-spring-boot-starter.version>1.0.13</fastmybatis-spring-boot-starter.version>
 	</properties>
 
 	<dependencies>
@@ -31,17 +31,6 @@
 			<groupId>net.oschina.durcframework</groupId>
 			<artifactId>fastmybatis-spring-boot-starter</artifactId>
 			<version>${fastmybatis-spring-boot-starter.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>net.oschina.durcframework</groupId>
-				    <artifactId>fastmybatis-core</artifactId>
-				</exclusion>
-			</exclusions>			
-		</dependency>
-		<dependency>
-			<groupId>net.oschina.durcframework</groupId>
-    <artifactId>fastmybatis-core</artifactId>
-    <version>1.0.13-SNAPSHOT</version>
 		</dependency>
 		<!-- sqlserver驱动
 		<dependency>
