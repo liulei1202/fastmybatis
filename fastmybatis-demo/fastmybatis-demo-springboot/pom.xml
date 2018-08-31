@@ -31,6 +31,17 @@
 			<groupId>net.oschina.durcframework</groupId>
 			<artifactId>fastmybatis-spring-boot-starter</artifactId>
 			<version>${fastmybatis-spring-boot-starter.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>net.oschina.durcframework</groupId>
+				    <artifactId>fastmybatis-core</artifactId>
+				</exclusion>
+			</exclusions>			
+		</dependency>
+		<dependency>
+			<groupId>net.oschina.durcframework</groupId>
+    <artifactId>fastmybatis-core</artifactId>
+    <version>1.0.13-SNAPSHOT</version>
 		</dependency>
 		<!-- sqlserver驱动
 		<dependency>
