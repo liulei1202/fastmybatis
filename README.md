@@ -214,7 +214,7 @@ long total = mapper.getCount(query); // 该条件下总记录数
 - [fastmybatis-core](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-core)：框架源代码
 - [fastmybatis-demo](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-demo)：对应demo（springboot,springmvc）
 - [fastmybatis-generator](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-generator)：代码生成工具，方便生成实体类和Mapper（可生成lombok风格实体类）
-- [fastmybatis-spring-boot-autoconfigure](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-spring-boot-autoconfigure)和[fastmybatis-spring-boot-starter](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-spring-boot-starter)：springboot对应的的starter
+- [fastmybatis-spring-boot-starter](https://gitee.com/durcframework/fastmybatis/tree/master/fastmybatis-spring-boot-starter)：springboot对应的的starter
 
 
 # 意见交流
