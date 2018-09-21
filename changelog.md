@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.0.14
+
+- 代码优化（sonar）
+
 ## 1.0.13
 
 - 合并PR2，https://gitee.com/durcframework/fastmybatis/pulls/2
