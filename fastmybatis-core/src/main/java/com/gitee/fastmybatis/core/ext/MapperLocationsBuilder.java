@@ -1,6 +1,8 @@
 package com.gitee.fastmybatis.core.ext;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -184,16 +186,21 @@ public class MapperLocationsBuilder {
 	/** 保存mapper到本地文件夹 */
 	private void saveMapper(final String saveDir, final List<Resource> mapperLocations) {
 		if (StringUtils.hasText(saveDir)) {
-			try {
-				LOGGER.info("保存mapper文件到" + saveDir);
-				for (Resource resource : mapperLocations) {
-					OutputStream out = new FileOutputStream(saveDir + "/" + resource.getFilename());
+			LOGGER.info("保存mapper文件到" + saveDir);
+			for (Resource resource : mapperLocations) {
+				OutputStream out = null;
+				try {
+					out = new FileOutputStream(saveDir + "/" + resource.getFilename());
 					IOUtils.copy(resource.getInputStream(), out);
-					out.close();
+				} catch (FileNotFoundException e) {
+					LOGGER.error("保存mapper文件错误，文件不存在。" + saveDir + "/" + resource.getFilename(), e);
+					throw new RuntimeException(e);
+				} catch (IOException e) {
+					LOGGER.error("保存mapper文件错误。" + saveDir + "/" + resource.getFilename(), e);
+					throw new RuntimeException(e);
+				} finally {
+					IOUtils.closeQuietly(out);
 				}
-			} catch (Exception e) {
-				LOGGER.error(e.getMessage(), e);
-				throw new RuntimeException(e);
 			}
 		}
 	}
@@ -286,7 +293,7 @@ public class MapperLocationsBuilder {
                 throw new Exception("Mapper文件[" + mapperResourceDefinition.getFilename() + "]的namespace不能为空。");
             }
             
-            if(trueNamespace.equals(attrNamespance.getValue())) {
+            if(trueNamespace.equals(namespaceValue)) {
                 String rootNodeName = mapperNode.getName();
 
                 if (!NODE_MAPPER.equals(rootNodeName)) {
