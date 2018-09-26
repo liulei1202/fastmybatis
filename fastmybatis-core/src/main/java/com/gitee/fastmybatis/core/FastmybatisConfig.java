@@ -15,7 +15,7 @@ import com.gitee.fastmybatis.core.handler.BaseFill;
  * @author tanghc
  */
 public class FastmybatisConfig {
-
+	
     public static final String COUNT_EXPRESSION = "count(*)";
 
     private static final String GLOBAL_VM_PLACEHOLDER = "<!--_global_vm_-->";
@@ -113,19 +113,8 @@ public class FastmybatisConfig {
      */
     public void setMapperSaveDir(String mapperSaveDir) {
         File dir = new File(mapperSaveDir);
-        boolean selfMake = false;
-        if (!dir.exists()) {
-            dir.mkdirs();
-            selfMake = true;
-        }
-        if (!dir.isDirectory()) {
-            if (selfMake) {
-            	boolean delSuccess = dir.delete();
-            	if (!delSuccess) {
-            		throw new IllegalArgumentException("文件删除失败，dir:" + mapperSaveDir);
-            	}
-            }
-            throw new IllegalArgumentException("mapperSaveDir必须是一个文件夹路径，mapperSaveDir：" + mapperSaveDir);
+        if (!dir.exists() && !dir.mkdirs()) {
+            throw new IllegalArgumentException("创建Mapper文件夹失败：" + mapperSaveDir);	
         }
         this.mapperSaveDir = mapperSaveDir;
     }

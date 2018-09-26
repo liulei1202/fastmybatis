@@ -14,6 +14,10 @@ import java.util.Set;
  */
 public class JavaTypeUtil {
 
+	private JavaTypeUtil() {
+		super();
+	}
+
 	/** key:基本类型 */
 	private static Map<String, JavaType> javaTypeMap = new HashMap<>();
 	/** key:基本类型或装箱类型 value:mybatis类型 */

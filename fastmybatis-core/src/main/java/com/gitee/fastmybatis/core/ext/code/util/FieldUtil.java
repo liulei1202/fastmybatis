@@ -4,8 +4,10 @@ package com.gitee.fastmybatis.core.ext.code.util;
  * @author tanghc
  */
 public class FieldUtil {
+    private FieldUtil() {
+	}
 
-    private static final String DOT = ".";
+	private static final String DOT = ".";
     
 	/**
 	 * 过滤"."
@@ -14,15 +16,13 @@ public class FieldUtil {
 	 * @return 过滤‘.’符号
 	 */
 	public static String dotFilter(String field) {
-		if (isNotEmpty(field)) {
-			if (field.indexOf(DOT) > -1) {
-				String[] words = field.split("\\.");
-				String ret = "";
-				for (String str : words) {
-					ret += upperFirstLetter(str);
-				}
-				return ret;
+		if (isNotEmpty(field) && field.indexOf(DOT) > -1) {
+			String[] words = field.split("\\.");
+			StringBuilder ret = new StringBuilder();
+			for (String str : words) {
+				ret.append(upperFirstLetter(str));
 			}
+			return ret.toString();
 		}
 		return field;
 	}
@@ -72,18 +72,20 @@ public class FieldUtil {
 			char c = param.charAt(i);
 			int preIndex = i - 1;
 			int nextIndex = i + 1;
-			if (	(
+			// 是否需要变为小写字母
+			boolean needToLower = (
+					Character.isUpperCase(c) 
+					&& preIndex > 0
+					&& Character.isLowerCase(param.charAt(preIndex))
+				)
+				||
+				(
 						Character.isUpperCase(c) 
-						&& preIndex > 0
-						&& Character.isLowerCase(param.charAt(preIndex))
-					)
-					||
-					(
-							Character.isUpperCase(c) 
-							&& nextIndex < len 
-							&& Character.isLowerCase(param.charAt(nextIndex))
-					)
-				) {
+						&& nextIndex < len 
+						&& Character.isLowerCase(param.charAt(nextIndex))
+				);
+			
+			if (needToLower) {
 				if(i > 0) {
 					sb.append(UNDERLINE);
 				}

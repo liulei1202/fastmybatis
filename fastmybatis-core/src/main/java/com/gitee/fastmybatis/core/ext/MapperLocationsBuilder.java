@@ -1,28 +1,25 @@
 package com.gitee.fastmybatis.core.ext;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.QName;
 import org.dom4j.dom.DOMAttribute;
@@ -32,9 +29,12 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
+import org.xml.sax.SAXException;
 
 import com.gitee.fastmybatis.core.FastmybatisConfig;
 import com.gitee.fastmybatis.core.ext.code.client.ClassClient;
+import com.gitee.fastmybatis.core.ext.exception.GenCodeException;
+import com.gitee.fastmybatis.core.ext.exception.MapperFileException;
 import com.gitee.fastmybatis.core.mapper.Mapper;
 
 /**
@@ -45,7 +45,7 @@ import com.gitee.fastmybatis.core.mapper.Mapper;
  */
 public class MapperLocationsBuilder {
 
-	private static Log LOGGER = LogFactory.getLog(MapperLocationsBuilder.class);
+	private static final Log LOG = LogFactory.getLog(MapperLocationsBuilder.class);
 	private static final String ENCODE = "UTF-8";
 	
 	private static final String EMPTY = "";
@@ -55,6 +55,7 @@ public class MapperLocationsBuilder {
 	private static final String MAPPER_END = "</mapper>";
 	private static final String MAPPER_EMPTY = "<mapper/>";
 	private static final String ATTR_NAMESPACE = "namespace";
+	private static final String SAXREADER_FEATURE = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
 	
 
 	private static final String EXT_MAPPER_PLACEHOLDER = "<!--_ext_mapper_-->";
@@ -82,12 +83,10 @@ public class MapperLocationsBuilder {
 			ClassScanner classScanner = new ClassScanner(basePackages, Mapper.class);
 			Set<Class<?>> clazzsSet = classScanner.getClassSet();
 
-			Resource[] mapperLocations = this.buildMapperLocations(clazzsSet);
-
-			return mapperLocations;
+			return this.buildMapperLocations(clazzsSet);
 		} catch (Exception e) {
-		    LOGGER.error("构建mapper失败", e);
-			throw new RuntimeException(e);
+		    LOG.error("构建mapper失败", e);
+			throw new MapperFileException(e);
 		} finally {
 			distroy();
 		}
@@ -128,78 +127,42 @@ public class MapperLocationsBuilder {
 		}
 		final String templateLocation = this.buildTemplateLocation(this.getDbName());
 		final String globalVmLocation = this.config.getGlobalVmLocation();
-		LOGGER.info("使用模板:" + templateLocation);
+		LOG.info("使用模板:" + templateLocation);
 		final ClassClient codeClient = new ClassClient(config);
 		final List<Resource> mapperLocations = Collections.synchronizedList(new ArrayList<Resource>(classCount));
-		ExecutorService executorPool = this.buildExecutorService(classCount);
 
 		long startTime = System.currentTimeMillis();
 		try {
-			for (Class<?> mapperClass : clazzsSet) {
-				final Class<?> daoClass = mapperClass;
-				executorPool.execute(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							String xml = codeClient.genMybatisXml(daoClass, templateLocation, globalVmLocation);
-							xml = mergeExtMapperFile(daoClass, xml);
-							mapperLocations.add(new MapperResource(xml, daoClass));
-						} catch (Exception e) {
-						    LOGGER.error(e.getMessage(), e);
-							throw new RuntimeException(e);
-						}
-					}
-				});
+			for (Class<?> daoClass : clazzsSet) {
+				String xml = codeClient.genMybatisXml(daoClass, templateLocation, globalVmLocation);
+				xml = mergeExtMapperFile(daoClass, xml);
+				mapperLocations.add(new MapperResource(xml, daoClass));
 			}
 
-			// 等待线程池中所有的线程都执行完毕
-			executorPool.shutdown();
-			executorPool.awaitTermination(Integer.MAX_VALUE, TimeUnit.SECONDS);
-
 			long endTime = System.currentTimeMillis();
-			LOGGER.info("生成Mapper内容总耗时：" + (endTime - startTime) / 1000.0 + "秒");
+			LOG.info("生成Mapper内容总耗时：" + (endTime - startTime) / 1000.0 + "秒");
 
 			this.saveMapper(config.getMapperSaveDir(), mapperLocations);
 
 			return mapperLocations;
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			throw new RuntimeException(e);
+			LOG.error(e.getMessage(), e);
+			throw new GenCodeException(e);
 		}
 
 	}
 
-	private ExecutorService buildExecutorService(int classSize) {
-		int poolSize = config.getMapperExecutorPoolSize();
-		int nThreads = poolSize > classSize ? classSize : poolSize;
-		
-		return Executors.newFixedThreadPool(nThreads, new ThreadFactory() {
-			@Override
-			public Thread newThread(Runnable r) {
-				Thread t = new Thread(r);
-				t.setUncaughtExceptionHandler(new ThreadPoolUncaughtExceptionHandler());
-				return t;
-			}
-		});
-	}
-
-	/** 保存mapper到本地文件夹 */
-	private void saveMapper(final String saveDir, final List<Resource> mapperLocations) {
+	/** 保存mapper到本地文件夹 
+	 * @throws IOException 
+	 */
+	private void saveMapper(final String saveDir, final List<Resource> mapperLocations) throws IOException {
 		if (StringUtils.hasText(saveDir)) {
-			LOGGER.info("保存mapper文件到" + saveDir);
+			LOG.info("保存mapper文件到" + saveDir);
 			for (Resource resource : mapperLocations) {
-				OutputStream out = null;
-				try {
-					out = new FileOutputStream(saveDir + "/" + resource.getFilename());
+				try (OutputStream out = new FileOutputStream(saveDir + "/" + resource.getFilename());) {
 					IOUtils.copy(resource.getInputStream(), out);
-				} catch (FileNotFoundException e) {
-					LOGGER.error("保存mapper文件错误，文件不存在。" + saveDir + "/" + resource.getFilename(), e);
-					throw new RuntimeException(e);
-				} catch (IOException e) {
-					LOGGER.error("保存mapper文件错误。" + saveDir + "/" + resource.getFilename(), e);
-					throw new RuntimeException(e);
-				} finally {
-					IOUtils.closeQuietly(out);
+				}catch (IOException e) {
+					throw e;
 				}
 			}
 		}
@@ -235,14 +198,16 @@ public class MapperLocationsBuilder {
 				continue;
 			}
 
-			LOGGER.info("加载未合并Mapper：" + mapperResourceDefinition.getFilename());
+			LOG.info("加载未合并Mapper：" + mapperResourceDefinition.getFilename());
 
 			mapperLocations.add(mapperResourceDefinition.getResource());
 		}
 	}
 
-	/** 合并扩展mapper文件内容 */
-	private String mergeExtMapperFile(Class<?> mapperClass, String xml) {
+	/** 合并扩展mapper文件内容 
+	 * @throws DocumentException 
+	 * @throws IOException */
+	private String mergeExtMapperFile(Class<?> mapperClass, String xml) throws IOException, DocumentException  {
 		// 自定义文件
 		String mapperFileName = mapperClass.getSimpleName() + XML_SUFFIX;
 		// 先找跟自己同名的xml，如:UserMapper.java -> UserMapper.xml
@@ -257,13 +222,8 @@ public class MapperLocationsBuilder {
 			mapperResourceDefinition.setMerged(true);
 		}
 		// 再找namespace一样的xml
-		try {
-            String otherMapperXml = this.buildOtherMapperContent(mapperClass, this.mapperResourceStore.values());
-            extXml.append(otherMapperXml);
-        } catch (Exception e) {
-            LOGGER.error("加载额外Mapp文件出错", e);
-            throw new RuntimeException(e);
-        }
+        String otherMapperXml = this.buildOtherMapperContent(mapperClass, this.mapperResourceStore.values());
+        extXml.append(otherMapperXml);
 		
 		xml = xml.replace(EXT_MAPPER_PLACEHOLDER, extXml.toString());
 
@@ -273,8 +233,10 @@ public class MapperLocationsBuilder {
 	/** 
                     一个Mapper.java可以对应多个Mapper.xml。只要namespace相同，就会把它们的内容合并，最终形成一个完整的MapperResource<br>
                    这样做的好处是每人维护一个文件相互不干扰，至少在提交代码是不会冲突，同时也遵循了开闭原则。
+	 * @throws IOException 
+	 * @throws DocumentException 
 	 */
-	private String buildOtherMapperContent(Class<?> mapperClass, Collection<MapperResourceDefinition> mapperResourceDefinitions) throws Exception {
+	private String buildOtherMapperContent(Class<?> mapperClass, Collection<MapperResourceDefinition> mapperResourceDefinitions) throws IOException, DocumentException {
 	    StringBuilder xml = new StringBuilder();
 	    String trueNamespace = mapperClass.getName();
 	    for (MapperResourceDefinition mapperResourceDefinition : mapperResourceDefinitions) {
@@ -290,14 +252,14 @@ public class MapperLocationsBuilder {
             String namespaceValue = attrNamespance == null ? null : attrNamespance.getValue();
             
             if(StringUtils.isEmpty(namespaceValue)) {
-                throw new Exception("Mapper文件[" + mapperResourceDefinition.getFilename() + "]的namespace不能为空。");
+                throw new MapperFileException("Mapper文件[" + mapperResourceDefinition.getFilename() + "]的namespace不能为空。");
             }
             
             if(trueNamespace.equals(namespaceValue)) {
                 String rootNodeName = mapperNode.getName();
 
                 if (!NODE_MAPPER.equals(rootNodeName)) {
-                    throw new Exception("mapper文件必须含有<mapper>节点,是否缺少<mapper></mapper>?");
+                    throw new MapperFileException("mapper文件必须含有<mapper>节点,是否缺少<mapper></mapper>?");
                 }
                 
                 mapperNode.remove(namespace);
@@ -314,34 +276,34 @@ public class MapperLocationsBuilder {
 	    
 	}
 
-	private String getExtFileContent(Resource resource) {
-		try {
-			InputStream in = resource.getInputStream();
-			Document document = this.buildSAXReader().read(in);
-			Element mapperNode = document.getRootElement();
+	private String getExtFileContent(Resource resource) throws IOException, DocumentException {
+		InputStream in = resource.getInputStream();
+		Document document = this.buildSAXReader().read(in);
+		Element mapperNode = document.getRootElement();
 
-			String rootNodeName = mapperNode.getName();
+		String rootNodeName = mapperNode.getName();
 
-			if (!NODE_MAPPER.equals(rootNodeName)) {
-				throw new Exception("mapper文件必须含有<mapper>节点,是否缺少<mapper></mapper>?");
-			}
-
-			mapperNode.remove(namespace);
-
-			String rootXml = mapperNode.asXML();
-			// 去除首尾mapper标签
-			rootXml = rootXml.replace(MAPPER_START, EMPTY).replace(MAPPER_END, EMPTY).replace(MAPPER_EMPTY, EMPTY);
-
-			return rootXml;
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			throw new RuntimeException("加载资源文件出错,[" + resource.getFilename() + "]," + e.getMessage());
+		if (!NODE_MAPPER.equals(rootNodeName)) {
+			throw new MapperFileException("mapper文件必须含有<mapper>节点,是否缺少<mapper></mapper>?");
 		}
+
+		mapperNode.remove(namespace);
+
+		String rootXml = mapperNode.asXML();
+		// 去除首尾mapper标签
+		rootXml = rootXml.replace(MAPPER_START, EMPTY).replace(MAPPER_END, EMPTY).replace(MAPPER_EMPTY, EMPTY);
+
+		return rootXml;
 	}
 
 	private SAXReader buildSAXReader() {
 		SAXReader reader = new SAXReader();
 		reader.setEncoding(ENCODE);
+		try {
+		    reader.setFeature(SAXREADER_FEATURE, false);
+        } catch (SAXException e) {
+            LOG.error("reader.setFeature fail by ", e);
+        }
 		return reader;
 	}
 
@@ -411,15 +373,19 @@ public class MapperLocationsBuilder {
 			return this.mapperClass.getSimpleName() + XML_SUFFIX;
 		}
 
-	}
-
-	/** 捕获线程池中的异常 */
-	private static class ThreadPoolUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
 		@Override
-		public void uncaughtException(Thread t, Throwable e) {
-			LOGGER.error(e.getMessage(), e);
-			System.exit(0);
+		public int hashCode() {
+			return super.hashCode();
 		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return (obj == this ||
+					(obj instanceof MapperResource && Arrays.equals(((MapperResource) obj).getByteArray(), this.getByteArray())));
+		}
+		
+		
+
 	}
 
 }

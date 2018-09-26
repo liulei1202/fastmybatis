@@ -4,16 +4,23 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 定义分页返回结果
+ * 
+ * @param <E> 实体类
  * @author tanghc
  */
-public interface PageResult<Entity> extends Serializable {
+public interface PageResult<E> extends Serializable {
+	
+	/** 第一页 */
+	int FIRST_PAGE = 1;
+	
     /**
      * 设置结果集
      * 
      * @param list
      *            结果集
      */
-    void setList(List<Entity> list);
+    void setList(List<E> list);
 
     /**
      * 设置记录总数

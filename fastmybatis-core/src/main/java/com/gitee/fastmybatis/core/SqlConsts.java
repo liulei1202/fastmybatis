@@ -5,6 +5,8 @@ package com.gitee.fastmybatis.core;
  * @author tanghc
  */
 public class SqlConsts {
+	private SqlConsts(){}
+	
 	public static final String EMPTY = "";
 	public static final String BLANK = " ";
 	public static final String LIKE = "LIKE";

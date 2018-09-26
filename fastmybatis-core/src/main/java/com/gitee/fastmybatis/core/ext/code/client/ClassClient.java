@@ -1,12 +1,13 @@
 package com.gitee.fastmybatis.core.ext.code.client;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 
 import com.gitee.fastmybatis.core.FastmybatisConfig;
 import com.gitee.fastmybatis.core.ext.code.NotEntityException;
+import com.gitee.fastmybatis.core.ext.exception.MapperFileException;
 
 /**
  * @author tanghc
@@ -54,12 +55,11 @@ public class ClassClient {
 
 		try {
 			return generator.generateCode(param);
-		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
-			throw new RuntimeException(e);
 		} catch (NotEntityException e) {
             return String.format(EMPTY_XML, mapperClass.getName());
-        }
+        } catch (IOException e) {
+        	throw new MapperFileException(e);
+		}
 	}
 
 }

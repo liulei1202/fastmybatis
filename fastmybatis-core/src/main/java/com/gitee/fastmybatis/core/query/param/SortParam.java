@@ -7,8 +7,9 @@ import com.gitee.fastmybatis.core.query.annotation.Condition;
  * 排序查询参数
  * @author tanghc
  */
+@SuppressWarnings("serial")
 public class SortParam extends BaseParam implements SchSortableParam {
-    /** 排序字段，数据库字段 */
+	/** 排序字段，数据库字段 */
 	private String sort;
 	/** 排序排序方式，asc或desc */
 	private String order;

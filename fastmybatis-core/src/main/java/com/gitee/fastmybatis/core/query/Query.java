@@ -444,8 +444,9 @@ public class Query implements Queryable {
 
     @Override
     public boolean getIsSetTotal(){
+    	//不为-1，设置了总记录数
         if (total != -1 ){
-            return true;//不为-1，设置了总记录数
+            return true;
         }
         return false;
     }

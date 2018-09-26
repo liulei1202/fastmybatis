@@ -5,11 +5,11 @@ import java.util.List;
 import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
 
 /**
- * SQL上下文,这里可以取到表,字段信息<br>
- * 最终会把SQL上下文信息放到velocity中
+ * Mapper上下文,这里可以取到表,字段信息<br>
+ * 最终会把上下文信息放到velocity中
  * @author tanghc
  */
-public class SQLContext {
+public class MapperContext {
     /** 表结构定义 */
 	private TableDefinition tableDefinition; 
 	private String namespace;
@@ -19,7 +19,7 @@ public class SQLContext {
 	/** java类完整路径,即:class.getName(); */
 	private String className;
 
-	public SQLContext(TableDefinition tableDefinition) {
+	public MapperContext(TableDefinition tableDefinition) {
 		this.tableDefinition = tableDefinition;
 	}
 

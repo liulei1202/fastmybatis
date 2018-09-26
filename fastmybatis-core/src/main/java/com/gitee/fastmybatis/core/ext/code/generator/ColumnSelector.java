@@ -20,6 +20,7 @@ import com.gitee.fastmybatis.core.annotation.LogicDelete;
 import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
 import com.gitee.fastmybatis.core.ext.code.util.JavaTypeUtil;
 import com.gitee.fastmybatis.core.ext.code.util.ReflectUtil;
+import com.gitee.fastmybatis.core.ext.exception.GenCodeException;
 import com.gitee.fastmybatis.core.handler.BaseEnum;
 import com.gitee.fastmybatis.core.handler.BaseFill;
 import com.gitee.fastmybatis.core.handler.EnumTypeHandler;
@@ -31,9 +32,9 @@ import com.gitee.fastmybatis.core.handler.FillType;
  */
 public class ColumnSelector {
 
-	private final static String UUID_NAME = "uuid";
-	private final static String INCREMENT_NAME = "increment";
-	private final static String STRING_TYPE = "String";
+	private static final String UUID_NAME = "uuid";
+	private static final String INCREMENT_NAME = "increment";
+	private static final String STRING_TYPE = "String";
 	
 	private Class<?> entityClass;
 	private FastmybatisConfig config;
@@ -74,7 +75,7 @@ public class ColumnSelector {
 		}
 		
 		if(!isBaseEnum) {
-			throw new RuntimeException("枚举类：" + enumType.getName() + "必须实现" + baseEnumClass.getName() + "接口");
+			throw new GenCodeException("枚举类：" + enumType.getName() + "必须实现" + baseEnumClass.getName() + "接口");
 		}
 	}
 	
@@ -119,7 +120,7 @@ public class ColumnSelector {
 		// 如果定义了UUID策略，但类型不是String
 		if(isUuid && !isStringType) {
 			String columnName = this.getColumnName(field);
-			throw new RuntimeException("字段[" + columnName + "]定义了UUID策略，但类型不是String，实际类型为：" + columnType);
+			throw new GenCodeException("字段[" + columnName + "]定义了UUID策略，但类型不是String，实际类型为：" + columnType);
 		}
 		
 		return isUuid && isStringType;

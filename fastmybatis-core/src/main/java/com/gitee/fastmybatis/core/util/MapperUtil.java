@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.gitee.fastmybatis.core.PageInfo;
 import com.gitee.fastmybatis.core.PageResult;
+import com.gitee.fastmybatis.core.exception.QueryException;
 import com.gitee.fastmybatis.core.mapper.SchMapper;
 import com.gitee.fastmybatis.core.query.Query;
 import com.gitee.fastmybatis.core.query.param.BaseParam;
@@ -16,7 +17,10 @@ import com.gitee.fastmybatis.core.query.param.BaseParam;
  *
  */
 public class MapperUtil {
-    /**
+    private MapperUtil() {
+	}
+
+	/**
      * 分页数算法:页数 = (总记录数 + 每页记录数 - 1) / 每页记录数
      * 
      * @param total 总记录数
@@ -86,7 +90,7 @@ public class MapperUtil {
         try {
             result = pageResultClass.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new QueryException(e);
         }
 
         try {
@@ -131,7 +135,7 @@ public class MapperUtil {
             result.setTotal(total);
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new QueryException(e);
         }
 
         return result;

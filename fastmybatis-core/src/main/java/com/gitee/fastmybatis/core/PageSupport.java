@@ -7,12 +7,15 @@ import java.util.Map;
 import com.gitee.fastmybatis.core.util.MyBeanUtil;
 
 /**
+ * 分页支持类
+ * 
+ * @param <E> 实体类
  * @author tanghc
  */
-public class PageSupport<Entity> implements PageResult<Entity> {
+public class PageSupport<E> implements PageResult<E> {
     private static final long serialVersionUID = 5931004082164727399L;
     
-    private List<Entity> list;
+    private List<E> list;
     private long total = 0;
     private int start = 0;
     private int pageIndex = 1;
@@ -20,15 +23,13 @@ public class PageSupport<Entity> implements PageResult<Entity> {
     private int pageCount = 0;
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public PageResult process(EntityProcessor<Entity> processor) {
+    public PageResult process(EntityProcessor<E> processor) {
         if (processor == null) {
-            return this;
+            throw new IllegalArgumentException("processor不能为null");
         }
         PageResult pageResult = this;
-        if (processor != null) {
-            List<Object> jsonObjList = processEntityToJSONObject(list, processor);
-            pageResult.setList(jsonObjList);
-        }
+        List<Object> jsonObjList = processEntityToJSONObject(list, processor);
+        pageResult.setList(jsonObjList);
         return pageResult;
     }
 
@@ -38,11 +39,11 @@ public class PageSupport<Entity> implements PageResult<Entity> {
      * @param processor
      * @return 返回新的结果集
      */
-    public static <Entity> List<Object> processEntityToJSONObject(List<Entity> list,
-            EntityProcessor<Entity> processor) {
-        List<Object> jsonObjList = new ArrayList<Object>(list.size());
+    public static <E> List<Object> processEntityToJSONObject(List<E> list,
+            EntityProcessor<E> processor) {
+        List<Object> jsonObjList = new ArrayList<>(list.size());
 
-        for (Entity entity : list) {
+        for (E entity : list) {
             Map<String, Object> jsonObject = MyBeanUtil.pojoToMap(entity);
             processor.process(entity, jsonObject);
             jsonObjList.add(jsonObject);
@@ -79,7 +80,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
      * @return 返回1
      */
     public int fatchFirstPageIndex() {
-        return 1;
+        return FIRST_PAGE;
     }
 
     /**
@@ -96,7 +97,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
      * 
      * @return 返回结果集
      */
-    public List<Entity> fatchList() {
+    public List<E> fatchList() {
         return list;
     }
 
@@ -170,7 +171,7 @@ public class PageSupport<Entity> implements PageResult<Entity> {
     }
 
     @Override
-    public void setList(List<Entity> list) {
+    public void setList(List<E> list) {
         this.list = list;
     }
 

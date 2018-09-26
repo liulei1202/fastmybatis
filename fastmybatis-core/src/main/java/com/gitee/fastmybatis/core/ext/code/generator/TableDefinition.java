@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.gitee.fastmybatis.core.ext.exception.GenCodeException;
+
 /**
  * 数据库表定义,从这里可以获取表名,字段信息
  * 
@@ -151,7 +153,7 @@ public class TableDefinition {
         for (ColumnDefinition column : columnDefinitions) {
             if (column.getIsLogicDelete()) {
                 if (count == 1) {
-                    throw new RuntimeException(
+                    throw new GenCodeException(
                             column.getJavaFieldName() + "字段重复定义@LogicDelete.确保实体类中只有一个@LogicDelete注解");
                 }
                 this.setLogicDeleteColumn(column);

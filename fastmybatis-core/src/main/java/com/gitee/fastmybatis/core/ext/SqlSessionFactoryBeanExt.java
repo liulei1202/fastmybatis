@@ -16,6 +16,7 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.core.io.Resource;
 
 import com.gitee.fastmybatis.core.FastmybatisConfig;
+import com.gitee.fastmybatis.core.ext.exception.DatabaseConnectException;
 
 
 /**
@@ -25,7 +26,7 @@ import com.gitee.fastmybatis.core.FastmybatisConfig;
  */
 public class SqlSessionFactoryBeanExt extends SqlSessionFactoryBean {
 	
-	private static Log LOGGER = LogFactory.getLog(SqlSessionFactoryBeanExt.class);
+	private static final Log LOG = LogFactory.getLog(SqlSessionFactoryBeanExt.class);
 	
 	private MapperLocationsBuilder mapperLocationsBuilder = new MapperLocationsBuilder();
 	
@@ -77,17 +78,17 @@ public class SqlSessionFactoryBeanExt extends SqlSessionFactoryBean {
 			conn = dataSource.getConnection();
 			DatabaseMetaData metaData = conn.getMetaData();
 			String dbName = metaData.getDatabaseProductName();
-			LOGGER.info("数据库名称：" + dbName);
+			LOG.info("数据库名称：" + dbName);
 			return dbName;
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-			throw new RuntimeException(e);
+			LOG.error(e.getMessage(), e);
+			throw new DatabaseConnectException(e);
 		}finally {
 			if(conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					LOGGER.error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 				}
 			}
 		}

@@ -16,7 +16,7 @@ public class ListExpression implements ExpressionListable {
 
     private String column = "";
     private String equal = SqlConsts.IN;
-    private Collection<?> value = Collections.EMPTY_LIST;
+    private Collection<?> value = Collections.emptyList();
     private String joint = SqlConsts.AND;
 
     public ListExpression(String joint, String column, String equal, Collection<?> value) {

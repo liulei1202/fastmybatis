@@ -8,8 +8,9 @@ import com.gitee.fastmybatis.core.query.annotation.Condition;
  * @author tanghc
  *
  */
+@SuppressWarnings("serial")
 public class PageSortParam extends BaseParam implements SchPageableParam,SchSortableParam {
-
+	
 	/** 当前第几页 */
 	private int pageIndex = 1;
 	/** 每页记录数 */

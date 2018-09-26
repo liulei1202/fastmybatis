@@ -5,6 +5,8 @@ package com.gitee.fastmybatis.core.handler;
  * @author tanghc
  */
 class Opt {
+	private Opt() {
+	}
 	public static final int SELECT_RIGHT = 1;
 	public static final int INSERT_RIGHT = 2;
 	public static final int UPDATE_RIGHT = 3;

@@ -5,9 +5,10 @@ import java.util.List;
 /**
  * 封装查询结果
  * 
+ * @param <E> 实体类
  * @author tanghc
  */
-public class PageInfo<Entity> extends PageSupport<Entity> {
+public class PageInfo<E> extends PageSupport<E> {
     private static final long serialVersionUID = 5104636317609298856L;
 
     /**
@@ -42,7 +43,7 @@ public class PageInfo<Entity> extends PageSupport<Entity> {
 	 * @return 返回1
 	 */
 	public int getFirstPageIndex() {
-		return 1;
+		return FIRST_PAGE;
 	}
 
 	/**
@@ -59,7 +60,7 @@ public class PageInfo<Entity> extends PageSupport<Entity> {
 	 * 
 	 * @return 返回结果集
 	 */
-	public List<Entity> getList() {
+	public List<E> getList() {
 		return this.fatchList();
 	}
 

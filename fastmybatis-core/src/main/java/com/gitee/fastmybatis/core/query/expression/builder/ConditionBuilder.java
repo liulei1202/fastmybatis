@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.util.Assert;
 
+import com.gitee.fastmybatis.core.exception.QueryException;
 import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
 import com.gitee.fastmybatis.core.query.annotation.Condition;
 import com.gitee.fastmybatis.core.query.expression.Expression;
@@ -68,7 +69,7 @@ public class ConditionBuilder {
 				}
 			}
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new QueryException(e);
 		}
 		return expList;
 	}

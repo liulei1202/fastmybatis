@@ -10,9 +10,11 @@ import com.gitee.fastmybatis.core.query.Query;
 /**
  * 具备查询功能的Mapper
  * 
+ * @param <E> 实体类，如：Student
+ * @param <I> 主键类型，如：Long，Integer
  * @author tanghc
  */
-public interface SchMapper<Entity, ID> extends Mapper<Entity> {
+public interface SchMapper<E, I> extends Mapper<E> {
 
     /**
      * 内置resultMap名称
@@ -26,7 +28,7 @@ public interface SchMapper<Entity, ID> extends Mapper<Entity> {
      *            主键值
      * @return 返回实体对象，没有返回null
      */
-    Entity getById(ID id);
+    E getById(I id);
 
     /**
      * 根据条件查找单条记录
@@ -35,7 +37,7 @@ public interface SchMapper<Entity, ID> extends Mapper<Entity> {
      *            查询条件
      * @return 返回实体对象，没有返回null
      */
-    Entity getByQuery(@Param("query") Query query);
+    E getByQuery(@Param("query") Query query);
 
     /**
      * 根据字段查询一条记录
@@ -46,7 +48,7 @@ public interface SchMapper<Entity, ID> extends Mapper<Entity> {
      *            字段值
      * @return 返回实体对象，没有返回null
      */
-    Entity getByColumn(@Param("column") String column, @Param("value") Object value);
+    E getByColumn(@Param("column") String column, @Param("value") Object value);
 
     /**
      * 查询总记录数
@@ -66,7 +68,7 @@ public interface SchMapper<Entity, ID> extends Mapper<Entity> {
      *            字段值
      * @return 返回实体对象集合，没有返回空集合
      */
-    List<Entity> listByColumn(@Param("column") String column, @Param("value") Object value);
+    List<E> listByColumn(@Param("column") String column, @Param("value") Object value);
 
     /**
      * 查询结果集
@@ -75,7 +77,7 @@ public interface SchMapper<Entity, ID> extends Mapper<Entity> {
      *            查询条件
      * @return 返回实体对象集合，没有返回空集合
      */
-    List<Entity> list(@Param("query") Query query);
+    List<E> list(@Param("query") Query query);
 
     /**
      * 查询指定字段结果，Map里面key对应字段名，value对应值<br>

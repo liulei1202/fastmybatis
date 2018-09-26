@@ -87,6 +87,7 @@ public class ClassUtil {
     /**
      * 将实体对象转换成Map。已废弃，使用MyBeanUtil.pojoToMap(pojo)
      * 
+     * @Deprecated 使用MyBeanUtil.pojoToMap(pojo)
      * @param pojo
      *            实体类
      * @return 返回map
@@ -99,6 +100,7 @@ public class ClassUtil {
     /**
      * map集合转换成对象集合。已废弃，使用MyBeanUtil.mapListToObjList(list, pojoClass);
      * 
+     * @deprecated 使用MyBeanUtil.mapListToObjList(list, pojoClass);
      * @param list
      *            map集合
      * @param pojoClass
@@ -113,6 +115,7 @@ public class ClassUtil {
     /**
      * 将map对象转换成普通类。已废弃，使用MyBeanUtil.mapToPojo(map, pojoClass);
      * 
+     * @deprecated 使用MyBeanUtil.mapToPojo(map, pojoClass);
      * @param map
      *            map对象
      * @param pojoClass

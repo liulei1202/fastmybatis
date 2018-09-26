@@ -1,6 +1,5 @@
 package com.gitee.fastmybatis.core.ext.code.client;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -13,7 +12,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
 import com.gitee.fastmybatis.core.ext.code.NotEntityException;
-import com.gitee.fastmybatis.core.ext.code.generator.SQLContext;
+import com.gitee.fastmybatis.core.ext.code.generator.MapperContext;
 import com.gitee.fastmybatis.core.ext.code.generator.TableDefinition;
 import com.gitee.fastmybatis.core.ext.code.generator.TableSelector;
 import com.gitee.fastmybatis.core.ext.code.util.VelocityUtil;
@@ -27,9 +26,9 @@ public class Generator {
 	
 	private static final Charset UTF8 = Charsets.toCharset("UTF-8");
 	
-	public String generateCode(ClientParam clientParam) throws FileNotFoundException, NotEntityException {
+	public String generateCode(ClientParam clientParam) throws NotEntityException, IOException {
 		InputStream templateInputStream = this.buildTemplateInputStream(clientParam);
-		SQLContext sqlContext = this.buildClientSQLContextList(clientParam);
+		MapperContext sqlContext = this.buildClientSQLContextList(clientParam);
 		VelocityContext context = new VelocityContext();
 
 		TableDefinition tableDefinition = sqlContext.getTableDefinition();
@@ -45,8 +44,9 @@ public class Generator {
 		return VelocityUtil.generate(context, templateInputStream);
 	}
 	
-	/** 返回模板文件内容 */
-	private InputStream buildTemplateInputStream(ClientParam clientParam) throws FileNotFoundException {
+	/** 返回模板文件内容 
+	 * @throws IOException */
+	private InputStream buildTemplateInputStream(ClientParam clientParam) throws IOException {
 	    // 模板文件
 		DefaultResourceLoader templateLoader = new DefaultResourceLoader(); 
 		Resource vmResource = templateLoader.getResource(clientParam.getTemplateLocation());
@@ -61,7 +61,7 @@ public class Generator {
 				return vmResource.getInputStream();
 			}
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage(), e);
+			throw e;
 		}
 	}
 	
@@ -82,7 +82,7 @@ public class Generator {
 	 * @return 返回SQL上下文
 	 * @throws NotEntityException 
 	 */
-	private SQLContext buildClientSQLContextList(ClientParam clientParam) throws NotEntityException {
+	private MapperContext buildClientSQLContextList(ClientParam clientParam) throws NotEntityException {
 		Class<?> entityClass = clientParam.getEntityClass();
 		if(entityClass == Object.class || entityClass == Void.class) {
 		    throw new NotEntityException();
@@ -91,7 +91,7 @@ public class Generator {
 
 		TableDefinition tableDefinition = tableSelector.getTableDefinition();
 
-		SQLContext context = new SQLContext(tableDefinition);
+		MapperContext context = new MapperContext(tableDefinition);
 		
 		String namespace = this.buildNamespace(clientParam.getMapperClass());
 		context.setClassName(entityClass.getName());

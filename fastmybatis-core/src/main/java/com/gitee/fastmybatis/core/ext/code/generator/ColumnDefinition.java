@@ -101,6 +101,12 @@ public class ColumnDefinition {
         return this.getMybatisValue(fillType, "");
     }
 
+    /**
+     * 返回 mybatis值内容
+     * @param fillType 填充类型
+     * @param prefix 前缀
+     * @return 如返回<code>#{userName}</code>
+     */
     private String getMybatisValue(FillType fillType, String prefix) {
         // 如果是乐观锁字段
         if (this.isVersion) { 
@@ -110,7 +116,6 @@ public class ColumnDefinition {
             mybatisValue.append("#{" + prefix + this.getJavaFieldName()).append(this.getTypeHandlerValue(fillType))
                     .append("}");
 
-            // #{userName}
             return mybatisValue.toString(); 
         }
     }

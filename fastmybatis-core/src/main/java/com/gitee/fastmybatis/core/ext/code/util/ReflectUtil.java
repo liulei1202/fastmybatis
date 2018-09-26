@@ -13,6 +13,10 @@ import java.util.List;
  */
 public class ReflectUtil {
 	
+	private ReflectUtil() {
+		super();
+	}
+
 	private static final String SERIAL_VERSION_UID_NAME = "serialVersionUID";
 
 	/**
