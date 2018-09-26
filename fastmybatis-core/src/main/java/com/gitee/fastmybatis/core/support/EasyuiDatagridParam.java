@@ -7,6 +7,7 @@ import com.gitee.fastmybatis.core.query.param.PageSortParam;
  * 支持easyui表格参数
  * @author tanghc
  */
+@SuppressWarnings("serial")
 public class EasyuiDatagridParam extends PageSortParam {
     private int page;
     private int rows;
