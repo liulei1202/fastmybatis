@@ -72,9 +72,8 @@ public class MapperLocationsBuilder {
 
 	/**
 	 * 初始化mybatis配置文件
-	 * 
-	 * @param basePackage
-	 *            实体类的包目录.指定哪些包需要被扫描,支持多个包"package.a,package.b"并对每个包都会递归搜索
+	 * @param basePackage 实体类的包目录.指定哪些包需要被扫描,支持多个包"package.a,package.b"并对每个包都会递归搜索
+	 * @return 返回mapper资源
 	 */
 	public Resource[] build(String basePackage) {
 		try {

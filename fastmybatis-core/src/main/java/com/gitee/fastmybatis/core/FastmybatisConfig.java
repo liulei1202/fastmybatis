@@ -56,7 +56,7 @@ public class FastmybatisConfig {
     /**
      * 驼峰转换下划线，如果配置了true，则java字段映射成数据库字段将自动转成下划线形式
      * 
-     * @param camel2underline
+     * @param camel2underline 如果配置了true，则java字段映射成数据库字段将自动转成下划线形式
      */
     public void setCamel2underline(boolean camel2underline) {
         this.camel2underline = camel2underline;
@@ -122,7 +122,8 @@ public class FastmybatisConfig {
     /**
      * 设置字段填充
      * 
-     * @param fills
+     * @param <T> 填充器类型
+     * @param fills 填充器数组
      */
     public <T extends BaseFill<?>> void setFills(List<T> fills) {
         for (BaseFill<?> fill : fills) {

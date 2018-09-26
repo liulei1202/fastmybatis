@@ -7,16 +7,17 @@ import org.apache.ibatis.annotations.Param;
 /**
  * 具备保存功能的Mapper
  * 
+ * @param <E>实体类
  * @author tanghc
  */
-public interface SaveMapper<Entity> extends Mapper<Entity> {
+public interface SaveMapper<E> extends Mapper<E> {
     /**
      * 保存，保存所有字段
      * 
      * @param entity
      * @return 受影响行数
      */
-    int save(Entity entity);
+    int save(E entity);
 
     /**
      * 保存，忽略null字段
@@ -24,7 +25,7 @@ public interface SaveMapper<Entity> extends Mapper<Entity> {
      * @param entity
      * @return 受影响行数
      */
-    int saveIgnoreNull(Entity entity);
+    int saveIgnoreNull(E entity);
 
     /**
      * 批量保存,只支持mysql,sqlserver2008及以上数据库.<br>
@@ -34,7 +35,7 @@ public interface SaveMapper<Entity> extends Mapper<Entity> {
      * @return 受影响行数
      * @see #saveMulti(List) 批量兼容版本
      */
-    int saveBatch(@Param("entitys") List<Entity> entitys);
+    int saveBatch(@Param("entitys") List<E> entitys);
 
     /**
      * 批量保存,兼容更多的数据库版本.<br>
@@ -43,7 +44,7 @@ public interface SaveMapper<Entity> extends Mapper<Entity> {
      * @param entitys
      * @return 受影响行数
      */
-    int saveMulti(@Param("entitys") List<Entity> entitys);
+    int saveMulti(@Param("entitys") List<E> entitys);
 
     /**
      * 批量保存,兼容更多的数据库版本,忽略重复行.<br>
@@ -52,5 +53,5 @@ public interface SaveMapper<Entity> extends Mapper<Entity> {
      * @param entitys
      * @return 受影响行数
      */
-    int saveMultiSet(@Param("entitys") List<Entity> entitys);
+    int saveMultiSet(@Param("entitys") List<E> entitys);
 }

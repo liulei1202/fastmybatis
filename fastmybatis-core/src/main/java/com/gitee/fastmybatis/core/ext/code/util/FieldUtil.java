@@ -12,7 +12,7 @@ public class FieldUtil {
 	/**
 	 * 过滤"."
 	 * 
-	 * @param field
+	 * @param field 字段名
 	 * @return 过滤‘.’符号
 	 */
 	public static String dotFilter(String field) {
@@ -30,7 +30,7 @@ public class FieldUtil {
 	/**
 	 * 将第一个字母转换成大写
 	 * 
-	 * @param str
+	 * @param str 内容
 	 * @return 返回原字符串且第一个字符大写
 	 */
 	public static String upperFirstLetter(String str) {
@@ -44,7 +44,7 @@ public class FieldUtil {
 	/**
 	 * 将第一个字母转换成小写
 	 * 
-	 * @param str
+	 * @param str 内容
 	 * @return 返回原字符串且第一个字母小写
 	 */
 	public static String lowerFirstLetter(String str) {
@@ -59,7 +59,7 @@ public class FieldUtil {
 
 	/**
 	 * 驼峰转下划线
-	 * @param param
+	 * @param param 内容
 	 * @return 返回转换后的字符串
 	 */
 	public static String camelToUnderline(String param) {
@@ -99,7 +99,7 @@ public class FieldUtil {
 
 	/**
 	 * 下划线转驼峰
-	 * @param param
+	 * @param param 内容
 	 * @return 返回转换后的字符串
 	 */
 	public static String underlineToCamel(String param) {

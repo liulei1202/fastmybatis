@@ -34,6 +34,7 @@ public class MapperUtil {
     /**
      * 分页查询
      * 
+     * @param <Entity> 实体类
      * @param mapper
      *            查询mapper
      * @param bean
@@ -48,6 +49,7 @@ public class MapperUtil {
     /**
      * 分页查询
      * 
+     * @param <Entity> 实体类
      * @param mapper
      *            查询mapper
      * @param searchParam
@@ -62,6 +64,7 @@ public class MapperUtil {
     /**
      * 分页查询
      * 
+     * @param <Entity> 实体类
      * @param mapper
      *            查询mapper
      * @param query
@@ -75,6 +78,9 @@ public class MapperUtil {
 
     /**
      * 分页查询
+     * 
+     * @param <Entity> 实体类
+     * @param <T> 返回结果类
      * 
      * @param mapper
      *            查询mapper

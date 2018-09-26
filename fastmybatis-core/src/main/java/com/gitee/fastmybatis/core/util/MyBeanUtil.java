@@ -70,8 +70,8 @@ public class MyBeanUtil extends org.springframework.beans.BeanUtils {
     /**
      * 属性拷贝，把map中的值拷贝到target中去
      * 
-     * @param map
-     * @param target
+     * @param map map对象
+     * @param target 目标对象
      */
     public static void copyPropertiesForMap(Map<String, Object> map, Object target) {
         Assert.notNull(map, "map must not be null");
@@ -98,6 +98,7 @@ public class MyBeanUtil extends org.springframework.beans.BeanUtils {
     /**
      * 将map对象转换成普通类
      * 
+     * @param <T> 普通类类型
      * @param map
      *            map对象
      * @param pojoClass
@@ -111,6 +112,7 @@ public class MyBeanUtil extends org.springframework.beans.BeanUtils {
     /**
      * map集合转换成对象集合
      * 
+     * @param <T> 普通类类型
      * @param list
      *            map集合
      * @param pojoClass

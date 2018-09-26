@@ -26,6 +26,8 @@ public class ClassUtil {
      *            从哪个类中获取
      * @param index
      *            泛型参数索引,从0开始
+     * @return 返回泛型类型class
+     * @throws IndexOutOfBoundsException
      */
     public static Class<?> getSuperClassGenricType(Class<?> clazz, int index) throws IndexOutOfBoundsException {
 
@@ -50,7 +52,9 @@ public class ClassUtil {
      * 返回接口类的泛型参数的类型
      * 
      * @param clazz
+     *            从哪个类中获取
      * @param index
+     *            泛型参数索引,从0开始
      * @return 返回class对象
      */
     public static Class<?> getSuperInterfaceGenricType(Class<?> clazz, int index) {
@@ -76,7 +80,7 @@ public class ClassUtil {
     /**
      * 返回类名并且第一个字母小写
      * 
-     * @param clazz
+     * @param clazz class类型
      * @return 返回类名并且第一个字母小写
      */
     public static String getClassSimpleName(Class<?> clazz) {
@@ -87,7 +91,7 @@ public class ClassUtil {
     /**
      * 将实体对象转换成Map。已废弃，使用MyBeanUtil.pojoToMap(pojo)
      * 
-     * @Deprecated 使用MyBeanUtil.pojoToMap(pojo)
+     * @deprecated 使用MyBeanUtil.pojoToMap(pojo)
      * @param pojo
      *            实体类
      * @return 返回map
@@ -105,6 +109,7 @@ public class ClassUtil {
      *            map集合
      * @param pojoClass
      *            待转换的对象类型
+     * @param <T> 实体类
      * @return 返回对象集合
      */
     @Deprecated
@@ -120,6 +125,7 @@ public class ClassUtil {
      *            map对象
      * @param pojoClass
      *            普通类
+     * @param <T> 实体类
      * @return 返回普通类
      */
     @Deprecated

@@ -35,8 +35,9 @@ public class PageSupport<E> implements PageResult<E> {
 
     /**
      * 将list中的entity对象处理成JSONObject对象 
-     * @param list 
-     * @param processor
+     * @param list 数据源
+     * @param processor 处理器
+     * @param <E> 实体类
      * @return 返回新的结果集
      */
     public static <E> List<Object> processEntityToJSONObject(List<E> list,

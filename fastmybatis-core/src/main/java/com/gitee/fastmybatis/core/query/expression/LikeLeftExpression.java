@@ -20,7 +20,7 @@ public class LikeLeftExpression extends AbstractLikeExpression {
 
 	/**
 	 * Like条件查询,左边模糊匹配,即'%aaa'
-	 * @param joint
+	 * @param joint 连接符，and，or
 	 * @param column 数据库字段名
 	 * @param value 查询的值
 	 */

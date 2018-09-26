@@ -225,11 +225,9 @@ public class Query implements Queryable {
 
     /**
      * 添加IN条件
-     * 
-     * @param columnName
-     *            数据库字段名
-     * @param value
-     *            值
+     * @param columnName 数据库字段名
+     * @param value 值
+     * @param valueConvert 转换
      * @return 返回Query对象
      */
     public <T> Query in(String columnName, Collection<T> value, ValueConvert<T> valueConvert) {
@@ -267,11 +265,9 @@ public class Query implements Queryable {
 
     /**
      * 添加not in条件
-     * 
-     * @param columnName
-     *            数据库字段名
-     * @param value
-     *            值
+     * @param columnName 数据库字段名
+     * @param value 值
+     * @param valueConvert 转换器
      * @return 返回Query对象
      */
     public <T> Query notIn(String columnName, Collection<T> value, ValueConvert<T> valueConvert) {
@@ -361,7 +357,7 @@ public class Query implements Queryable {
     /**
      * 添加关联条件
      * 
-     * @param joinSql
+     * @param joinSql 连接sql语句，如：“left join user_info t2 on t.id=t2.user_id”
      * @return 返回Query对象
      */
     public Query join(String joinSql) {
@@ -372,7 +368,7 @@ public class Query implements Queryable {
     /**
      * 使用key/value进行多个等于的比对,相当于多个eq的效果
      * 
-     * @param map
+     * @param map 键值对
      * @return 返回Query对象
      */
     public Query allEq(LinkedHashMap<String, Object> map) {
@@ -554,17 +550,17 @@ public class Query implements Queryable {
     /**
      * 添加注解查询条件
      * 
-     * @param searchEntity
+     * @param searchEntity 查询实体
      * @return 返回Query对象
      */
     public Query addAnnotionExpression(Object searchEntity) {
         bindExpressionsFromBean(searchEntity, this);
         return this;
     }
-
+    
     /**
      * 添加分页信息
-     * 
+     * @param searchEntity 查询实体
      * @return 返回Query对象
      */
     public Query addPaginationInfo(SchPageableParam searchEntity) {
@@ -576,7 +572,7 @@ public class Query implements Queryable {
     /**
      * 添加排序信息
      * 
-     * @param searchEntity
+     * @param searchEntity 查询实体
      * @return 返回Query对象
      */
     public Query addSortInfo(SchSortableParam searchEntity) {
@@ -587,7 +583,7 @@ public class Query implements Queryable {
     /**
      * 构建查询条件.
      * 
-     * @param searchEntity
+     * @param searchEntity 查询实体
      * @return 返回Query对象
      */
     public static Query build(Object searchEntity) {
@@ -611,7 +607,7 @@ public class Query implements Queryable {
      * 更多功能可查看开发文档.
      * </pre>
      * 
-     * @param bean
+     * @param bean 查询实体
      * @return 返回Query对象
      */
     private static Query buildFromBean(Object bean) {
@@ -643,7 +639,7 @@ public class Query implements Queryable {
      * 更多功能可查看开发文档.
      * </pre>
      * 
-     * @param bean
+     * @param bean 查询实体
      * @return 返回Query对象
      */
     public static Query buildFromBeanByProperty(Object bean) {
@@ -696,8 +692,8 @@ public class Query implements Queryable {
     /**
      * 添加额外参数
      * 
-     * @param name
-     * @param value
+     * @param name 参数名
+     * @param value 值
      * @return 返回Query对象
      */
     public Query addParam(String name, Object value) {

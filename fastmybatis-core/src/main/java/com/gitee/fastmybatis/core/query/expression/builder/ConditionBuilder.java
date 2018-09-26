@@ -48,17 +48,17 @@ public class ConditionBuilder {
 	/**
 	 * 获取条件表达式
 	 * 
-	 * @param obj
+	 * @param pojo pojo对象
 	 * @return 返回表达式结合
 	 */
-	public List<Expression> buildExpressions(Object obj) {
-	    Assert.notNull(obj, "buildExpressions(Object obj) obj can't be null.");
+	public List<Expression> buildExpressions(Object pojo) {
+	    Assert.notNull(pojo, "buildExpressions(Object pojo) pojo can't be null.");
 		List<Expression> expList = new ArrayList<Expression>();
-		Method[] methods = obj.getClass().getMethods();
+		Method[] methods = pojo.getClass().getMethods();
 		try {
 			for (Method method : methods) {
 				if (couldBuildExpression(method)) {
-					Object value = method.invoke(obj);
+					Object value = method.invoke(pojo);
 					if (value == null) {
 						continue;
 					}

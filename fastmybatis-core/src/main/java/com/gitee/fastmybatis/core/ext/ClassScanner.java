@@ -57,8 +57,8 @@ public class ClassScanner {
 	 * 将符合条件的Bean以Class集合的形式返回
 	 * 
 	 * @return 返回Mapper的class集合
-	 * @throws IOException
-	 * @throws ClassNotFoundException
+	 * @throws IOException IO异常
+	 * @throws ClassNotFoundException 文件找不到异常
 	 */
 	public Set<Class<?>> getClassSet() throws IOException, ClassNotFoundException {
 		this.classSet.clear();

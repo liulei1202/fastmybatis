@@ -21,7 +21,7 @@ public abstract class AbstractTypeHandlerAdapter<T> extends BaseTypeHandler<T> {
 	/**
 	 * 解析数据库字段值，转成java对象值
 	 * 
-	 * @param columnValue
+	 * @param columnValue 数据库值
 	 * @return 返回java对象值
 	 */
 	protected abstract T convertValue(Object columnValue);
@@ -102,11 +102,11 @@ public abstract class AbstractTypeHandlerAdapter<T> extends BaseTypeHandler<T> {
 
 	/**
 	 * setParameter默认行为
-	 * @param ps
-	 * @param i
-	 * @param parameter
-	 * @param jdbcType
-	 * @throws SQLException
+	 * @param ps PreparedStatement
+	 * @param i 字段索引
+	 * @param parameter 参数
+	 * @param jdbcType 数据类型
+	 * @throws SQLException 抛出SQLException
 	 */
 	protected void setParameterDefault(PreparedStatement ps, int i, T parameter, JdbcType jdbcType)
 			throws SQLException {

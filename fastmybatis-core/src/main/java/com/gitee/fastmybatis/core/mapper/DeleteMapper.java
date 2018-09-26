@@ -7,9 +7,11 @@ import com.gitee.fastmybatis.core.query.Query;
 /**
  * 具备删除功能的Mapper
  * 
+ * @param <E> 实体类
+ * @param <I> 主键类型，如Long
  * @author tanghc
  */
-public interface DeleteMapper<Entity, ID> extends Mapper<Entity> {
+public interface DeleteMapper<E, I> extends Mapper<E> {
     /**
      * 删除
      * 
@@ -17,7 +19,7 @@ public interface DeleteMapper<Entity, ID> extends Mapper<Entity> {
      *            实体类
      * @return 受影响行数
      */
-    int delete(Entity entity);
+    int delete(E entity);
 
     /**
      * 根据id删除
@@ -26,7 +28,7 @@ public interface DeleteMapper<Entity, ID> extends Mapper<Entity> {
      *            主键id值
      * @return 受影响行数
      */
-    int deleteById(ID id);
+    int deleteById(I id);
 
     /**
      * 根据条件删除

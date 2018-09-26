@@ -7,16 +7,17 @@ import com.gitee.fastmybatis.core.query.Query;
 /**
  * 具备更新功能的Mapper
  * 
+ * @param <E> 实体类
  * @author tanghc
  */
-public interface UpdateMapper<Entity> extends Mapper<Entity> {
+public interface UpdateMapper<E> extends Mapper<E> {
     /**
      * 更新，更新所有字段
      * 
      * @param entity 实体类
      * @return 受影响行数
      */
-    int update(Entity entity);
+    int update(E entity);
 
     /**
      * 更新，忽略null字段
@@ -24,7 +25,7 @@ public interface UpdateMapper<Entity> extends Mapper<Entity> {
      * @param entity 实体类
      * @return 受影响行数
      */
-    int updateIgnoreNull(Entity entity);
+    int updateIgnoreNull(E entity);
 
     /**
      * 根据条件批量更新
