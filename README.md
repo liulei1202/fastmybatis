@@ -11,6 +11,14 @@ fastmybatis是一个mybatis开发框架，其宗旨为：简单、快速、有�
 
 [fastmybatis与MyBatis generator对比](https://gitee.com/durcframework/fastmybatis/wikis/pages?title=fastmybatis%E4%B8%8EMyBatis%20generator%E5%AF%B9%E6%AF%94&parent=)
 
+- 阿里代码规范检测结果：
+
+![阿里代码检测](https://images.gitee.com/uploads/images/2018/0927/094039_41c0e3f8_332975.png "alicode.png")
+
+- sonar代码检测结果：
+
+![sonar代码检测](https://images.gitee.com/uploads/images/2018/0927/094056_75095096_332975.png "sonar.png")
+
 # 快速开始（springboot）
 
 - 新建一个springboot项目
