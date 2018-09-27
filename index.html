@@ -41,9 +41,10 @@
 
 
 <!-- 请把你的html正文部分粘贴到此处，在浏览器中打开之后将会自动生成目录。如果想要将目录保留并嵌入到此文档中，只需在浏览器中“另存为->网页，全部”即可 -->
-<div class="md-preview markdown-body" data-provider="markdown-preview" style="width: 100%; height: 15376px; resize: none;"><h1>简介</h1>
+<div class="wiki-preview-body markdown-body"><h1>
+<a id="简介" class="anchor" href="#%E7%AE%80%E4%BB%8B"></a>简介</h1>
 <p>fastmybatis是一个mybatis开发框架，其宗旨为：简单、快速、有效。</p>
-<ul>
+<ul class="task-list">
 <li>零配置快速上手</li>
 <li>无需编写xml文件即可完成CRUD操作</li>
 <li>支持mysql，sqlserver，oracle，postgresql,sqlite</li>
@@ -51,82 +52,88 @@
 <li>支持与spring-boot集成，依赖starter即可</li>
 <li>轻量级，无侵入性，是官方mybatis的一种扩展</li>
 </ul>
-<h1>快速开始（springboot）</h1>
-<ul>
+<h1>
+<a id="快速开始springboot" class="anchor" href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8Bspringboot"></a>快速开始（springboot）</h1>
+<ul class="task-list">
 <li>新建一个springboot项目</li>
 <li>pom.xml添加fastmybatis-spring-boot-starter</li>
 </ul>
-<pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>net.oschina.durcframework<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>fastmybatis-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>最新版本（见changelog.md）<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>net.oschina.durcframework<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>fastmybatis-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>最新版本（见changelog.md）<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
 </code></pre>
-<ul>
+<ul class="task-list">
 <li>假设数据库有张<code>t_user</code>表，添加对应的实体类<code>TUser.java</code>和Mapper<code>TUserMapper.java</code>(可用fastmybatis-generator来生成)</li>
 <li>在<code>application.propertis</code>中配置数据库连接</li>
 <li>编写测试用例</li>
 </ul>
-<pre><code class="hljs"><span class="hljs-annotation">@Autowired</span>
+<pre><code class="hljs d"><span class="hljs-keyword">@Autowired</span>
 TUserMapper mapper;
     
 <span class="hljs-comment">// 根据主键查询</span>
-<span class="hljs-annotation">@Test</span>
-<span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">testGetById</span><span class="hljs-params">()</span> </span>{
+<span class="hljs-keyword">@Test</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> testGetById() {
     TUser user = mapper.getById(<span class="hljs-number">3</span>);
-    System.out.println(user);
+    System.<span class="hljs-keyword">out</span>.println(user);
 }
 </code></pre>
-<h1>查询</h1>
+<h1>
+<a id="查询" class="anchor" href="#%E6%9F%A5%E8%AF%A2"></a>查询</h1>
 <p>本小节主要讲解fastmybatis的查询功能。fastmybatis提供丰富的查询方式，满足日常查询所需。</p>
-<h2>分页查询</h2>
-<h3>方式1</h3>
+<h2>
+<a id="分页查询" class="anchor" href="#%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"></a>分页查询</h2>
+<h3>
+<a id="方式1" class="anchor" href="#%E6%96%B9%E5%BC%8F1"></a>方式1</h3>
 <p>前端传递两个分页参数pageIndex，pageSize</p>
-<pre><code class="hljs">	<span class="hljs-comment">// http://localhost:8080/page1?pageIndex=1&amp;pageSize=10</span>
+<pre><code class="hljs cpp">	<span class="hljs-comment">// http://localhost:8080/page1?pageIndex=1&amp;pageSize=10</span>
 	@GetMapping(<span class="hljs-string">"page1"</span>)
-	public <span class="hljs-keyword">List</span>&lt;TUser&gt; page1(int pageIndex,int pageSize) {
-		<span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>();
-		<span class="hljs-keyword">query</span>.page(pageIndex, pageSize);
-		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(<span class="hljs-keyword">query</span>);
-		<span class="hljs-keyword">return</span> <span class="hljs-keyword">list</span>;
+	<span class="hljs-keyword">public</span> List&lt;TUser&gt; page1(<span class="hljs-keyword">int</span> pageIndex,<span class="hljs-keyword">int</span> pageSize) {
+		Query query = <span class="hljs-keyword">new</span> Query();
+		query.page(pageIndex, pageSize);
+		List&lt;TUser&gt; <span class="hljs-built_in">list</span> = mapper.<span class="hljs-built_in">list</span>(query);
+		<span class="hljs-keyword">return</span> <span class="hljs-built_in">list</span>;
 	}
 </code></pre>
-<h3>方式2</h3>
+<h3>
+<a id="方式2" class="anchor" href="#%E6%96%B9%E5%BC%8F2"></a>方式2</h3>
 <p>PageParam里面封装了pageIndex，pageSize参数</p>
-<pre><code class="hljs">	<span class="hljs-comment">// http://localhost:8080/page2?pageIndex=1&amp;pageSize=10</span>
+<pre><code class="hljs php">	<span class="hljs-comment">// http://localhost:8080/page2?pageIndex=1&amp;pageSize=10</span>
 	@GetMapping(<span class="hljs-string">"page2"</span>)
-	public <span class="hljs-keyword">List</span>&lt;TUser&gt; page2(PageParam param) {
-		<span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = param.toQuery();
-		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(<span class="hljs-keyword">query</span>);
+	<span class="hljs-keyword">public</span> <span class="hljs-keyword">List</span>&lt;TUser&gt; page2(PageParam param) {
+		Query query = param.toQuery();
+		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(query);
 		<span class="hljs-keyword">return</span> <span class="hljs-keyword">list</span>;
 	}
 </code></pre>
-<h3>返回结果集和总记录数</h3>
+<h3>
+<a id="返回结果集和总记录数" class="anchor" href="#%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E9%9B%86%E5%92%8C%E6%80%BB%E8%AE%B0%E5%BD%95%E6%95%B0"></a>返回结果集和总记录数</h3>
 <p>方式1和方式2只能查询结果集，通常我们查询还需返回记录总数并返回给前端，fastmybatis的处理方式如下：</p>
-<pre><code class="hljs">// http://localhost:<span class="hljs-number">8080</span>/page3?pageIndex=<span class="hljs-number">1</span>&amp;pageSize=<span class="hljs-number">10</span>
-	@<span class="hljs-type">GetMapping</span>(<span class="hljs-string">"page3"</span>)
-	public <span class="hljs-type">Map</span>&lt;<span class="hljs-type">String</span>,<span class="hljs-type">Object</span>&gt; page3(<span class="hljs-type">PageParam</span> param) {
-		<span class="hljs-type">Query</span> query = param.toQuery();
-		<span class="hljs-type">List</span>&lt;<span class="hljs-type">TUser</span>&gt; list = mapper.list(query);
+<pre><code class="hljs qml"><span class="hljs-comment">// http://localhost:8080/page3?pageIndex=1&amp;pageSize=10</span>
+	@GetMapping(<span class="hljs-string">"page3"</span>)
+	public <span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>,<span class="hljs-built_in">Object</span>&gt; page3(PageParam param) {
+		Query query = param.toQuery();
+		List&lt;TUser&gt; <span class="hljs-built_in">list</span> = mapper.list(query);
 		long total = mapper.getCount(query);
 		
-		<span class="hljs-type">Map</span>&lt;<span class="hljs-type">String</span>,<span class="hljs-type">Object</span>&gt; <span class="hljs-literal">result</span> = new <span class="hljs-type">HashMap</span>&lt;<span class="hljs-type">String</span>, <span class="hljs-type">Object</span>&gt;();
-		<span class="hljs-literal">result</span>.put(<span class="hljs-string">"list"</span>, list);
-		<span class="hljs-literal">result</span>.put(<span class="hljs-string">"total"</span>, total);
+		<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>,<span class="hljs-built_in">Object</span>&gt; result = <span class="hljs-keyword">new</span> HashMap&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt;();
+		result.put(<span class="hljs-string">"list"</span>, <span class="hljs-built_in">list</span>);
+		result.put(<span class="hljs-string">"total"</span>, total);
 		
-		<span class="hljs-keyword">return</span> <span class="hljs-literal">result</span>;
+		<span class="hljs-keyword">return</span> result;
 	}
 </code></pre>
 <p>fastmybatis提供一种更简洁的方式来处理：</p>
-<pre><code class="hljs">// http://localhost:<span class="hljs-number">8080</span>/page4?pageIndex=<span class="hljs-number">1</span>&amp;pageSize=<span class="hljs-number">10</span>
-	@<span class="hljs-type">GetMapping</span>(<span class="hljs-string">"page4"</span>)
-	public <span class="hljs-type">PageInfo</span>&lt;<span class="hljs-type">TUser</span>&gt; page4(<span class="hljs-type">PageParam</span> param) {
-		<span class="hljs-type">PageInfo</span>&lt;<span class="hljs-type">TUser</span>&gt; pageInfo = <span class="hljs-type">MapperUtil</span>.query(mapper, query);
-		<span class="hljs-keyword">return</span> <span class="hljs-literal">result</span>;
+<pre><code class="hljs kotlin"><span class="hljs-comment">// http://localhost:8080/page4?pageIndex=1&amp;pageSize=10</span>
+	<span class="hljs-meta">@GetMapping(<span class="hljs-meta-string">"page4"</span>)</span>
+	<span class="hljs-keyword">public</span> PageInfo&lt;TUser&gt; page4(PageParam param) {
+		PageInfo&lt;TUser&gt; pageInfo = MapperUtil.query(mapper, query);
+		<span class="hljs-keyword">return</span> result;
 	}
 </code></pre>
 <p>PageInfo里面包含了List，total信息，还包含了一些额外信息，完整数据如下：</p>
-<pre><code class="hljs">{
+<pre><code class="hljs cpp">{
     <span class="hljs-string">"currentPageIndex"</span>: <span class="hljs-number">1</span>, <span class="hljs-comment">// 当前页</span>
     <span class="hljs-string">"firstPageIndex"</span>: <span class="hljs-number">1</span>, <span class="hljs-comment">// 首页</span>
     <span class="hljs-string">"lastPageIndex"</span>: <span class="hljs-number">2</span>, <span class="hljs-comment">// 尾页</span>
@@ -143,62 +150,69 @@ TUserMapper mapper;
     <span class="hljs-string">"total"</span>: <span class="hljs-number">20</span> <span class="hljs-comment">// 总记录数</span>
 }
 </code></pre>
-<h2>根据参数字段查询</h2>
-<h3>查询姓名为张三的用户</h3>
-<pre><code class="hljs"><span class="hljs-comment">// http://localhost:8080/sch?username=张三</span>
+<h2>
+<a id="根据参数字段查询" class="anchor" href="#%E6%A0%B9%E6%8D%AE%E5%8F%82%E6%95%B0%E5%AD%97%E6%AE%B5%E6%9F%A5%E8%AF%A2"></a>根据参数字段查询</h2>
+<h3>
+<a id="查询姓名为张三的用户" class="anchor" href="#%E6%9F%A5%E8%AF%A2%E5%A7%93%E5%90%8D%E4%B8%BA%E5%BC%A0%E4%B8%89%E7%9A%84%E7%94%A8%E6%88%B7"></a>查询姓名为张三的用户</h3>
+<pre><code class="hljs php"><span class="hljs-comment">// http://localhost:8080/sch?username=张三</span>
 	@GetMapping(<span class="hljs-string">"sch"</span>)
-	public <span class="hljs-keyword">List</span>&lt;TUser&gt; sch(String username) {
-		<span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>();
-		<span class="hljs-keyword">query</span>.<span class="hljs-keyword">eq</span>(<span class="hljs-string">"username"</span>, username);
-		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(<span class="hljs-keyword">query</span>);
+	<span class="hljs-keyword">public</span> <span class="hljs-keyword">List</span>&lt;TUser&gt; sch(String username) {
+		Query query = <span class="hljs-keyword">new</span> Query();
+		query.eq(<span class="hljs-string">"username"</span>, username);
+		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(query);
 		<span class="hljs-keyword">return</span> <span class="hljs-keyword">list</span>;
 	}
 </code></pre>
-<h3>查询姓名为张三并且拥有的钱大于100块</h3>
-<pre><code class="hljs"><span class="hljs-comment">// http://localhost:8080/sch2?username=张三</span>
+<h3>
+<a id="查询姓名为张三并且拥有的钱大于100块" class="anchor" href="#%E6%9F%A5%E8%AF%A2%E5%A7%93%E5%90%8D%E4%B8%BA%E5%BC%A0%E4%B8%89%E5%B9%B6%E4%B8%94%E6%8B%A5%E6%9C%89%E7%9A%84%E9%92%B1%E5%A4%A7%E4%BA%8E100%E5%9D%97"></a>查询姓名为张三并且拥有的钱大于100块</h3>
+<pre><code class="hljs php"><span class="hljs-comment">// http://localhost:8080/sch2?username=张三</span>
 	@GetMapping(<span class="hljs-string">"sch2"</span>)
-	public <span class="hljs-keyword">List</span>&lt;TUser&gt; sch2(String username) {
-		<span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>();
-		<span class="hljs-keyword">query</span>.<span class="hljs-keyword">eq</span>(<span class="hljs-string">"username"</span>, username).gt(<span class="hljs-string">"money"</span>, 100);
-		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(<span class="hljs-keyword">query</span>);
+	<span class="hljs-keyword">public</span> <span class="hljs-keyword">List</span>&lt;TUser&gt; sch2(String username) {
+		Query query = <span class="hljs-keyword">new</span> Query();
+		query.eq(<span class="hljs-string">"username"</span>, username).gt(<span class="hljs-string">"money"</span>, <span class="hljs-number">100</span>);
+		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(query);
 		<span class="hljs-keyword">return</span> <span class="hljs-keyword">list</span>;
 	}
 </code></pre>
-<h3>查询姓名为张三并带分页</h3>
-<pre><code class="hljs"><span class="hljs-comment">// http://localhost:8080/sch3?username=张三&amp;pageIndex=1&amp;pageSize=5</span>
+<h3>
+<a id="查询姓名为张三并带分页" class="anchor" href="#%E6%9F%A5%E8%AF%A2%E5%A7%93%E5%90%8D%E4%B8%BA%E5%BC%A0%E4%B8%89%E5%B9%B6%E5%B8%A6%E5%88%86%E9%A1%B5"></a>查询姓名为张三并带分页</h3>
+<pre><code class="hljs php"><span class="hljs-comment">// http://localhost:8080/sch3?username=张三&amp;pageIndex=1&amp;pageSize=5</span>
 	@GetMapping(<span class="hljs-string">"sch3"</span>)
-	public <span class="hljs-keyword">List</span>&lt;TUser&gt; sch3(String username,PageParam param) {
-		<span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = param.toQuery();
-		<span class="hljs-keyword">query</span>.<span class="hljs-keyword">eq</span>(<span class="hljs-string">"username"</span>, username);
-		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(<span class="hljs-keyword">query</span>);
+	<span class="hljs-keyword">public</span> <span class="hljs-keyword">List</span>&lt;TUser&gt; sch3(String username,PageParam param) {
+		Query query = param.toQuery();
+		query.eq(<span class="hljs-string">"username"</span>, username);
+		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(query);
 		<span class="hljs-keyword">return</span> <span class="hljs-keyword">list</span>;
 	}
 </code></pre>
-<h3>查询钱最多的前三名</h3>
-<pre><code class="hljs"><span class="hljs-comment">// http://localhost:8080/sch4</span>
+<h3>
+<a id="查询钱最多的前三名" class="anchor" href="#%E6%9F%A5%E8%AF%A2%E9%92%B1%E6%9C%80%E5%A4%9A%E7%9A%84%E5%89%8D%E4%B8%89%E5%90%8D"></a>查询钱最多的前三名</h3>
+<pre><code class="hljs php"><span class="hljs-comment">// http://localhost:8080/sch4</span>
 	@GetMapping(<span class="hljs-string">"sch4"</span>)
-	public <span class="hljs-keyword">List</span>&lt;TUser&gt; sch4() {
-		<span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>();
-		<span class="hljs-keyword">query</span>.orderby(<span class="hljs-string">"money"</span>, <span class="hljs-keyword">Sort</span>.<span class="hljs-keyword">DESC</span>) <span class="hljs-comment">// 按金额降序</span>
-			.page(1, 3);
-		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(<span class="hljs-keyword">query</span>);
+	<span class="hljs-keyword">public</span> <span class="hljs-keyword">List</span>&lt;TUser&gt; sch4() {
+		Query query = <span class="hljs-keyword">new</span> Query();
+		query.orderby(<span class="hljs-string">"money"</span>, Sort.DESC) <span class="hljs-comment">// 按金额降序</span>
+			.page(<span class="hljs-number">1</span>, <span class="hljs-number">3</span>);
+		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(query);
 		<span class="hljs-keyword">return</span> <span class="hljs-keyword">list</span>;
 	}
 </code></pre>
-<h3>将参数放在对象中查询</h3>
-<pre><code class="hljs"><span class="hljs-comment">// http://localhost:8080/sch5?username=张三</span>
+<h3>
+<a id="将参数放在对象中查询" class="anchor" href="#%E5%B0%86%E5%8F%82%E6%95%B0%E6%94%BE%E5%9C%A8%E5%AF%B9%E8%B1%A1%E4%B8%AD%E6%9F%A5%E8%AF%A2"></a>将参数放在对象中查询</h3>
+<pre><code class="hljs php"><span class="hljs-comment">// http://localhost:8080/sch5?username=张三</span>
 	@GetMapping(<span class="hljs-string">"sch5"</span>)
-	public <span class="hljs-keyword">List</span>&lt;TUser&gt; sch5(UserParam userParam) {
-		<span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = userParam.toQuery();
-		<span class="hljs-keyword">query</span>.<span class="hljs-keyword">eq</span>(<span class="hljs-string">"username"</span>, userParam.getUsername());
-		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(<span class="hljs-keyword">query</span>);
+	<span class="hljs-keyword">public</span> <span class="hljs-keyword">List</span>&lt;TUser&gt; sch5(UserParam userParam) {
+		Query query = userParam.toQuery();
+		query.eq(<span class="hljs-string">"username"</span>, userParam.getUsername());
+		<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(query);
 		<span class="hljs-keyword">return</span> <span class="hljs-keyword">list</span>;
 	}
 </code></pre>
 <p>UserParam继承PageSortParam类，表示支持分页和排序查询</p>
-<h3>使用普通bean查询</h3>
+<h3>
+<a id="使用普通bean查询" class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%99%AE%E9%80%9Abean%E6%9F%A5%E8%AF%A2"></a>使用普通bean查询</h3>
 <p>假设有个User类如下</p>
-<pre><code class="hljs"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">User</span> {
+<pre><code class="hljs cpp"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> {</span>
 	<span class="hljs-keyword">private</span> Integer id;
 	<span class="hljs-keyword">private</span> String userName;
 
@@ -220,177 +234,188 @@ TUserMapper mapper;
 }
 </code></pre>
 <p>我们将这个类作为查询参数,那么在springmvc中可以这样写:</p>
-<pre><code class="hljs">@GetMapping(path=<span class="hljs-string">"findUserBean.do"</span>)
-public <span class="hljs-keyword">List</span>&lt;User&gt; findUser(User user) {
-	<span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = <span class="hljs-keyword">Query</span>.build(user);
-	<span class="hljs-keyword">List</span>&lt;User&gt; <span class="hljs-keyword">list</span> = dao.find(<span class="hljs-keyword">query</span>);
+<pre><code class="hljs php">@GetMapping(path=<span class="hljs-string">"findUserBean.do"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">List</span>&lt;User&gt; findUser(User user) {
+	Query query = Query.build(user);
+	<span class="hljs-keyword">List</span>&lt;User&gt; <span class="hljs-keyword">list</span> = dao.find(query);
 	<span class="hljs-keyword">return</span> <span class="hljs-keyword">list</span>;
 }
 </code></pre>
-<p>Query query = Query.build(user);这句是将User中的属性转换成对应条件,假设userName的值为"jim",那么会封装成一个条件where user_name=‘jim’</p>
+<p>Query query = Query.build(user);这句是将User中的属性转换成对应条件,假设userName的值为"jim",那么会封装成一个条件where user_name='jim'</p>
 <p>浏览器输入链接:<a href="http://localhost:8080/fastmybatis-springmvc/findUserBean.do?userName=jim">http://localhost:8080/fastmybatis-springmvc/findUserBean.do?userName=jim</a>
 后台将会执行如下SQL:</p>
-<pre><code class="hljs"><span class="hljs-operator"><span class="hljs-keyword">SELECT</span> id,user_name <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">user</span> t <span class="hljs-keyword">WHERE</span> t.user_name = ?
-</span></code></pre>
+<pre><code class="hljs armasm"><span class="hljs-keyword">SELECT </span>id,user_name FROM user t WHERE t.user_name = ?
+</code></pre>
 <p>?的值为jim</p>
-<h3>@Condition注解</h3>
+<h3>
+<a id="condition注解" class="anchor" href="#condition%E6%B3%A8%E8%A7%A3"></a>@Condition注解</h3>
 <p>@Condition注解用来强化查询，有了这个注解可以生成各种查询条件。</p>
 <p>@Condition注解有三个属性：</p>
-<ul>
+<ul class="task-list">
 <li>joint：表达式之间的连接符,AND|OR,默认AND</li>
 <li>column：数据库字段名，可选</li>
 <li>operator：连接符枚举，存放了等于、大于、小于等连接符</li>
 </ul>
 <p>如果要查询id大于2的用户只需在get方法上加上一个@Condition注解即可:</p>
-<pre><code class="hljs"><span class="hljs-annotation">@Condition</span>(operator=Operator.gt)
-<span class="hljs-keyword">public</span> <span class="hljs-function">Integer <span class="hljs-title">getId</span><span class="hljs-params">()</span> </span>{
+<pre><code class="hljs kotlin"><span class="hljs-meta">@Condition(operator=Operator.gt)</span>
+<span class="hljs-keyword">public</span> Integer getId() {
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.id;
 }
 </code></pre>
 <p>这样，当id有值时，会封装成一个<strong>where id&gt;2</strong>的条件</p>
-<ul>
+<ul class="task-list">
 <li>需要注意的是，如果不指定column属性，系统会默认取get方法中属性名，然后转换成数据库字段名。如果需要指定数据库字段名的话，可以使用@Condition的column属性。</li>
 </ul>
 <p>public Integer get++UserName++() {
 return this.userName;
 }</p>
 <p>这种情况下会取下划线部分字段，然后转换成数据库字段名。</p>
-<pre><code class="hljs"><span class="hljs-annotation">@Condition</span>(column=<span class="hljs-string">"username"</span>) <span class="hljs-comment">// 显示指定字段名</span>
-<span class="hljs-keyword">public</span> <span class="hljs-function">Integer <span class="hljs-title">getUserName</span><span class="hljs-params">()</span> </span>{
+<pre><code class="hljs kotlin"><span class="hljs-meta">@Condition(column=<span class="hljs-meta-string">"username"</span>)</span> <span class="hljs-comment">// 显示指定字段名</span>
+<span class="hljs-keyword">public</span> Integer getUserName() {
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.userName;
 }
 </code></pre>
 <p>使用@Condition可以生产更加灵活的条件查询,比如需要查询日期为2017-12-1~2017-12-10日的记录,我们可以这样写:</p>
-<pre><code class="hljs"><span class="hljs-annotation">@Condition</span>(column=<span class="hljs-string">"add_date"</span>,operator=Operator.ge)
-<span class="hljs-keyword">public</span> <span class="hljs-function">Date <span class="hljs-title">getStartDate</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.startDate;
+<pre><code class="hljs css">@<span class="hljs-keyword">Condition</span>(<span class="hljs-keyword">column</span>="<span class="hljs-keyword">add_date</span>",<span class="hljs-keyword">operator</span>=<span class="hljs-keyword">Operator</span>.<span class="hljs-keyword">ge</span>)
+public Date getStartDate() {
+    <span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">this</span><span class="hljs-selector-class">.startDate</span>;
 }
 
-<span class="hljs-annotation">@Condition</span>(column=<span class="hljs-string">"add_date"</span>,operator=Operator.lt)
-<span class="hljs-keyword">public</span> <span class="hljs-function">Date <span class="hljs-title">getEndDate</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.endDate;
+@<span class="hljs-keyword">Condition</span>(<span class="hljs-keyword">column</span>="<span class="hljs-keyword">add_date</span>",<span class="hljs-keyword">operator</span>=<span class="hljs-keyword">Operator</span>.<span class="hljs-keyword">lt</span>)
+public Date getEndDate() {
+    <span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">this</span><span class="hljs-selector-class">.endDate</span>;
 }
 </code></pre>
 <p>转换成SQL语句:</p>
-<pre><code class="hljs">t.add_date&gt;=<span class="hljs-string">'2017-12-1'</span> <span class="hljs-keyword">AND</span> t.add_date&lt;<span class="hljs-string">'2017-12-10'</span>
+<pre><code class="hljs php">t.add_date&gt;=<span class="hljs-string">'2017-12-1'</span> <span class="hljs-keyword">AND</span> t.add_date&lt;<span class="hljs-string">'2017-12-10'</span>
 </code></pre>
-<h4>IN查询</h4>
-<p>假设前端页面传来多个值比如checkbox勾选多个id=[1,2],那么我们在User类里面可以用Integer[]或List&lt;Integer&gt;来接收.</p>
-<pre><code class="hljs"><span class="hljs-keyword">private</span> Integer[] idArr;
+<h4>
+<a id="in查询" class="anchor" href="#in%E6%9F%A5%E8%AF%A2"></a>IN查询</h4>
+<p>假设前端页面传来多个值比如checkbox勾选多个id=[1,2],那么我们在User类里面可以用Integer[]或List来接收.</p>
+<pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> Integer[] idArr;
 
-<span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setIdArr</span><span class="hljs-params">(Integer[] idArr)</span> </span>{<span class="hljs-keyword">this</span>.idArr = idArr;}
+<span class="hljs-keyword">public</span> void setIdArr(Integer[] idArr) {<span class="hljs-keyword">this</span>.idArr = idArr;}
 
-<span class="hljs-annotation">@Condition</span>(column=<span class="hljs-string">"id"</span>)
+<span class="hljs-meta">@Condition(column=<span class="hljs-meta-string">"id"</span>)</span>
 <span class="hljs-keyword">public</span> Integer[] getIdArr() {<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.idArr;}
 </code></pre>
 <p>这样会生成where id IN(1,2)条件。</p>
-<h2>排序查询</h2>
+<h2>
+<a id="排序查询" class="anchor" href="#%E6%8E%92%E5%BA%8F%E6%9F%A5%E8%AF%A2"></a>排序查询</h2>
 <p>// 根据添加时间倒序</p>
-<pre><code class="hljs"><span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>();
-<span class="hljs-keyword">query</span>.orderby(<span class="hljs-string">"create_time"</span>,<span class="hljs-keyword">Sort</span>.<span class="hljs-keyword">DESC</span>);
-dao.find(<span class="hljs-keyword">query</span>);
+<pre><code class="hljs gradle">Query query = <span class="hljs-keyword">new</span> Query();
+query.orderby(<span class="hljs-string">"create_time"</span>,<span class="hljs-keyword">Sort</span>.DESC);
+dao.<span class="hljs-keyword">find</span>(query);
 </code></pre>
-<h2>多表关联查询</h2>
+<h2>
+<a id="多表关联查询" class="anchor" href="#%E5%A4%9A%E8%A1%A8%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2"></a>多表关联查询</h2>
 <p>多表关联查询使用的地方很多，比如需要关联第二张表，获取第二张表的几个字段，然后返回给前端。</p>
 <p>fastmybatis的用法如下：</p>
 <p>假如我们需要关联第二张表<code>user_info</code>，筛选出user_info中的城市为杭州的数据。</p>
-<pre><code class="hljs"><span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>()
+<pre><code class="hljs cs">Query query = <span class="hljs-keyword">new</span> Query()
         <span class="hljs-comment">// 左连接查询,主表的alias默认为t</span>
-        .join(<span class="hljs-string">"LEFT JOIN user_info t2 ON t.id = t2.user_id"</span>).page(1, 5)
-        .<span class="hljs-keyword">eq</span>(<span class="hljs-string">"t2.city"</span>,<span class="hljs-string">"杭州"</span>);
+        .<span class="hljs-keyword">join</span>(<span class="hljs-string">"LEFT JOIN user_info t2 ON t.id = t2.user_id"</span>).page(<span class="hljs-number">1</span>, <span class="hljs-number">5</span>)
+        .eq(<span class="hljs-string">"t2.city"</span>,<span class="hljs-string">"杭州"</span>);
 
-<span class="hljs-keyword">List</span>&lt;TUser&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(<span class="hljs-keyword">query</span>);
+List&lt;TUser&gt; list = mapper.list(query);
 
 System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">"=============="</span>);
-<span class="hljs-keyword">for</span> (TUser user : <span class="hljs-keyword">list</span>) {
+<span class="hljs-keyword">for</span> (TUser user : list) {
     System.<span class="hljs-keyword">out</span>.println(user.getId() + <span class="hljs-string">" "</span> + user.getUsername());
 }
 System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">"=============="</span>);
 </code></pre>
-<h3>多表关联返回指定字段</h3>
+<h3>
+<a id="多表关联返回指定字段" class="anchor" href="#%E5%A4%9A%E8%A1%A8%E5%85%B3%E8%81%94%E8%BF%94%E5%9B%9E%E6%8C%87%E5%AE%9A%E5%AD%97%E6%AE%B5"></a>多表关联返回指定字段</h3>
 <p>有时候不需要全部字段，需要取表1中的几个字段，然后取表2中的几个字段，fastmybatis实现方式如下：</p>
-<pre><code class="hljs"><span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>();
+<pre><code class="hljs qml">Query query = <span class="hljs-keyword">new</span> Query();
 <span class="hljs-comment">// 左连接查询,主表的alias默认为t</span>
-<span class="hljs-keyword">query</span>.join(<span class="hljs-string">"LEFT JOIN user_info t2 ON t.id = t2.user_id"</span>);
+query.join(<span class="hljs-string">"LEFT JOIN user_info t2 ON t.id = t2.user_id"</span>);
 <span class="hljs-comment">// 指定返回字段</span>
-<span class="hljs-keyword">List</span>&lt;String&gt; column = Arrays.asList(<span class="hljs-string">"t2.user_id as userId"</span>, <span class="hljs-string">"t.username"</span>, <span class="hljs-string">"t2.city"</span>);
+List&lt;<span class="hljs-built_in">String</span>&gt; column = Arrays.asList(<span class="hljs-string">"t2.user_id as userId"</span>, <span class="hljs-string">"t.username"</span>, <span class="hljs-string">"t2.city"</span>);
 <span class="hljs-comment">// 查询结果返回到map中</span>
-<span class="hljs-keyword">List</span>&lt;Map&lt;String, Object&gt;&gt; mapList = mapper.listMap(column, <span class="hljs-keyword">query</span>);
+List&lt;<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">Object</span>&gt;&gt; mapList = mapper.listMap(column, query);
 <span class="hljs-comment">// 再将map转换成实体bean</span>
-<span class="hljs-keyword">List</span>&lt;UserInfoVo&gt; <span class="hljs-keyword">list</span> = MyBeanUtil.mapListToObjList(mapList, UserInfoVo.<span class="hljs-keyword">class</span>);
+List&lt;UserInfoVo&gt; <span class="hljs-built_in">list</span> = MyBeanUtil.mapListToObjList(mapList, UserInfoVo.class);
 </code></pre>
 <p>执行的SQL语句对应如下：</p>
-<pre><code class="hljs">SELECT t2<span class="hljs-class">.user_id</span> as userId , t<span class="hljs-class">.username</span> , t2<span class="hljs-class">.city</span>
+<pre><code class="hljs stylus">SELECT t2<span class="hljs-selector-class">.user_id</span> as userId , t<span class="hljs-selector-class">.username</span> , t2<span class="hljs-selector-class">.city</span>
 FROM `t_user` t 
-LEFT JOIN user_info t2 ON t<span class="hljs-class">.id</span> = t2<span class="hljs-class">.user_id</span>
+LEFT JOIN user_info t2 ON t<span class="hljs-selector-class">.id</span> = t2<span class="hljs-selector-class">.user_id</span>
 </code></pre>
-<h2>使用@Select查询</h2>
+<h2>
+<a id="使用select查询" class="anchor" href="#%E4%BD%BF%E7%94%A8select%E6%9F%A5%E8%AF%A2"></a>使用@Select查询</h2>
 <p>@Select注解是mybatis官方提供的一个功能，fastmybatis可以理解为是官方的一种扩展，因此同样支持此功能。
 在Mapper中添加如下代码：</p>
-<pre><code class="hljs"><span class="hljs-variable">@Select</span>(<span class="hljs-string">"select * from t_user where id=#{id}"</span>)
-TUser <span class="hljs-function">selectById</span>(<span class="hljs-variable">@Param</span>(<span class="hljs-string">"id"</span>) int id);
+<pre><code class="hljs less"><span class="hljs-variable">@Select</span>(<span class="hljs-string">"select * from t_user where id=#{id}"</span>)
+TUser selectById(<span class="hljs-variable">@Param</span>(<span class="hljs-string">"id"</span>) int id);
 </code></pre>
 <p>编写测试用例</p>
-<pre><code class="hljs"><span class="hljs-annotation">@Test</span>
-<span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">testSelectById</span><span class="hljs-params">()</span> </span>{
+<pre><code class="hljs cs">@<span class="hljs-function">Test
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testSelectById</span>(<span class="hljs-params"></span>) </span>{
     TUser user = dao.selectById(<span class="hljs-number">3</span>);
 
-    System.out.println(user.getUsername());
+    System.<span class="hljs-keyword">out</span>.println(user.getUsername());
 }
 </code></pre>
 <p>对于简单的SQL，可以用这种方式实现。除了@Select之外，还有@Update，@Insert，@Delete，这里就不多做演示了。</p>
-<h2>Query类详解</h2>
+<h2>
+<a id="query类详解" class="anchor" href="#query%E7%B1%BB%E8%AF%A6%E8%A7%A3"></a>Query类详解</h2>
 <p>Query是一个查询参数类，配合Mapper一起使用。</p>
-<h3>参数介绍</h3>
+<h3>
+<a id="参数介绍" class="anchor" href="#%E5%8F%82%E6%95%B0%E4%BB%8B%E7%BB%8D"></a>参数介绍</h3>
 <p>Query里面封装了一系列查询参数，主要分为以下几类：</p>
-<ul>
+<ul class="task-list">
 <li>分页参数：设置分页</li>
 <li>排序参数：设置排序字段</li>
 <li>条件参数：设置查询条件</li>
 <li>字段参数：可返回指定字段</li>
 </ul>
 <p>下面逐个讲解每个参数的用法。</p>
-<h3>分页参数</h3>
+<h3>
+<a id="分页参数" class="anchor" href="#%E5%88%86%E9%A1%B5%E5%8F%82%E6%95%B0"></a>分页参数</h3>
 <p>一般来说分页的使用比较简单，通常是两个参数，
 pageIndex：当前页索引，pageSize：每页几条数据。
 Query类使用**page(pageIdnex, pageSize)**方法来设置。
 假如我们要查询第二页，每页10条数据，代码可以这样写：</p>
-<pre><code class="hljs"><span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>();
-<span class="hljs-keyword">query</span>.page(2, 10);
-<span class="hljs-keyword">List</span>&lt;User&gt; <span class="hljs-keyword">list</span> = dao.find(<span class="hljs-keyword">query</span>);
+<pre><code class="hljs php">Query query = <span class="hljs-keyword">new</span> Query();
+query.page(<span class="hljs-number">2</span>, <span class="hljs-number">10</span>);
+<span class="hljs-keyword">List</span>&lt;User&gt; <span class="hljs-keyword">list</span> = dao.find(query);
 </code></pre>
 <p>如果要实现不规则分页，可以这样写：</p>
-<pre><code class="hljs"><span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>();
-<span class="hljs-keyword">query</span>.limit(3, 5) <span class="hljs-comment">// 对应mysql：limit 3,5</span>
+<pre><code class="hljs cpp">Query query = <span class="hljs-keyword">new</span> Query();
+query.limit(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>) <span class="hljs-comment">// 对应mysql：limit 3,5</span>
 </code></pre>
-<h3>排序参数</h3>
-<pre><code class="hljs"><span class="hljs-function"><span class="hljs-title">orderby</span><span class="hljs-params">(String sortname, Sort sort)</span></span>
+<h3>
+<a id="排序参数" class="anchor" href="#%E6%8E%92%E5%BA%8F%E5%8F%82%E6%95%B0"></a>排序参数</h3>
+<pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">orderby</span><span class="hljs-params">(String sortname, Sort sort)</span></span>
 </code></pre>
 <p>其中sortname为数据库字段，非javaBean属性</p>
-<ul>
+<ul class="task-list">
 <li>orderby(String sortname, Sort sort)则可以指定排序方式，Sort为排序方式枚举
 假如要按照添加时间倒序，可以这样写：</li>
 </ul>
-<pre><code class="hljs"><span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>();
-<span class="hljs-keyword">query</span>.orderby(<span class="hljs-string">"create_time"</span>,<span class="hljs-keyword">Sort</span>.<span class="hljs-keyword">DESC</span>);
-mapper.<span class="hljs-keyword">list</span>(<span class="hljs-keyword">query</span>);
+<pre><code class="hljs cpp">Query query = <span class="hljs-keyword">new</span> Query();
+query.orderby(<span class="hljs-string">"create_time"</span>,Sort.DESC);
+mapper.<span class="hljs-built_in">list</span>(query);
 </code></pre>
 <p>添加多个排序字段可以在后面追加：</p>
-<pre><code class="hljs"><span class="hljs-keyword">query</span>.orderby(<span class="hljs-string">"create_time"</span>,<span class="hljs-keyword">Sort</span>.<span class="hljs-keyword">DESC</span>).orderby(<span class="hljs-string">"id"</span>,<span class="hljs-keyword">Sort</span>.ASC);
+<pre><code class="hljs cs">query.<span class="hljs-keyword">orderby</span>(<span class="hljs-string">"create_time"</span>,Sort.DESC).<span class="hljs-keyword">orderby</span>(<span class="hljs-string">"id"</span>,Sort.ASC);
 </code></pre>
-<h3>条件参数</h3>
+<h3>
+<a id="条件参数" class="anchor" href="#%E6%9D%A1%E4%BB%B6%E5%8F%82%E6%95%B0"></a>条件参数</h3>
 <p>条件参数是用的最多一个，因为在查询中往往需要加入各种条件。
 fastmybatis在条件查询上面做了一些封装，这里不做太多讲解，只讲下基本的用法，以后会单独开一篇文章来介绍。感兴趣的同学可以自行查看源码，也不难理解。</p>
 <p>条件参数使用非常简单，Query对象封装一系列常用条件查询。</p>
-<ul>
+<ul class="task-list">
 <li>等值查询eq(String columnName, Object value)，columnName为数据库字段名，value为查询的值
 假设我们要查询姓名为张三的用户，可以这样写：</li>
 </ul>
-<pre><code class="hljs"><span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>();
-<span class="hljs-keyword">query</span>.<span class="hljs-keyword">eq</span>(<span class="hljs-string">"username"</span>,<span class="hljs-string">"张三"</span>);
-<span class="hljs-keyword">List</span>&lt;User&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(<span class="hljs-keyword">query</span>);
+<pre><code class="hljs php">Query query = <span class="hljs-keyword">new</span> Query();
+query.eq(<span class="hljs-string">"username"</span>,<span class="hljs-string">"张三"</span>);
+<span class="hljs-keyword">List</span>&lt;User&gt; <span class="hljs-keyword">list</span> = mapper.<span class="hljs-keyword">list</span>(query);
 </code></pre>
-<p>通过方法名即可知道eq表示等于’=’，同理lt表示小于&lt;,gt表示大于&gt;</p>
+<p>通过方法名即可知道eq表示等于'='，同理lt表示小于&lt;,gt表示大于&gt;</p>
 <table>
 <thead>
 <tr>
@@ -449,63 +474,66 @@ fastmybatis在条件查询上面做了一些封装，这里不做太多讲解，
 </tr>
 <tr>
 <td>isEmpty</td>
-<td>字段为NULL或者为’’</td>
+<td>字段为NULL或者为''</td>
 </tr>
 </tbody>
 </table>
 <p>如果上述方法还不能满足查询需求的话，我们可以使用自定sql的方式来编写查询条件，方法为：</p>
-<pre><code class="hljs"><span class="hljs-keyword">Query</span> <span class="hljs-keyword">query</span> = new <span class="hljs-keyword">Query</span>();
-<span class="hljs-keyword">query</span>.sql(<span class="hljs-string">" username='Jim' OR username='Tom'"</span>);
+<pre><code class="hljs cpp">Query query = <span class="hljs-keyword">new</span> Query();
+query.sql(<span class="hljs-string">" username='Jim' OR username='Tom'"</span>);
 </code></pre>
 <p><strong>注意</strong>：sql()方法不会处理sql注入问题，因此尽量少用。</p>
-<h1>自定义SQL</h1>
-<h2>方式1</h2>
+<h1>
+<a id="自定义sql" class="anchor" href="#%E8%87%AA%E5%AE%9A%E4%B9%89sql"></a>自定义SQL</h1>
+<h2>
+<a id="方式1-1" class="anchor" href="#%E6%96%B9%E5%BC%8F1-1"></a>方式1</h2>
 <p>直接写在Mapper.java中</p>
-<pre><code class="hljs"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">TUserMapper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">CrudMapper</span>&lt;<span class="hljs-title">TUser</span>, <span class="hljs-title">Integer</span>&gt; {</span>
+<pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">TUserMapper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">CrudMapper</span>&lt;<span class="hljs-title">TUser</span>, <span class="hljs-title">Integer</span>&gt; </span>{
 
     <span class="hljs-comment">// 自定义sql，官方自带，不需要写xml</span>
-    <span class="hljs-javadoc">/**
+    <span class="hljs-comment">/**
      * 修改用户名
-     *<span class="hljs-javadoctag"> @param</span> id
-     *<span class="hljs-javadoctag"> @param</span> username
-     *<span class="hljs-javadoctag"> @return</span> 返回影响行数
+     * <span class="hljs-doctag">@param</span> id
+     * <span class="hljs-doctag">@param</span> username
+     * <span class="hljs-doctag">@return</span> 返回影响行数
      */</span>
-    <span class="hljs-annotation">@Update</span>(<span class="hljs-string">"update t_user set username = #{username} where id = #{id}"</span>)
-    <span class="hljs-typename">int</span> updateById(<span class="hljs-annotation">@Param</span>(<span class="hljs-string">"id"</span>) <span class="hljs-typename">int</span> id, <span class="hljs-annotation">@Param</span>(<span class="hljs-string">"username"</span>) String username);
+    <span class="hljs-meta">@Update</span>(<span class="hljs-string">"update t_user set username = #{username} where id = #{id}"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">updateById</span><span class="hljs-params">(@Param(<span class="hljs-string">"id"</span>)</span> <span class="hljs-keyword">int</span> id, @<span class="hljs-title">Param</span><span class="hljs-params">(<span class="hljs-string">"username"</span>)</span> String username)</span>;
  
 }
 </code></pre>
 <p>简单SQL可采用这种形式。</p>
-<h2>方式2</h2>
+<h2>
+<a id="方式2-1" class="anchor" href="#%E6%96%B9%E5%BC%8F2-1"></a>方式2</h2>
 <p>fastmybatis提供的Mapper已经满足大部分的操作需求，但是有些复杂的sql语句还是需要写在xml文件中。fastmybatis同样支持将sql语句写在xml中，具体配置如下：</p>
-<ul>
+<ul class="task-list">
 <li>在application.properties添加一句，指定xml文件存放路径</li>
 </ul>
-<pre><code class="hljs">mybatis.mapper-locations=<span class="hljs-keyword">classpath</span>:<span class="hljs-regexp">/mybatis/m</span>apper<span class="hljs-comment">/*.xml
+<pre><code class="hljs gradle">mybatis.mapper-locations=<span class="hljs-keyword">classpath</span>:<span class="hljs-regexp">/mybatis/m</span>apper<span class="hljs-comment">/*.xml
 </span></code></pre>
-<ul>
+<ul class="task-list">
 <li>在resources/mybatis/mapper目录下新建一个xml文件TUserMapper.xml，内容如下：</li>
 </ul>
-<pre><code class="hljs"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
-<span class="hljs-doctype">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">mapper</span> <span class="hljs-attribute">namespace</span>=<span class="hljs-value">"com.mayapp.mapper.TUserMapper"</span>&gt;</span>
+<pre lang="xml" class="xml"><code class="hljs"><span class="php"><span class="hljs-meta">&lt;?</span>xml version=<span class="hljs-string">"1.0"</span> encoding=<span class="hljs-string">"utf-8"</span><span class="hljs-meta">?&gt;</span></span>
+<span class="hljs-meta">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">namespace</span>=<span class="hljs-string">"com.mayapp.mapper.TUserMapper"</span>&gt;</span>
 	
-	<span class="hljs-tag">&lt;<span class="hljs-title">select</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"selectByName"</span> <span class="hljs-attribute">parameterType</span>=<span class="hljs-value">"String"</span> <span class="hljs-attribute">resultMap</span>=<span class="hljs-value">"baseResultMap"</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"selectByName"</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">"String"</span> <span class="hljs-attr">resultMap</span>=<span class="hljs-string">"baseResultMap"</span>&gt;</span>
 		select * from t_user t where t.username = #{username} limit 1
-	<span class="hljs-tag">&lt;/<span class="hljs-title">select</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
 	
-<span class="hljs-tag">&lt;/<span class="hljs-title">mapper</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">mapper</span>&gt;</span>
 </code></pre>
 <p>这个xml文件跟其它的mybatis配置文件一样，baseResultMap没有看到定义，但是确实存在，因为这个是fastmybatis提供的一个内置resultMap。</p>
-<ul>
+<ul class="task-list">
 <li>在TUseroMapper.java中添加：</li>
 </ul>
-<pre><code class="hljs"><span class="hljs-function">TUser <span class="hljs-title">selectByName</span><span class="hljs-params">(@Param(<span class="hljs-string">"username"</span>)</span>String username)</span>;
+<pre lang="java" class="java"><code class="hljs"><span class="hljs-function">TUser <span class="hljs-title">selectByName</span><span class="hljs-params">(@Param(<span class="hljs-string">"username"</span>)</span>String username)</span>;
 </code></pre>
-<ul>
+<ul class="task-list">
 <li>编写单元测试用例</li>
 </ul>
-<pre><code class="hljs"><span class="hljs-annotation">@Test</span>
+<pre lang="java" class="java"><code class="hljs"><span class="hljs-meta">@Test</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testSelectByName</span><span class="hljs-params">()</span> </span>{
     TUser user = dao.selectByName(<span class="hljs-string">"张三"</span>);
 
@@ -513,132 +541,137 @@ fastmybatis在条件查询上面做了一些封装，这里不做太多讲解，
 }
     
 </code></pre>
-<h3>多文件同一个namespace</h3>
+<h3>
+<a id="多文件同一个namespace" class="anchor" href="#%E5%A4%9A%E6%96%87%E4%BB%B6%E5%90%8C%E4%B8%80%E4%B8%AAnamespace"></a>多文件同一个namespace</h3>
 <p>在以往的开发过程中，一个Mapper对应一个xml文件（namespace）。如果多人同时在一个xml中写SQL的话会造成各种冲突（虽然能够最终被解决）。</p>
 <p>fastmybatis打破这种常规，允许不同的xml文件定义相同的namespace，程序启动时会自动把他们的内容合并到同一个文件当中去。</p>
-<ul>
+<ul class="task-list">
 <li>张三的UserMapper_zs.xml</li>
 </ul>
-<pre><code class="hljs"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
-<span class="hljs-doctype">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">mapper</span> <span class="hljs-attribute">namespace</span>=<span class="hljs-value">"com.mayapp.mapper.TUserMapper"</span>&gt;</span>
+<pre><code class="hljs xml"><span class="php"><span class="hljs-meta">&lt;?</span>xml version=<span class="hljs-string">"1.0"</span> encoding=<span class="hljs-string">"utf-8"</span><span class="hljs-meta">?&gt;</span></span>
+<span class="hljs-meta">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">namespace</span>=<span class="hljs-string">"com.mayapp.mapper.TUserMapper"</span>&gt;</span>
 	
-	<span class="hljs-tag">&lt;<span class="hljs-title">select</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"selectByName"</span> <span class="hljs-attribute">parameterType</span>=<span class="hljs-value">"String"</span> <span class="hljs-attribute">resultMap</span>=<span class="hljs-value">"baseResultMap"</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"selectByName"</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">"String"</span> <span class="hljs-attr">resultMap</span>=<span class="hljs-string">"baseResultMap"</span>&gt;</span>
 		select * from t_user t where t.username = #{username} limit 1
-	<span class="hljs-tag">&lt;/<span class="hljs-title">select</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
 	
-<span class="hljs-tag">&lt;/<span class="hljs-title">mapper</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">mapper</span>&gt;</span>
 </code></pre>
-<ul>
+<ul class="task-list">
 <li>李四的UserMapper_ls.xml</li>
 </ul>
-<pre><code class="hljs"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
-<span class="hljs-doctype">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">mapper</span> <span class="hljs-attribute">namespace</span>=<span class="hljs-value">"com.mayapp.mapper.TUserMapper"</span>&gt;</span>
+<pre><code class="hljs xml"><span class="php"><span class="hljs-meta">&lt;?</span>xml version=<span class="hljs-string">"1.0"</span> encoding=<span class="hljs-string">"utf-8"</span><span class="hljs-meta">?&gt;</span></span>
+<span class="hljs-meta">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">namespace</span>=<span class="hljs-string">"com.mayapp.mapper.TUserMapper"</span>&gt;</span>
 	
-	<span class="hljs-tag">&lt;<span class="hljs-title">select</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"updateUser"</span> <span class="hljs-attribute">parameterType</span>=<span class="hljs-value">"String"</span> <span class="hljs-attribute">resultMap</span>=<span class="hljs-value">"baseResultMap"</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"updateUser"</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">"String"</span> <span class="hljs-attr">resultMap</span>=<span class="hljs-string">"baseResultMap"</span>&gt;</span>
 		update t_user set username = #{username} where id=#{id}
-	<span class="hljs-tag">&lt;/<span class="hljs-title">select</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
 	
-<span class="hljs-tag">&lt;/<span class="hljs-title">mapper</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">mapper</span>&gt;</span>
 </code></pre>
 <p>最终会合并成</p>
-<pre><code class="hljs"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
-<span class="hljs-doctype">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">mapper</span> <span class="hljs-attribute">namespace</span>=<span class="hljs-value">"com.mayapp.mapper.TUserMapper"</span>&gt;</span>
+<pre><code class="hljs xml"><span class="php"><span class="hljs-meta">&lt;?</span>xml version=<span class="hljs-string">"1.0"</span> encoding=<span class="hljs-string">"utf-8"</span><span class="hljs-meta">?&gt;</span></span>
+<span class="hljs-meta">&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">mapper</span> <span class="hljs-attr">namespace</span>=<span class="hljs-string">"com.mayapp.mapper.TUserMapper"</span>&gt;</span>
     <span class="hljs-comment">&lt;!-- 张三部分 --&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-title">select</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"selectByName"</span> <span class="hljs-attribute">parameterType</span>=<span class="hljs-value">"String"</span> <span class="hljs-attribute">resultMap</span>=<span class="hljs-value">"baseResultMap"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"selectByName"</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">"String"</span> <span class="hljs-attr">resultMap</span>=<span class="hljs-string">"baseResultMap"</span>&gt;</span>
 		select * from t_user t where t.username = #{username} limit 1
-	<span class="hljs-tag">&lt;/<span class="hljs-title">select</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
 	
 	<span class="hljs-comment">&lt;!-- 李四部分 --&gt;</span>
-	<span class="hljs-tag">&lt;<span class="hljs-title">select</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"updateUser"</span> <span class="hljs-attribute">parameterType</span>=<span class="hljs-value">"String"</span> <span class="hljs-attribute">resultMap</span>=<span class="hljs-value">"baseResultMap"</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"updateUser"</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">"String"</span> <span class="hljs-attr">resultMap</span>=<span class="hljs-string">"baseResultMap"</span>&gt;</span>
 		update t_user set username = #{username} where id=#{id}
-	<span class="hljs-tag">&lt;/<span class="hljs-title">select</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
 	
-<span class="hljs-tag">&lt;/<span class="hljs-title">mapper</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">mapper</span>&gt;</span>
 </code></pre>
 <p>这样也体现了开闭原则，即新增一个功能只需要新增一个文件就行，不需要修改原来的文件。</p>
 <p>如果SQL写多了还可以把它们进行分类，放到不同的xml中，便于管理。</p>
 <p>**注：**合并动作是在启动时进行的，并不会生成一个真实的文件。</p>
-<h1>字段自动填充</h1>
-<h2>填充器设置</h2>
+<h1>
+<a id="字段自动填充" class="anchor" href="#%E5%AD%97%E6%AE%B5%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85"></a>字段自动填充</h1>
+<h2>
+<a id="填充器设置" class="anchor" href="#%E5%A1%AB%E5%85%85%E5%99%A8%E8%AE%BE%E7%BD%AE"></a>填充器设置</h2>
 <p>假设数据库表里面有两个时间字段gmt_create,gmt_update。</p>
 <p>当进行insert操作时gmt_create，gmt_update字段需要更新。当update时，gmt_update字段需要更新。</p>
 <p>通常的做法是通过Entity手动设置：</p>
-<pre><code class="hljs"><span class="hljs-built_in">User</span> <span class="hljs-built_in">user</span> = new <span class="hljs-built_in">User</span>();
-<span class="hljs-built_ins">user</span>.setGmtCreate(new Date());
-<span class="hljs-built_ins">user</span>.setGmtUpdate(new Date());
+<pre><code class="hljs javascript">User user = <span class="hljs-keyword">new</span> User();
+user.setGmtCreate(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>());
+user.setGmtUpdate(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>());
 </code></pre>
 <p>因为表设计的时候大部分都有这两个字段，所以对每张表都进行手动设置的话很容易错加、漏加。
 fastmybatis提供了两个辅助类DateFillInsert和DateFillUpdate，用来处理添加修改时的时间字段自动填充。配置了这两个类之后，时间字段将会自动设置。</p>
 <p>配置方式如下：</p>
-<pre><code class="hljs"><span class="hljs-type">EasymybatisConfig</span> config = <span class="hljs-keyword">new</span> <span class="hljs-type">EasymybatisConfig</span><span class="hljs-literal">()</span>;
+<pre><code class="hljs arduino">EasymybatisConfig <span class="hljs-built_in">config</span> = <span class="hljs-keyword">new</span> EasymybatisConfig();
 
-    config.setFills(<span class="hljs-type">Arrays</span>.asList(
-			<span class="hljs-keyword">new</span> <span class="hljs-type">DateFillInsert</span><span class="hljs-literal">()</span>
-			,<span class="hljs-keyword">new</span> <span class="hljs-type">DateFillUpdate</span><span class="hljs-literal">()</span>
+    <span class="hljs-built_in">config</span>.setFills(Arrays.asList(
+			<span class="hljs-keyword">new</span> DateFillInsert()
+			,<span class="hljs-keyword">new</span> DateFillUpdate()
 			));
 </code></pre>
 <p>在spring的xml中配置如下:</p>
-<pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"sqlSessionFactory"</span>
-		<span class="hljs-attribute">class</span>=<span class="hljs-value">"com.gitee.fastmybatis.core.ext.SqlSessionFactoryBeanExt"</span>&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"dataSource"</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">"dataSource"</span> /&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"configLocation"</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>classpath:mybatis/mybatisConfig.xml<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
-		<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"mapperLocations"</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
-				<span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>classpath:mybatis/mapper/*.xml<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
-			<span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
-		<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"sqlSessionFactory"</span>
+		<span class="hljs-attr">class</span>=<span class="hljs-string">"com.gitee.fastmybatis.core.ext.SqlSessionFactoryBeanExt"</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"dataSource"</span> /&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"configLocation"</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>classpath:mybatis/mybatisConfig.xml<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"mapperLocations"</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">list</span>&gt;</span>
+				<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>classpath:mybatis/mapper/*.xml<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">list</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
 		
 		<span class="hljs-comment">&lt;!-- 以下是附加属性 --&gt;</span>
 		
 		<span class="hljs-comment">&lt;!-- dao所在的包名,跟MapperScannerConfigurer的basePackage一致 
 			多个用;隔开
 		--&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"basePackage"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"com.myapp.dao"</span> /&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"config"</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"com.gitee.fastmybatis.core.EasymybatisConfig"</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"basePackage"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.myapp.dao"</span> /&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"config"</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.gitee.fastmybatis.core.EasymybatisConfig"</span>&gt;</span>
                                 <span class="hljs-comment">&lt;!-- 定义填充器 --&gt;</span>
-				<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"fills"</span>&gt;</span>
-					<span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
-                                        <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"com.gitee.fastmybatis.core.support.DateFillInsert"</span>/&gt;</span>
-                                        <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"com.gitee.fastmybatis.core.support.DateFillUpdate"</span>/&gt;</span>
-					<span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
-				<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
-			<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
-		<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
-	<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+				<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"fills"</span>&gt;</span>
+					<span class="hljs-tag">&lt;<span class="hljs-name">list</span>&gt;</span>
+                                        <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.gitee.fastmybatis.core.support.DateFillInsert"</span>/&gt;</span>
+                                        <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.gitee.fastmybatis.core.support.DateFillUpdate"</span>/&gt;</span>
+					<span class="hljs-tag">&lt;/<span class="hljs-name">list</span>&gt;</span>
+				<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
 </code></pre>
 <p>springboot中可以这样定义:</p>
 <p>在application.properties中添加：</p>
-<pre><code class="hljs">mybatis<span class="hljs-class">.fill</span><span class="hljs-class">.com</span><span class="hljs-class">.gitee</span><span class="hljs-class">.fastmybatis</span><span class="hljs-class">.core</span><span class="hljs-class">.support</span><span class="hljs-class">.DateFillInsert</span>=
-mybatis<span class="hljs-class">.fill</span><span class="hljs-class">.com</span><span class="hljs-class">.gitee</span><span class="hljs-class">.fastmybatis</span><span class="hljs-class">.core</span><span class="hljs-class">.support</span><span class="hljs-class">.DateFillUpdate</span>=
+<pre><code class="hljs stylus">mybatis<span class="hljs-selector-class">.fill</span><span class="hljs-selector-class">.com</span><span class="hljs-selector-class">.gitee</span><span class="hljs-selector-class">.fastmybatis</span><span class="hljs-selector-class">.core</span><span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.DateFillInsert</span>=
+mybatis<span class="hljs-selector-class">.fill</span><span class="hljs-selector-class">.com</span><span class="hljs-selector-class">.gitee</span><span class="hljs-selector-class">.fastmybatis</span><span class="hljs-selector-class">.core</span><span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.DateFillUpdate</span>=
 </code></pre>
 <p>如果要指定字段名，可以写成：</p>
-<pre><code class="hljs">mybatis<span class="hljs-class">.fill</span><span class="hljs-class">.com</span><span class="hljs-class">.gitee</span><span class="hljs-class">.fastmybatis</span><span class="hljs-class">.core</span><span class="hljs-class">.support</span><span class="hljs-class">.DateFillInsert</span>=add_time
+<pre><code class="hljs stylus">mybatis<span class="hljs-selector-class">.fill</span><span class="hljs-selector-class">.com</span><span class="hljs-selector-class">.gitee</span><span class="hljs-selector-class">.fastmybatis</span><span class="hljs-selector-class">.core</span><span class="hljs-selector-class">.support</span><span class="hljs-selector-class">.DateFillInsert</span>=add_time
 </code></pre>
-<h2>自定义填充器</h2>
+<h2>
+<a id="自定义填充器" class="anchor" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%A1%AB%E5%85%85%E5%99%A8"></a>自定义填充器</h2>
 <p>除了使用fastmybatis默认提供的填充之外，我们还可以自定义填充。</p>
-<p>自定义填充类要继承FillHandler&lt;T&gt;类。
-&lt;T&gt; 表示填充字段类型，如Date，String，BigDecimal，Boolean。</p>
-<h3>实战(springboot)</h3>
+<p>自定义填充类要继承FillHandler类。
+ 表示填充字段类型，如Date，String，BigDecimal，Boolean。</p>
+<h3>
+<a id="实战springboot" class="anchor" href="#%E5%AE%9E%E6%88%98springboot"></a>实战(springboot)</h3>
 <p>现在有个remark字段，需要在insert时初始化为“备注默认内容”，新建一个StringRemarkFill类如下：</p>
-<pre><code class="hljs">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringRemarkFill</span> <span class="hljs-keyword"><span class="hljs-keyword">extends</span></span> <span class="hljs-title">FillHandler&lt;String&gt;</span> {</span>
+<pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringRemarkFill</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FillHandler&lt;String&gt;</span> </span>{
 
-	<span class="hljs-annotation">@Override</span>
+	<span class="hljs-meta">@Override</span>
 	public <span class="hljs-type">String</span> getColumnName() {
 		<span class="hljs-keyword">return</span> <span class="hljs-string">"remark"</span>;
 	}
 
-	<span class="hljs-annotation">@Override</span>
+	<span class="hljs-meta">@Override</span>
 	public <span class="hljs-type">FillType</span> getFillType() {
 		<span class="hljs-keyword">return</span> <span class="hljs-type">FillType</span>.<span class="hljs-type">INSERT</span>;
 	}
 
-	<span class="hljs-annotation">@Override</span>
+	<span class="hljs-meta">@Override</span>
 	<span class="hljs-keyword">protected</span> <span class="hljs-type">Object</span> getFillValue(<span class="hljs-type">String</span> defaultValue) {
 		<span class="hljs-keyword">return</span> <span class="hljs-string">"备注默认内容"</span>;
 	}
@@ -646,91 +679,189 @@ mybatis<span class="hljs-class">.fill</span><span class="hljs-class">.com</span>
 }
 </code></pre>
 <p>StringRemarkFill类中有三个重写方法：</p>
-<ul>
+<ul class="task-list">
 <li>getColumnName() ： 指定表字段名</li>
 <li>getFillType() ： 填充方式，FillType.INSERT:仅insert时填充； FillType.UPDATE：insert，update时填充</li>
 <li>getFillValue(String defaultValue) ：返回填充内容</li>
 </ul>
 <p>然后在application.properties中添加：</p>
-<pre><code class="hljs">mybatis<span class="hljs-class">.fill</span><span class="hljs-class">.com</span><span class="hljs-class">.xx</span><span class="hljs-class">.StringRemarkFill</span>=
+<pre><code class="hljs stylus">mybatis<span class="hljs-selector-class">.fill</span><span class="hljs-selector-class">.com</span><span class="hljs-selector-class">.xx</span><span class="hljs-selector-class">.StringRemarkFill</span>=
 </code></pre>
 <p>这样就配置完毕了，调用dao.save(user);时会自动填充remark字段。</p>
-<h2>指定目标类</h2>
+<h2>
+<a id="指定目标类" class="anchor" href="#%E6%8C%87%E5%AE%9A%E7%9B%AE%E6%A0%87%E7%B1%BB"></a>指定目标类</h2>
 <p>上面说到StringRemarkFill填充器，它作用在所有实体类上，也就是说实体类如果有remark字段都会自动填充。这样显然是不合理的，解决办法是指定特定的实体类。只要重写FillHandler类的getTargetEntityClasses()方法即可。</p>
-<pre><code class="hljs">@Override
-<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">Class</span>&lt;?&gt;[] <span class="hljs-title">getTargetEntityClasses</span>() {</span>
-	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-class"><span class="hljs-keyword">Class</span>&lt;?&gt;[] { <span class="hljs-title">TUser</span>.<span class="hljs-title">class</span> };</span>
+<pre><code class="hljs gradle">@Override
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">Class</span>&lt;?&gt;[] getTargetEntityClasses() {
+	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Class</span>&lt;?&gt;[] { TUser.<span class="hljs-keyword">class</span> };
 }
 </code></pre>
 <p>这样就表示作用在TUser类上，多个类可以追加。最终代码如下：</p>
-<pre><code class="hljs">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringRemarkFill</span> <span class="hljs-keyword"><span class="hljs-keyword">extends</span></span> <span class="hljs-title">FillHandler&lt;String&gt;</span> {</span>
+<pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringRemarkFill</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FillHandler&lt;String&gt;</span> </span>{
 
-	<span class="hljs-annotation">@Override</span>
+	<span class="hljs-meta">@Override</span>
 	public <span class="hljs-type">String</span> getColumnName() {
 		<span class="hljs-keyword">return</span> <span class="hljs-string">"remark"</span>;
 	}
 
-	<span class="hljs-annotation">@Override</span>
+	<span class="hljs-meta">@Override</span>
 	public <span class="hljs-type">Class</span>&lt;?&gt;[] getTargetEntityClasses() {
 		<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">Class</span>&lt;?&gt;[] { <span class="hljs-type">TUser</span>.<span class="hljs-keyword">class</span> }; <span class="hljs-comment">// 只作用在TUser类上</span>
 	}
 
-	<span class="hljs-annotation">@Override</span>
+	<span class="hljs-meta">@Override</span>
 	public <span class="hljs-type">FillType</span> getFillType() {
 		<span class="hljs-keyword">return</span> <span class="hljs-type">FillType</span>.<span class="hljs-type">INSERT</span>;
 	}
 
-	<span class="hljs-annotation">@Override</span>
+	<span class="hljs-meta">@Override</span>
 	<span class="hljs-keyword">protected</span> <span class="hljs-type">Object</span> getFillValue(<span class="hljs-type">String</span> defaultValue) {
 		<span class="hljs-keyword">return</span> <span class="hljs-string">"备注默认内容"</span>; <span class="hljs-comment">// insert时填充的内容</span>
 	}
 
 }
 </code></pre>
-<p>关于自动填充的原理是基于mybatis的TypeHandler实现的，这里就不多做介绍了。感兴趣的同学可以查看FillHandler&lt;T&gt;源码。</p>
-<h1>其他功能</h1>
-<h2>指定外部模板</h2>
+<p>关于自动填充的原理是基于mybatis的TypeHandler实现的，这里就不多做介绍了。感兴趣的同学可以查看FillHandler源码。</p>
+<h1>
+<a id="其他功能" class="anchor" href="#%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD"></a>其他功能</h1>
+<h2>
+<a id="指定外部模板" class="anchor" href="#%E6%8C%87%E5%AE%9A%E5%A4%96%E9%83%A8%E6%A8%A1%E6%9D%BF"></a>指定外部模板</h2>
 <p>fastmybatis依赖模板文件来生成mapper，默认的模板存放在fastmybatis/tpl/下，模板文件名对应某一种数据库，如mysql.vm对应mysql数据库。</p>
 <p>我们可以通过更改template-classpath的值来改变模板读取的位置。默认template-classpath的值为/fastmybatis/tpl/。假如你想对mysql.vm做一些修改，那么可以按照如下步骤进行：</p>
-<ol>
+<ol class="task-list">
 <li>使用解压工具解压fastmybatis.jar</li>
 <li>在fastmybatis/tpl/下找到mysql.vm，拷贝一份出来，放到你的项目中的classpath下（src/main/resources）</li>
 <li>在application.properties中添加一行</li>
 </ol>
-<pre><code class="hljs">mybatis.<span class="hljs-keyword">template</span>-classpath=/ 
+<pre><code class="hljs cpp">mybatis.<span class="hljs-keyword">template</span>-classpath=/ 
 </code></pre>
 <p>这样在启动时会自动读取classpath根目录下的mysql.vm。控制台也会打印读取模板的信息：</p>
-<pre><code class="hljs"><span class="hljs-number">2017</span>-<span class="hljs-number">12</span>-<span class="hljs-number">26</span> <span class="hljs-number">19</span>:<span class="hljs-number">32</span>:<span class="hljs-number">31.021</span>  INFO <span class="hljs-number">13476</span> --- [           main] n<span class="hljs-class">.o</span><span class="hljs-class">.d</span><span class="hljs-class">.e</span><span class="hljs-class">.ext</span><span class="hljs-class">.MapperLocationsBuilder</span>       : 使用模板:/mysql<span class="hljs-class">.vm</span>
+<pre><code class="hljs yaml"><span class="hljs-number">2017</span><span class="hljs-bullet">-12</span><span class="hljs-bullet">-26</span> <span class="hljs-number">19</span><span class="hljs-string">:32:31.021</span>  <span class="hljs-string">INFO</span> <span class="hljs-number">13476</span> <span class="hljs-meta">---</span> <span class="hljs-string">[</span>           <span class="hljs-string">main]</span> <span class="hljs-string">n.o.d.e.ext.MapperLocationsBuilder</span>       <span class="hljs-string">:</span> <span class="hljs-string">使用模板:/mysql.vm</span>
 </code></pre>
 <p>如果你的项目是springmvc，采用xml配置形式，前两步不变，第三步改为：</p>
-<pre><code class="hljs"><span class="hljs-comment">&lt;!-- 替换org.mybatis.spring.SqlSessionFactoryBean --&gt;</span>
-	<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"sqlSessionFactory"</span>
-		<span class="hljs-attribute">class</span>=<span class="hljs-value">"net.oschina.durcframework.fastmybatis.ext.SqlSessionFactoryBeanExt"</span>&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"dataSource"</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">"dataSource"</span> /&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"configLocation"</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>classpath:mybatis/mybatisConfig.xml<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
-		<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"mapperLocations"</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
-				<span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>classpath:mybatis/mapper/*.xml<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
-			<span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
-		<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<pre lang="xml" class="xml"><code class="hljs"><span class="hljs-comment">&lt;!-- 替换org.mybatis.spring.SqlSessionFactoryBean --&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"sqlSessionFactory"</span>
+		<span class="hljs-attr">class</span>=<span class="hljs-string">"net.oschina.durcframework.fastmybatis.ext.SqlSessionFactoryBeanExt"</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"dataSource"</span> /&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"configLocation"</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>classpath:mybatis/mybatisConfig.xml<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"mapperLocations"</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">list</span>&gt;</span>
+				<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>classpath:mybatis/mapper/*.xml<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">list</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
 		
 		<span class="hljs-comment">&lt;!-- 以下是附加属性 --&gt;</span>
 		
 		<span class="hljs-comment">&lt;!-- dao所在的包名,跟MapperScannerConfigurer的basePackage一致 
 			多个用;隔开
 		--&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"basePackage"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"com.myapp.dao"</span> /&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"config"</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"net.oschina.durcframework.fastmybatis.fastmybatisConfig"</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"basePackage"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.myapp.dao"</span> /&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"config"</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"net.oschina.durcframework.fastmybatis.fastmybatisConfig"</span>&gt;</span>
 				<span class="hljs-comment">&lt;!-- 指定外部模板 --&gt;</span>
-				<span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"templateClasspath"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"/"</span>/&gt;</span>
-			<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
-		<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
-	<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+				<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"templateClasspath"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"/"</span>/&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
 </code></pre>
-</div>
+<h2>
+<a id="逻辑删除" class="anchor" href="#%E9%80%BB%E8%BE%91%E5%88%A0%E9%99%A4"></a>逻辑删除</h2>
+<p>即更新一个字段标记为已删除。查询的时候会自动过滤掉已删除的数据。</p>
+<p>假设数据库表中有一个字段is_deleted类型为tinyint，0表示未删除，1表示已删除。</p>
+<p>实体类对应代码如下：</p>
+<pre lang="java" class="java"><code class="hljs"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> </span>{
+    <span class="hljs-meta">@LogicDelete</span>
+    <span class="hljs-keyword">private</span> Byte isDeleted;
+}
+</code></pre>
+<p>在执行<code>mapper.delete(1L);</code>时会触发UPDATE语句，将is_deleted字段更新为1。</p>
+<p>如果is_deleted类型为char(1)，f表示未删除，t表示已删除。</p>
+<pre lang="java" class="java"><code class="hljs"><span class="hljs-meta">@LogicDelete</span>(notDeleteValue = <span class="hljs-string">"f"</span>, deleteValue = <span class="hljs-string">"t"</span>)
+<span class="hljs-keyword">private</span> String isDeleted;
+</code></pre>
+<p>@LogicDelete提供两个属性</p>
+<ul class="task-list">
+<li>notDeleteValue：指定未删除时的值,不指定默认为0</li>
+<li>deleteValue：指定删除后保存的值,不指定默认为1</li>
+</ul>
+<p>假设1表示未删除，2表示已删除，@LogicDelete的设置方法如下：@LogicDelete(notDeleteValue = "1", deleteValue = "2")。如果每个实体类都要这样设置的话会很麻烦，easymybatis提供了全局配置</p>
+<ul class="task-list">
+<li>springboot下，application.properties添加</li>
+</ul>
+<pre><code class="hljs coffeescript"><span class="hljs-comment"># 未删除数据库保存的值，默认为0</span>
+mybatis.logic-<span class="hljs-keyword">not</span>-<span class="hljs-keyword">delete</span>-value=<span class="hljs-number">1</span>
+<span class="hljs-comment"># 删除后数据库保存的值，默认为1</span>
+mybatis.logic-<span class="hljs-keyword">delete</span>-value=<span class="hljs-number">2</span>
+</code></pre>
+<ul class="task-list">
+<li>springmvc设置方式如下：</li>
+</ul>
+<pre lang="xml" class="xml"><code class="hljs"><span class="hljs-comment">&lt;!-- 替换org.mybatis.spring.SqlSessionFactoryBean --&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"sqlSessionFactory"</span>
+		<span class="hljs-attr">class</span>=<span class="hljs-string">"net.oschina.durcframework.easymybatis.ext.SqlSessionFactoryBeanExt"</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"dataSource"</span> /&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"configLocation"</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>classpath:mybatis/mybatisConfig.xml<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"mapperLocations"</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">list</span>&gt;</span>
+				<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>classpath:mybatis/mapper/*.xml<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">list</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+		
+		<span class="hljs-comment">&lt;!-- 以下是附加属性 --&gt;</span>
+		
+		<span class="hljs-comment">&lt;!-- dao所在的包名,跟MapperScannerConfigurer的basePackage一致 
+			多个用;隔开
+		--&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"basePackage"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.myapp.dao"</span> /&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"config"</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"net.oschina.durcframework.easymybatis.EasymybatisConfig"</span>&gt;</span>		
+				<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"logicNotDeleteValue"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1"</span>/&gt;</span>
+                                <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"logicDeleteValue"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"2"</span>/&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+</code></pre>
+<ul class="task-list">
+<li>注：如果同时设置了@LogicDelete参数和全局配置，会优先读取注解中的配置。</li>
+</ul>
+<hr>
+<h3>
+<a id="代码生成器自动生成logicdelete注解" class="anchor" href="#%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90logicdelete%E6%B3%A8%E8%A7%A3"></a>代码生成器自动生成<code>@LogicDelete</code>注解</h3>
+<p>使用代码生成器生成实体类的时候，如果指定了删除字段，可自动在该字段上面加上<code>@LogicDelete</code>注解。</p>
+<p>步骤如下：</p>
+<p>打开代码生成器对应的属性文件，添加一行</p>
+<p><code>deleteColumn=isdel</code></p>
+<p>其中<code>isdel</code>表示表中的删除字段，生成后的效果</p>
+<pre><code class="hljs less"><span class="hljs-comment">/**
+ * 表名：t_user
+ * 备注：用户表
+ */</span>
+<span class="hljs-variable">@Table</span>(name = <span class="hljs-string">"t_user"</span>)
+public class User {
+    <span class="hljs-variable">@Id</span>
+    <span class="hljs-variable">@Column</span>(name = <span class="hljs-string">"id"</span>)
+    <span class="hljs-variable">@GeneratedValue</span>(strategy = GenerationType.IDENTITY)
+    <span class="hljs-comment">/** ID, 数据库字段：id */</span>
+    private Integer id;
+
+    <span class="hljs-comment">/** 用户名, 数据库字段：username */</span>
+    <span class="hljs-selector-tag">private</span> <span class="hljs-selector-tag">String</span> <span class="hljs-selector-tag">username</span>;
+
+    <span class="hljs-comment">/** 状态, 数据库字段：state */</span>
+    <span class="hljs-selector-tag">private</span> <span class="hljs-selector-tag">Byte</span> <span class="hljs-selector-tag">state</span>;
+
+    <span class="hljs-comment">/** 是否删除, 数据库字段：isdel */</span>
+    @<span class="hljs-selector-tag">com</span><span class="hljs-selector-class">.gitee</span><span class="hljs-selector-class">.fastmybatis</span><span class="hljs-selector-class">.core</span><span class="hljs-selector-class">.annotation</span><span class="hljs-selector-class">.LogicDelete</span>
+    <span class="hljs-selector-tag">private</span> <span class="hljs-selector-tag">Boolean</span> <span class="hljs-selector-tag">isdel</span>;
+
+...
+}
+</code></pre>
+<p>可查看fastmybatis-generator项目中的t_user_all.properties文件，然后运行Run_t_userAll.java进行体验</p></div>
 <!-- ***********************************************************内容分割线****************************************************************** -->
                 </article>
             </div>
