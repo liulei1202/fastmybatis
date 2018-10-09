@@ -21,17 +21,27 @@ import javax.persistence.Table;
 import javax.persistence.GenerationType;
 #end
 
-#if("$!{table.comment}" != "" )
 /**
  * 表名：${table.tableName}
+#if("$!{table.comment}" != "")
  * 备注：${table.comment}
- */
 #end
+ */
 @Table(name = "${table.tableName}")
 #if(${param.serializable}=="true")
 @SuppressWarnings("serial")
 #end
-public class ${context.javaBeanName} #if(${param.serializable}=="true")implements java.io.Serializable #end{
+public class ${context.javaBeanName}
+#if("$!{extClass}" != "")
+	extends $extClass 
+#end
+
+#foreach($implClass in $impls)
+	#if($velocityCount == 1) implements #end
+	#if($velocityCount > 1),#end 
+	$implClass
+#end
+{
 
 #foreach($column in $columns)
     #if(${column.isPk})
@@ -52,21 +62,17 @@ public class ${context.javaBeanName} #if(${param.serializable}=="true")implement
     #if(${column.columnName} == ${param.deleteColumn})
         @com.gitee.fastmybatis.core.annotation.LogicDelete
     #end
-        /** #if("$!{column.comment}" != "")${column.comment},#end 数据库字段：${column.columnName} */
+        /** #if("$!{column.comment}"!="")${column.comment},#end 数据库字段：${column.columnName} */
     	private ${column.javaTypeBox} ${column.javaFieldName}; 
 
 #end
 
 #foreach(${column} in ${columns})
-    #if("$!{column.comment}" != "")
-    	/** 设置${column.comment},数据库字段：${table.tableName}.${column.columnName} */
-    #end     
+    	/** #if("$!{column.comment}"!="")设置${column.comment},#end 数据库字段：${table.tableName}.${column.columnName} */
     	public void set${column.javaFieldNameUF}(${column.javaTypeBox} ${column.javaFieldName}) {
     		this.${column.javaFieldName} = ${column.javaFieldName};
     	}
-    #if("$!{column.comment}" != "")
-    	/** 获取${column.comment},数据库字段：${table.tableName}.${column.columnName} */
-    #end	     
+    	/** #if("$!{column.comment}"!="")获取${column.comment},#end 数据库字段：${table.tableName}.${column.columnName} */
     	public ${column.javaTypeBox} get${column.javaFieldNameUF}() {
     		return this.${column.javaFieldName};
     	}

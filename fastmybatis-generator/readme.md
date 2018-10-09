@@ -1,4 +1,5 @@
 # fastmybatis-generator
+
 fastmybatis对应的代码生成器，负责生成实体类和Mapper文件
 
 ## 使用方法
@@ -10,32 +11,59 @@ fastmybatis对应的代码生成器，负责生成实体类和Mapper文件
 
 ## 全局配置
 
-以下是全局配置,对所有配置文件有效.全局配置中的参数可以单独放在配置文件中.比如放在`t_user_all.properties`中,那么这个配置会覆盖全局的配置
+参见`globleConfig.properties`
+
+全局配置中的参数可以单独放在配置文件中.比如放在`t_user_all.properties`中,那么这个配置会覆盖全局的配置
 
 ```
-# if true,use database column name
+# 如果为true，将使用数据库字段
 useDbColumn=false
 
-# folder name of mapper class
+# 存放mapper文件的包名
 mapperPackageName=mapper
 
-# suffix of mapper class
+# mapper文件后缀，如：Dao
 mapperClassSuffix=Mapper
 
-# folder name of entity class
+# 存放实体类文件的包名
 entityPackageName=entity
 
-# suffix of entity class, such as "Entity"
+# 实体类文件后缀, 如：Entity
 entitySuffix=
 
-# if true,the entity class will implements Serializable
+# 如果为true，实体类默认实现Serializable接口
 serializable=false
 
-# name of delete column
+# 全局父类，如果设置了，所有实体类会继承这个父类
+globalExt=
+
+# 删除字段名称
 deleteColumn=is_deleted
 
-# if table pk use uuid,set true
+# 如果主键是UUID，设为true
 uuid=false
+
+# 指定表名称前缀，实体类会移除前缀。tableName:a_order -> Order.java
+tablePrefix=
+
+# 指定表名称后缀，实体类会移除后缀。tableName:order_ext -> Order.java
+tableSuffix=
+
+# 设置实体类实现的接口
+# 例子:implMap=Student:Clonable,com.xx.PK;User:com.xx.BaseParam
+# 结果:
+# 	public class Student implements Clonable, com.xx.PK {}
+#   public class User implements com.xx.BaseParam {}
+implMap=
+
+# 设置实体类继承的类。
+# 例子:extMap=Student:Clonable;User:com.xx.BaseParam
+# 结果:
+# 	public class Student extend Clonable {}
+#   public class User extend com.xx.BaseParam {}
+#
+# 此操作会覆盖globalExt属性
+extMap=
 ```
 
 ## 团队协作

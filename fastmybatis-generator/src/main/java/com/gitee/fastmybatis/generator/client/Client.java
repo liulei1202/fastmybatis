@@ -3,7 +3,15 @@ package com.gitee.fastmybatis.generator.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.gitee.fastmybatis.generator.entity.ClientParam;
 
@@ -71,8 +79,73 @@ public class Client{
 		String showSchema = properties.getProperty("showSchema");
 		param.setShowSchema("true".equals(showSchema));
 		param.setUuid("true".equals(properties.getProperty("uuid")));
+		
+		Map<String, Collection<String>> impllMap = this.buildImplMap(properties);
+		properties.put("implMap", impllMap);
+		
+		Map<String, String> extMap = this.buildExtMap(properties);
+		properties.put("extMap", extMap);
 
 		param.setParam(properties);
 		return param;
+	}
+	
+	private Map<String, Collection<String>> buildImplMap(Properties properties) {
+		String implMap = properties.getProperty("implMap", "");
+		if(StringUtils.isBlank(implMap)) {
+			return Collections.emptyMap();
+		}
+		Map<String, Collection<String>> map = new HashMap<>();
+		// implMap=Student:Clonable,com.xx.PK;User:com.xx.BaseParam
+		// ["Student:Clonable,com.xx.PK", "User:com.xx.BaseParam"]
+		String[] arr = implMap.split(";");
+		for (String block : arr) {
+			this.addImpls(block, map, properties);
+		}
+		return map;
+	}
+	
+	private Map<String, String> buildExtMap(Properties properties) {
+		String implMap = properties.getProperty("extMap", "");
+		if(StringUtils.isBlank(implMap)) {
+			return Collections.emptyMap();
+		}
+		Map<String, String> map = new HashMap<>();
+		// extMap=Student:Clonable;User:com.xx.BaseParam
+		// ["Student:Clonable,com.xx.PK", "User:com.xx.BaseParam"]
+		String[] arr = implMap.split(";");
+		for (String block : arr) {
+			this.addExt(block, map, properties);
+		}
+		return map;
+	}
+	
+	private void addImpls(String block, Map<String, Collection<String>> map, Properties properties) {
+		// Student:Clonable,com.xx.PK
+		// ["Student", "Clonable,com.xx.PK"]
+		String[] arr = block.split("\\:");
+		String key = arr[0]; // Student
+		String classNames = arr[1]; // Clonable,com.xx.PK
+		
+		String[] classArr = classNames.split(",");
+		Set<String> value = new HashSet<>();
+		for (String className : classArr) {
+			value.add(className);
+		}
+		boolean isSerialable = "true".equals(properties.getProperty("serializable"));
+		if(isSerialable) {
+			value.add("java.io.Serializable");
+		}
+		
+		map.put(key, value);
+	}
+	
+	private void addExt(String block, Map<String, String> map, Properties properties) {
+		// Student:Clonable
+		// ["Student", "Clonable"]
+		String[] arr = block.split("\\:");
+		String key = arr[0]; // Student
+		String className = arr[1]; // Clonable
+		map.put(key, className);
 	}
 }

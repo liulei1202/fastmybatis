@@ -23,17 +23,28 @@ import javax.persistence.GenerationType;
 
 import lombok.Data;
 
-#if("$!{table.comment}" != "" )
 /**
-  表:${table.tableName} ${table.comment}
-*/
+ * 表名：${table.tableName}
+#if("$!{table.comment}" != "")
+ * 备注：${table.comment}
 #end
+ */
 @Table(name = "${table.tableName}")
 #if(${param.serializable}=="true")
 @SuppressWarnings("serial")
 #end
 @Data
-public class ${context.javaBeanName} #if(${param.serializable}=="true")implements Serializable #end{
+public class ${context.javaBeanName} 
+#if("$!{extClass}" != "")
+	extends $extClass 
+#end
+
+#foreach($implClass in $impls)
+	#if($velocityCount == 1) implements #end
+	#if($velocityCount > 1),#end 
+	$implClass
+#end
+{
 
 #foreach($column in $columns)
     #if(${column.isPk})
