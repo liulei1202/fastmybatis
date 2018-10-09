@@ -4,7 +4,7 @@ fastmybatis是一个mybatis开发框架，其宗旨为：简单、快速、有�
 
 - 零配置快速上手
 - 无需编写xml文件即可完成CRUD操作
-- 支持mysql，sqlserver，oracle，postgresql,sqlite
+- 支持mysql、sqlserver、oracle、postgresql、sqlite
 - 支持自定义sql，sql语句可写在注解中或xml中
 - 支持与spring-boot集成，依赖starter即可
 - 轻量级，无侵入性，是官方mybatis的一种扩展
@@ -56,14 +56,14 @@ public void testGetById() {
  * @param id
  * @return 返回实体对象，没有返回null
  */
-Entity getById(ID id);
+T getById(I id);
 
 /**
  * 根据条件查找单条记录
  * @param query 查询条件
  * @return 返回实体对象，没有返回null
  */
-Entity getByQuery(@Param("query")Query query);
+T getByQuery(@Param("query")Query query);
 
 /**
  * 根据字段查询一条记录
@@ -71,7 +71,7 @@ Entity getByQuery(@Param("query")Query query);
  * @param value 字段值
  * @return 返回实体对象，没有返回null
  */
-Entity getByColumn(@Param("column")String column,@Param("value")Object value);
+T getByColumn(@Param("column")String column,@Param("value")Object value);
 
 /**
  * 查询总记录数
@@ -87,7 +87,7 @@ long getCount(@Param("query")Query query);
  * @param value 字段值
  * @return 返回实体对象集合，没有返回空集合
  */
-List<Entity> listByColumn(@Param("column")String column,@Param("value")Object value);
+List<T> listByColumn(@Param("column")String column,@Param("value")Object value);
 
 /**
  * 条件查询
@@ -95,7 +95,7 @@ List<Entity> listByColumn(@Param("column")String column,@Param("value")Object va
  * @param query 查询条件
  * @return 返回实体对象集合，没有返回空集合
  */
-List<Entity> list(@Param("query")Query query);
+List<T> list(@Param("query")Query query);
 
 /**
  * 查询指定字段结果
@@ -111,14 +111,14 @@ List<Map<String, Object>> listMap(@Param("columns")List<String> columns, @Param(
  * @param entity
  * @return 受影响行数
  */
-int save(Entity entity);
+int save(T entity);
 
 /**
  * 新增（忽略null数据）
  * @param entity
  * @return 受影响行数
  */
-int saveIgnoreNull(Entity entity);
+int saveIgnoreNull(T entity);
 
 /**
  * 批量添加,只支持mysql,sqlserver2008及以上数据库.<br>
@@ -126,7 +126,7 @@ int saveIgnoreNull(Entity entity);
  * @param entitys
  * @return
  */
-int saveBatch(@Param("entitys")List<Entity> entitys);
+int saveBatch(@Param("entitys")List<T> entitys);
 
 /**
  * 批量添加,兼容更多的数据库版本.<br>
@@ -134,7 +134,7 @@ int saveBatch(@Param("entitys")List<Entity> entitys);
  * @param entitys
  * @return
  */
-int saveMulti(@Param("entitys")List<Entity> entitys);
+int saveMulti(@Param("entitys")List<T> entitys);
 
 /**
  * 修改,修改所有字段
@@ -142,7 +142,7 @@ int saveMulti(@Param("entitys")List<Entity> entitys);
  * @param entity
  * @return 受影响行数
  */
-int update(Entity entity);
+int update(T entity);
 
 /**
  * 根据主键更新不为null的字段
@@ -150,7 +150,7 @@ int update(Entity entity);
  * @param entity
  * @return 受影响行数
  */
-int updateIgnoreNull(Entity entity);
+int updateIgnoreNull(T entity);
 
 /**
  * 根据条件批量更新
@@ -167,7 +167,7 @@ int updateByQuery(@Param("entity") Object entity, @Param("query") Query query);
  * @param entity
  * @return 受影响行数
  */
-int delete(Entity entity);
+int delete(T entity);
 
 /**
  * 根据id删除
@@ -175,7 +175,7 @@ int delete(Entity entity);
  * @param id 主键id
  * @return 受影响行数
  */
-int deleteById(ID id);
+int deleteById(I id);
 
 /**
  * 根据条件删除
