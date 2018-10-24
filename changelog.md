@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.0.16
+
+- @Condition注解新增ignoreEmptyString属性
+
 ## 1.0.15
 
 - 代码优化性能优化（阿里代码规范+sonar）

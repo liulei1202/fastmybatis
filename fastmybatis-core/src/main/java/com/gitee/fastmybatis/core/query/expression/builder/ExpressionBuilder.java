@@ -40,6 +40,10 @@ public class ExpressionBuilder {
         if (annotation.ignore()) {
             return null;
         }
+        // 是否忽略空字符串
+ 		if (annotation.ignoreEmptyString() && "".equals(value)) {
+ 			return null;
+ 		}
         Operator operator = annotation.operator();
         if (operator == Operator.nil) {
             if (ClassUtil.isArrayOrCollection(value)) {

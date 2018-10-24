@@ -46,4 +46,11 @@ public @interface Condition {
      * @return 返回true，@Condition将不起作用
      */
 	boolean ignore() default false;
+	
+	/**
+	 * 是否忽略空字符串，设置true，忽略空字符串的字段
+	 *
+	 * @return 返回true，空字符串字段不生成条件
+	 */
+	boolean ignoreEmptyString() default false;
 }
