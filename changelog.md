@@ -2,7 +2,7 @@
 
 ## 1.0.16
 
-- @Condition注解新增ignoreEmptyString属性 [doc](https://durcframework.gitee.io/fastmybatis/#27040701)
+- @Condition注解新增ignoreEmptyString属性 [doc](https://durcframework.gitee.io/fastmybatis/#27040701) 
 
 ## 1.0.15
 
