@@ -654,12 +654,12 @@ mybatis<span class="hljs-selector-class">.fill</span><span class="hljs-selector-
 <h2>
 <a id="自定义填充器" class="anchor" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%A1%AB%E5%85%85%E5%99%A8"></a>自定义填充器</h2>
 <p>除了使用fastmybatis默认提供的填充之外，我们还可以自定义填充。</p>
-<p>自定义填充类要继承FillHandler类。
+<p>自定义填充类要继承BaseFill类。
  表示填充字段类型，如Date，String，BigDecimal，Boolean。</p>
 <h3>
 <a id="实战springboot" class="anchor" href="#%E5%AE%9E%E6%88%98springboot"></a>实战(springboot)</h3>
 <p>现在有个remark字段，需要在insert时初始化为“备注默认内容”，新建一个StringRemarkFill类如下：</p>
-<pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringRemarkFill</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FillHandler&lt;String&gt;</span> </span>{
+<pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringRemarkFill</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseFill&lt;String&gt;</span> </span>{
 
 	<span class="hljs-meta">@Override</span>
 	public <span class="hljs-type">String</span> getColumnName() {
@@ -690,14 +690,14 @@ mybatis<span class="hljs-selector-class">.fill</span><span class="hljs-selector-
 <p>这样就配置完毕了，调用dao.save(user);时会自动填充remark字段。</p>
 <h2>
 <a id="指定目标类" class="anchor" href="#%E6%8C%87%E5%AE%9A%E7%9B%AE%E6%A0%87%E7%B1%BB"></a>指定目标类</h2>
-<p>上面说到StringRemarkFill填充器，它作用在所有实体类上，也就是说实体类如果有remark字段都会自动填充。这样显然是不合理的，解决办法是指定特定的实体类。只要重写FillHandler类的getTargetEntityClasses()方法即可。</p>
+<p>上面说到StringRemarkFill填充器，它作用在所有实体类上，也就是说实体类如果有remark字段都会自动填充。这样显然是不合理的，解决办法是指定特定的实体类。只要重写BaseFill类的getTargetEntityClasses()方法即可。</p>
 <pre><code class="hljs gradle">@Override
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">Class</span>&lt;?&gt;[] getTargetEntityClasses() {
 	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">Class</span>&lt;?&gt;[] { TUser.<span class="hljs-keyword">class</span> };
 }
 </code></pre>
 <p>这样就表示作用在TUser类上，多个类可以追加。最终代码如下：</p>
-<pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringRemarkFill</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FillHandler&lt;String&gt;</span> </span>{
+<pre><code class="hljs scala">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StringRemarkFill</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseFill&lt;String&gt;</span> </span>{
 
 	<span class="hljs-meta">@Override</span>
 	public <span class="hljs-type">String</span> getColumnName() {
@@ -721,7 +721,7 @@ mybatis<span class="hljs-selector-class">.fill</span><span class="hljs-selector-
 
 }
 </code></pre>
-<p>关于自动填充的原理是基于mybatis的TypeHandler实现的，这里就不多做介绍了。感兴趣的同学可以查看FillHandler源码。</p>
+<p>关于自动填充的原理是基于mybatis的TypeHandler实现的，这里就不多做介绍了。感兴趣的同学可以查看BaseFill源码。</p>
 <h1>
 <a id="其他功能" class="anchor" href="#%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD"></a>其他功能</h1>
 <h2>
