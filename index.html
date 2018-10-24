@@ -290,6 +290,15 @@ public Date getEndDate() {
 <pre><code class="hljs php">t.add_date&gt;=<span class="hljs-string">'2017-12-1'</span> <span class="hljs-keyword">AND</span> t.add_date&lt;<span class="hljs-string">'2017-12-10'</span>
 </code></pre>
 <h4>
+<a id="忽略空字符串v1016" class="anchor" href="#%E5%BF%BD%E7%95%A5%E7%A9%BA%E5%AD%97%E7%AC%A6%E4%B8%B2v1016"></a>忽略空字符串（v1.0.16）</h4>
+<p>1.0.16版本中，@Condition注解新增一个<code>ignoreEmptyString</code>属性，默认是false。如果设置true，则忽略空字符串的字段，即空字符串的字段不会加入到条件当中。</p>
+<pre><code class="hljs java"><span class="hljs-meta">@Condition</span>(ignoreEmptyString = <span class="hljs-keyword">true</span>)
+<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getChannelId</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> channelId;
+}    
+</code></pre>
+<p>如果channelId是""(空字符串)，该字段不会加入到条件当中。</p>
+<h4>
 <a id="in查询" class="anchor" href="#in%E6%9F%A5%E8%AF%A2"></a>IN查询</h4>
 <p>假设前端页面传来多个值比如checkbox勾选多个id=[1,2],那么我们在User类里面可以用Integer[]或List来接收.</p>
 <pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> Integer[] idArr;
