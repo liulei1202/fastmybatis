@@ -1,5 +1,30 @@
-# ignore eclipse files.
-.project
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
 .classpath
+.factorypath
+.project
 .settings
-.metadata
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+/.idea/
+/easyopen-parent.iml
+/.settings/
+/.project
+!/.idea/
+/.idea/libraries/
+/local-config/
