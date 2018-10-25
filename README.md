@@ -233,3 +233,4 @@ Q群328419269
 
 - [开发文档](https://durcframework.gitee.io/fastmybatis/)
 - [fastmybatis与MyBatis generator对比](https://gitee.com/durcframework/fastmybatis/wikis/pages?title=fastmybatis%E4%B8%8EMyBatis%20generator%E5%AF%B9%E6%AF%94&parent=)
+- [WIKI](https://gitee.com/durcframework/fastmybatis/wikis/pages)
