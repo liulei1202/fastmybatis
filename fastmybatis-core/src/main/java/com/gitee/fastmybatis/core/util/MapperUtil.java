@@ -1,14 +1,14 @@
 package com.gitee.fastmybatis.core.util;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.gitee.fastmybatis.core.PageInfo;
 import com.gitee.fastmybatis.core.PageResult;
 import com.gitee.fastmybatis.core.exception.QueryException;
 import com.gitee.fastmybatis.core.mapper.SchMapper;
 import com.gitee.fastmybatis.core.query.Query;
 import com.gitee.fastmybatis.core.query.param.BaseParam;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 查询工具
@@ -101,6 +101,7 @@ public class MapperUtil {
 
         try {
             // 总条数
+            int pageCount = 0;
             long total = 0;
             // 结果集
             List<Entity> list = Collections.emptyList();
@@ -110,6 +111,9 @@ public class MapperUtil {
             if (query.getIsQueryAll()) {
                 list = mapper.list(query);
                 total = list.size();
+                if (total > 0) {
+                    pageCount = 1;
+                }
             } else {
                 if (query.getIsSetTotal()){
                     //如果设置了total总记录数，直接获取该total
@@ -132,14 +136,13 @@ public class MapperUtil {
                     result.setPageIndex(pageIndex);
                     result.setPageSize(pageSize);
 
-                    int pageCount = calcPageCount(total, pageSize);
-                    result.setPageCount(pageCount);
+                    pageCount = calcPageCount(total, pageSize);
                 }
             }
 
             result.setList(list);
             result.setTotal(total);
-
+            result.setPageCount(pageCount);
         } catch (Exception e) {
             throw new QueryException(e);
         }

@@ -21,7 +21,7 @@
     <select id="list" parameterType="com.gitee.fastmybatis.core.query.Query"
 		resultMap="baseResultMap">
 		SELECT 
-			<include refid="common.sqlColumns" />
+			<include refid="baseColumns" />
 		FROM `${table.tableName}` t
 		<include refid="common.join" />
         <where>
@@ -84,7 +84,7 @@
     <!-- 根据条件获取单条记录 -->
     <select id="getByQuery" resultMap="baseResultMap" parameterType="com.gitee.fastmybatis.core.query.Query">
 		SELECT
-			<include refid="common.sqlColumns" />			
+			<include refid="baseColumns" />			
 		FROM `${table.tableName}` t
 		<include refid="common.join" />
         <where>

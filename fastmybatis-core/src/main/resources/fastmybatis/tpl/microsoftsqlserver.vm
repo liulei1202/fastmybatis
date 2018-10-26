@@ -7,6 +7,13 @@
         <result column="${column.columnName}" property="${column.javaFieldName}" ${column.javaTypeProperty} ${column.typeHandlerProperty} ${column.jdbcTypeProperty} />
     #end
     </resultMap>
+
+    <sql id="pageOrderBy">
+        <choose>
+            <when test="query.orderable">ORDER BY ${query.order}</when>
+            <otherwise>ORDER BY t.[${pk.columnName}]</otherwise>
+        </choose>
+    </sql>
     
     <!-- 表字段 -->
     <sql id="baseColumns">
@@ -20,17 +27,17 @@
 	<!-- 根据条件查询记录 -->
 	<select id="list" parameterType="com.gitee.fastmybatis.core.query.Query"
 		resultMap="baseResultMap">
-		<if test="!query.isQueryAll">
-			SELECT t0.* FROM (
-		</if>
-		SELECT row_number() over(
-			<choose>
-				<when test="orderable">ORDER BY ${jq}{order}</when>
-				<otherwise>ORDER BY [${pk.columnName}]</otherwise>
-			</choose>
-		) row,
+        <choose>
+            <when test="!query.isQueryAll">
+                SELECT t0.* FROM (
+                    SELECT row_number() over(
+                    <include refid="pageOrderBy"/>
+                    ) _row_number,
+            </when>
+            <otherwise>SELECT</otherwise>
+        </choose>
                 
-       <include refid="common.sqlColumns" />
+       <include refid="baseColumns" />
         
 		FROM ${table.tableName} t
 		<include refid="common.join" />
@@ -42,18 +49,30 @@
             </if>
             #end
         </where>
+        <if test="query.isQueryAll">
+            <include refid="common.orderBy" />
+        </if>
  		<if test="!query.isQueryAll">
-			) t0 WHERE t0.row BETWEEN (#{query.start,jdbcType=INTEGER} +1) AND
+			) t0 WHERE t0._row_number BETWEEN (#{query.start,jdbcType=INTEGER} + 1) AND
 			(#{query.start,jdbcType=INTEGER}  + #{query.limit,jdbcType=INTEGER})
 		</if>
 	</select>
 	
 	<!-- 查询map -->
     <select id="listMap" resultType="map">
-        SELECT 
-            <foreach collection="columns" item="column" separator=",">
-                ${column}
-            </foreach>
+        <choose>
+            <when test="!query.isQueryAll">
+                SELECT t0.* FROM (
+                    SELECT row_number() over(
+                    <include refid="pageOrderBy"/>
+                    ) _row_number,
+            </when>
+            <otherwise>SELECT</otherwise>
+        </choose>
+
+        <foreach collection="columns" item="column" separator=",">
+            ${column}
+        </foreach>
         FROM ${table.tableName} t
         <include refid="common.join" />
         <where>
@@ -62,9 +81,11 @@
               AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
             #end
         </where>
-        <include refid="common.orderBy" />
+        <if test="query.isQueryAll">
+            <include refid="common.orderBy" />
+        </if>
         <if test="!query.isQueryAll">
-			) t0 WHERE t0.row BETWEEN (#{query.start,jdbcType=INTEGER} +1) AND
+			) t0 WHERE t0._row_number BETWEEN (#{query.start,jdbcType=INTEGER} + 1) AND
 			(#{query.start,jdbcType=INTEGER}  + #{query.limit,jdbcType=INTEGER})
 		</if>
     </select>
@@ -98,7 +119,7 @@
 	<!-- 根据条件获取单条记录 -->
     <select id="getByQuery" resultMap="baseResultMap" parameterType="com.gitee.fastmybatis.core.query.Query">
 		SELECT TOP 1
-			<include refid="common.sqlColumns" />			
+			<include refid="baseColumns" />			
 		FROM [${table.tableName}] t
 		<include refid="common.join" />
         <where>
