@@ -28,6 +28,8 @@ GO
 
 /* Data for the `dbo.t_user` table  (Records 1 - 6) */
 
+set identity_insert [dbo].[t_user] ON
+GO
 
 INSERT INTO [dbo].[t_user] ([id], [username], [state], [isdel], [remark], [add_time], [money], [left_money])
 VALUES (3, N'王五', 0, 0, N'批量修改备注', '20170221 10:37:44', 101.1, 22.1)
@@ -53,11 +55,16 @@ INSERT INTO [dbo].[t_user] ([id], [username], [state], [isdel], [remark], [add_t
 VALUES (8, N'张三', 0, 0, N'批量修改备注', '20170221 10:40:11', 100.5, 22.1)
 GO
 
+set identity_insert [dbo].[t_user] OFF
+GO
+
 
 
 
 /* Data for the `dbo.user_info` table  (Records 1 - 6) */
 
+set identity_insert [dbo].[user_info] ON
+GO
 
 INSERT INTO [dbo].[user_info] ([id], [user_id], [city], [address], [create_time])
 VALUES (1, 3, N'杭州', N'延安路', '20170822 10:27:56.150')
@@ -83,6 +90,8 @@ INSERT INTO [dbo].[user_info] ([id], [user_id], [city], [address], [create_time]
 VALUES (6, 8, N'杭州', N'延安路', '20170822 10:27:56.150')
 GO
 
+set identity_insert [dbo].[user_info] OFF
+GO
 
 CREATE TABLE [dbo].[address] (
   [id] varchar(100) NOT NULL,

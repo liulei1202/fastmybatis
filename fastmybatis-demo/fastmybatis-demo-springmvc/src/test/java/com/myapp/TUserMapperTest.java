@@ -1,18 +1,5 @@
 package com.myapp;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
-
 import com.gitee.fastmybatis.core.PageInfo;
 import com.gitee.fastmybatis.core.query.Query;
 import com.gitee.fastmybatis.core.query.Sort;
@@ -20,6 +7,18 @@ import com.gitee.fastmybatis.core.util.MapperUtil;
 import com.gitee.fastmybatis.core.util.MyBeanUtil;
 import com.myapp.entity.TUser;
 import com.myapp.mapper.TUserMapper;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * mapper测试
@@ -90,7 +89,10 @@ public class TUserMapperTest extends TestBase {
      */
     @Test
     public void testList() {
-        Query query = new Query().eq("state", 0).in("money", Arrays.asList(100, 1.0, 3));
+        Query query = new Query()
+                .eq("state", 0)
+                .in("money", Arrays.asList(100, 1.0, 3))
+                .orderby("state",Sort.DESC);
         List<TUser> list = mapper.list(query);
         for (TUser tUser : list) {
             print(tUser);
@@ -168,7 +170,9 @@ public class TUserMapperTest extends TestBase {
     public void testPageInfo() {
         Query query = new Query();
         // 添加查询条件
-        query.eq("username", "张三").page(1, 2) // 分页查询，按页码分，通常使用这种。
+        query
+                .eq("username", "张三")
+                .page(1, 2) // 分页查询，按页码分，通常使用这种。
         // .limit(start, offset) // 分页查询，这种是偏移量分页
         ;
 
