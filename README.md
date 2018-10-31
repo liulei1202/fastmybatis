@@ -129,12 +129,13 @@ int saveIgnoreNull(T entity);
 int saveBatch(@Param("entitys")List<T> entitys);
 
 /**
- * 批量添加,兼容更多的数据库版本.<br>
+ * 批量保存,兼容更多的数据库版本.<br>
  * 此方式采用union all的方式批量insert,如果是mysql或sqlserver2008及以上推荐saveBatch()方法.
+ * 
  * @param entitys
- * @return
+ * @return 受影响行数
  */
-int saveMulti(@Param("entitys")List<T> entitys);
+int saveMulti(@Param("entitys") List<T> entitys);
 
 /**
  * 修改,修改所有字段
