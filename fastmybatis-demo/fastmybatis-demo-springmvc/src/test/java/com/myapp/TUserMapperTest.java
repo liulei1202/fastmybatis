@@ -41,7 +41,7 @@ public class TUserMapperTest extends TestBase {
      */
     @Test
     public void testGetById() {
-        TUser user = mapper.getById(3);
+        TUser user = mapper.getById(6);
         print(user);
     }
 

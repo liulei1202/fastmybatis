@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.1.0
+
+- 提供easyui表格分页查询，见MapperUtil.java
+
 ## 1.0.17
 
 - 修复SqlServer模板问题（使用SqlServer数据库必须升级到此版本）
