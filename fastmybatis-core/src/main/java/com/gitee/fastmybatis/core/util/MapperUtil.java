@@ -6,7 +6,11 @@ import com.gitee.fastmybatis.core.exception.QueryException;
 import com.gitee.fastmybatis.core.mapper.SchMapper;
 import com.gitee.fastmybatis.core.query.Query;
 import com.gitee.fastmybatis.core.query.param.BaseParam;
+import com.gitee.fastmybatis.core.support.PageEasyui;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +23,52 @@ import java.util.List;
 public class MapperUtil {
     private MapperUtil() {
 	}
+
+
+    /**
+     * 为easyui表格(datagrid)提供的查询
+     *
+     * @param mapper mapper
+     * @param query  查询条件
+     * @param clazz  返回VO的类型
+     * @param <E>    结果集
+     * @param <T>    VO
+     * @return 返回查询结果，将此对象转换成json，可被datagrid识别
+     */
+    public static <E, T> PageEasyui<T> queryForEasyuiDatagrid(SchMapper<E, ?> mapper, Query query, Class<T> clazz) {
+        PageEasyui pageInfo = queryForEasyuiDatagrid(mapper, query);
+        List list = pageInfo.getRows();
+        if (CollectionUtils.isNotEmpty(list)) {
+            List<Object> newList = new ArrayList<>(list.size());
+            try {
+                for (Object element : list) {
+                    if (clazz == element.getClass()) {
+                        newList.add(element);
+                    } else {
+                        T t = clazz.newInstance();
+                        BeanUtils.copyProperties(element, t);
+                        newList.add(t);
+                    }
+                }
+                pageInfo.setList(newList);
+            } catch (Exception e) {
+                throw new QueryException(e);
+            }
+        }
+        return (PageEasyui<T>)pageInfo;
+    }
+
+    /**
+     * 为easyui表格(datagrid)提供的查询
+     *
+     * @param mapper mapper
+     * @param query  查询对象
+     * @param <E>    结果集对象
+     * @return 返回查询结果，将此对象转换成json，可被datagrid识别
+     */
+    public static <E> PageEasyui<E> queryForEasyuiDatagrid(SchMapper<E, ?> mapper, Query query) {
+        return query(mapper, query, PageEasyui.class);
+    }
 
 	/**
      * 分页数算法:页数 = (总记录数 + 每页记录数 - 1) / 每页记录数

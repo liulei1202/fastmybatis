@@ -1,8 +1,9 @@
 package com.gitee.fastmybatis.core.support;
 
-import java.util.List;
-
 import com.gitee.fastmybatis.core.PageSupport;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 支持easyui表格的json结果<br>
@@ -14,7 +15,11 @@ import com.gitee.fastmybatis.core.PageSupport;
 public class PageEasyui<E> extends PageSupport<E> {
     private static final long serialVersionUID = 2599057675920773433L;
 
-    public long getTotal() {
+	public PageEasyui() {
+		this.setList(Collections.<E>emptyList());
+	}
+
+	public long getTotal() {
 		return this.fatchTotal();
 	}
 	

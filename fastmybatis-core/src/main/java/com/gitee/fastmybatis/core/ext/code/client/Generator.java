@@ -1,9 +1,10 @@
 package com.gitee.fastmybatis.core.ext.code.client;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-
+import com.gitee.fastmybatis.core.ext.code.NotEntityException;
+import com.gitee.fastmybatis.core.ext.code.generator.MapperContext;
+import com.gitee.fastmybatis.core.ext.code.generator.TableDefinition;
+import com.gitee.fastmybatis.core.ext.code.generator.TableSelector;
+import com.gitee.fastmybatis.core.ext.code.util.VelocityUtil;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -11,11 +12,9 @@ import org.apache.velocity.VelocityContext;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
-import com.gitee.fastmybatis.core.ext.code.NotEntityException;
-import com.gitee.fastmybatis.core.ext.code.generator.MapperContext;
-import com.gitee.fastmybatis.core.ext.code.generator.TableDefinition;
-import com.gitee.fastmybatis.core.ext.code.generator.TableSelector;
-import com.gitee.fastmybatis.core.ext.code.util.VelocityUtil;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
 /**
  * 代码生成器，根据定义好的velocity模板生成代码
@@ -78,7 +77,7 @@ public class Generator {
 	/**
 	 * 返回SQL上下文列表
 	 * 
-	 * @param tableNames
+	 * @param clientParam 参数
 	 * @return 返回SQL上下文
 	 * @throws NotEntityException 
 	 */

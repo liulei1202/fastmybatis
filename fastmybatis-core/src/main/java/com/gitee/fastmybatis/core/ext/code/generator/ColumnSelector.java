@@ -1,20 +1,5 @@
 package com.gitee.fastmybatis.core.ext.code.generator;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.gitee.fastmybatis.core.FastmybatisConfig;
 import com.gitee.fastmybatis.core.annotation.LogicDelete;
 import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
@@ -25,9 +10,22 @@ import com.gitee.fastmybatis.core.handler.BaseEnum;
 import com.gitee.fastmybatis.core.handler.BaseFill;
 import com.gitee.fastmybatis.core.handler.EnumTypeHandler;
 import com.gitee.fastmybatis.core.handler.FillType;
+import org.apache.commons.lang.StringUtils;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import javax.persistence.Version;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 表信息查询
+ * zi字段查询
  * @author tanghc
  */
 public class ColumnSelector {
@@ -125,20 +123,20 @@ public class ColumnSelector {
 		
 		return isUuid && isStringType;
 	}
-	
+
+	/**
+	 * 构建columnDefinition
+	 * @return 返回字段定义
+	 */
 	public List<ColumnDefinition> getColumnDefinitions() {
-		List<ColumnDefinition> columnDefinitionList = new ArrayList<ColumnDefinition>();
-		// 构建columnDefinition
-		
 		List<Field> fields = ReflectUtil.getDeclaredFields(entityClass);
-		
+		final List<ColumnDefinition> columnDefinitionList = new ArrayList<ColumnDefinition>(fields.size());
 		for (Field field : fields) {
 			ColumnDefinition columnDefinition = buildColumnDefinition(field);
 			if(columnDefinition != null) {
 				columnDefinitionList.add(columnDefinition);
 			}
 		}
-					
 		return columnDefinitionList;
 	}
 	
