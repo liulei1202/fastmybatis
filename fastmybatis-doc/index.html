@@ -795,7 +795,7 @@ mybatis<span class="hljs-selector-class">.fill</span><span class="hljs-selector-
 <li>notDeleteValue：指定未删除时的值,不指定默认为0</li>
 <li>deleteValue：指定删除后保存的值,不指定默认为1</li>
 </ul>
-<p>假设1表示未删除，2表示已删除，@LogicDelete的设置方法如下：@LogicDelete(notDeleteValue = "1", deleteValue = "2")。如果每个实体类都要这样设置的话会很麻烦，easymybatis提供了全局配置</p>
+<p>假设1表示未删除，2表示已删除，@LogicDelete的设置方法如下：@LogicDelete(notDeleteValue = "1", deleteValue = "2")。如果每个实体类都要这样设置的话会很麻烦，fastmybatis提供了全局配置</p>
 <ul class="task-list">
 <li>springboot下，application.properties添加</li>
 </ul>
@@ -809,7 +809,7 @@ mybatis.logic-<span class="hljs-keyword">delete</span>-value=<span class="hljs-n
 </ul>
 <pre lang="xml" class="xml"><code class="hljs"><span class="hljs-comment">&lt;!-- 替换org.mybatis.spring.SqlSessionFactoryBean --&gt;</span>
 	<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"sqlSessionFactory"</span>
-		<span class="hljs-attr">class</span>=<span class="hljs-string">"net.oschina.durcframework.easymybatis.ext.SqlSessionFactoryBeanExt"</span>&gt;</span>
+		<span class="hljs-attr">class</span>=<span class="hljs-string">"com.gitee.fastmybatis.core.ext.SqlSessionFactoryBeanExt"</span>&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"dataSource"</span> /&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"configLocation"</span>&gt;</span>
 			<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>classpath:mybatis/mybatisConfig.xml<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
