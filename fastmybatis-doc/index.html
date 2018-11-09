@@ -750,7 +750,7 @@ mybatis<span class="hljs-selector-class">.fill</span><span class="hljs-selector-
 <p>如果你的项目是springmvc，采用xml配置形式，前两步不变，第三步改为：</p>
 <pre lang="xml" class="xml"><code class="hljs"><span class="hljs-comment">&lt;!-- 替换org.mybatis.spring.SqlSessionFactoryBean --&gt;</span>
 	<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"sqlSessionFactory"</span>
-		<span class="hljs-attr">class</span>=<span class="hljs-string">"net.oschina.durcframework.fastmybatis.ext.SqlSessionFactoryBeanExt"</span>&gt;</span>
+		<span class="hljs-attr">class</span>=<span class="hljs-string">"com.gitee.fastmybatis.core.ext.SqlSessionFactoryBeanExt"</span>&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"dataSource"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"dataSource"</span> /&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"configLocation"</span>&gt;</span>
 			<span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>classpath:mybatis/mybatisConfig.xml<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
