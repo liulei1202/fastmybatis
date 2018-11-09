@@ -613,7 +613,7 @@ user.setGmtUpdate(<span class="hljs-keyword">new</span> <span class="hljs-built_
 <p>因为表设计的时候大部分都有这两个字段，所以对每张表都进行手动设置的话很容易错加、漏加。
 fastmybatis提供了两个辅助类DateFillInsert和DateFillUpdate，用来处理添加修改时的时间字段自动填充。配置了这两个类之后，时间字段将会自动设置。</p>
 <p>配置方式如下：</p>
-<pre><code class="hljs arduino">EasymybatisConfig <span class="hljs-built_in">config</span> = <span class="hljs-keyword">new</span> EasymybatisConfig();
+<pre><code class="hljs arduino">FastmybatisConfig <span class="hljs-built_in">config</span> = <span class="hljs-keyword">new</span> FastmybatisConfig();
 
     <span class="hljs-built_in">config</span>.setFills(Arrays.asList(
 			<span class="hljs-keyword">new</span> DateFillInsert()
@@ -640,7 +640,7 @@ fastmybatis提供了两个辅助类DateFillInsert和DateFillUpdate，用来处�
 		--&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"basePackage"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.myapp.dao"</span> /&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"config"</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.gitee.fastmybatis.core.EasymybatisConfig"</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.gitee.fastmybatis.core.FastmybatisConfig"</span>&gt;</span>
                                 <span class="hljs-comment">&lt;!-- 定义填充器 --&gt;</span>
 				<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"fills"</span>&gt;</span>
 					<span class="hljs-tag">&lt;<span class="hljs-name">list</span>&gt;</span>
@@ -768,7 +768,7 @@ mybatis<span class="hljs-selector-class">.fill</span><span class="hljs-selector-
 		--&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"basePackage"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.myapp.dao"</span> /&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"config"</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"net.oschina.durcframework.fastmybatis.fastmybatisConfig"</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"net.oschina.durcframework.fastmybatis.FastmybatisConfig"</span>&gt;</span>
 				<span class="hljs-comment">&lt;!-- 指定外部模板 --&gt;</span>
 				<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"templateClasspath"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"/"</span>/&gt;</span>
 			<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
@@ -827,7 +827,7 @@ mybatis.logic-<span class="hljs-keyword">delete</span>-value=<span class="hljs-n
 		--&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"basePackage"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.myapp.dao"</span> /&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"config"</span>&gt;</span>
-			<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"net.oschina.durcframework.easymybatis.EasymybatisConfig"</span>&gt;</span>		
+			<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"net.oschina.durcframework.easymybatis.FastmybatisConfig"</span>&gt;</span>		
 				<span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"logicNotDeleteValue"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1"</span>/&gt;</span>
                                 <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"logicDeleteValue"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"2"</span>/&gt;</span>
 			<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
