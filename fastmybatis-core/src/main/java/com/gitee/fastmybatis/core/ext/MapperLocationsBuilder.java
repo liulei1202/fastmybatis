@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,7 +127,7 @@ public class MapperLocationsBuilder {
 		final String globalVmLocation = this.config.getGlobalVmLocation();
 		LOG.info("使用模板:" + templateLocation);
 		final ClassClient codeClient = new ClassClient(config);
-		final List<Resource> mapperLocations = Collections.synchronizedList(new ArrayList<Resource>(classCount));
+		final List<Resource> mapperLocations = new ArrayList<Resource>(classCount);
 
 		long startTime = System.currentTimeMillis();
 		try {

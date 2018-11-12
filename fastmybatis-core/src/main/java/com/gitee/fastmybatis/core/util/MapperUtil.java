@@ -35,7 +35,8 @@ public class MapperUtil {
      * @param <T>    VO
      * @return 返回查询结果，将此对象转换成json，可被datagrid识别
      */
-    public static <E, T> PageEasyui<T> queryForEasyuiDatagrid(SchMapper<E, ?> mapper, Query query, Class<T> clazz) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <E, T> PageEasyui<T> queryForEasyuiDatagrid(SchMapper<E, ?> mapper, Query query, Class<T> clazz) {
         PageEasyui pageInfo = queryForEasyuiDatagrid(mapper, query);
         List list = pageInfo.getRows();
         if (CollectionUtils.isNotEmpty(list)) {
@@ -54,6 +55,8 @@ public class MapperUtil {
             } catch (Exception e) {
                 throw new QueryException(e);
             }
+        } else {
+        	pageInfo.setList(Collections.<T>emptyList());
         }
         return (PageEasyui<T>)pageInfo;
     }
@@ -66,6 +69,7 @@ public class MapperUtil {
      * @param <E>    结果集对象
      * @return 返回查询结果，将此对象转换成json，可被datagrid识别
      */
+    @SuppressWarnings("unchecked")
     public static <E> PageEasyui<E> queryForEasyuiDatagrid(SchMapper<E, ?> mapper, Query query) {
         return query(mapper, query, PageEasyui.class);
     }

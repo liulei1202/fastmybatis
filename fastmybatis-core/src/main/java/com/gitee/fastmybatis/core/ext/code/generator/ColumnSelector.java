@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * zi字段查询
+ * 字段查询
  * @author tanghc
  */
 public class ColumnSelector {

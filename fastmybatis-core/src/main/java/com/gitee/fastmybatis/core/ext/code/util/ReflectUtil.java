@@ -17,8 +17,6 @@ public class ReflectUtil {
 		super();
 	}
 
-	private static final String SERIAL_VERSION_UID_NAME = "serialVersionUID";
-
 	/**
 	 * 循环向上转型, 获取对象的所有的DeclaredField
 	 * 
@@ -35,8 +33,8 @@ public class ReflectUtil {
 				fields = clazz.getDeclaredFields();
 				for (int i = 0, size = fields.length; i < size; i++) {
 					Field field = fields[i];
-					// 过滤serialVersionUID字段
-					if(Modifier.isStatic(field.getModifiers()) && SERIAL_VERSION_UID_NAME.equals(field.getName())) {
+					// 过滤static字段
+					if(Modifier.isStatic(field.getModifiers())) {
 						continue;
 					}
 					fieldList.add(field);
