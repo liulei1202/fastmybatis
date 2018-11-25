@@ -40,7 +40,7 @@
 
 
 	<select id="findJoinPage"
-		parameterType="com.gitee.fastmybatis.core.query.Pageable"
+		parameterType="com.gitee.fastmybatis.core.query.Query"
 		resultMap="baseResultMap">
 		SELECT t.*,t2.city,t2.address
 		FROM t_user t LEFT JOIN user_info t2 ON t.id = t2.user_id

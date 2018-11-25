@@ -1,5 +1,19 @@
 package com.myapp;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
+
 import com.gitee.fastmybatis.core.PageInfo;
 import com.gitee.fastmybatis.core.query.Query;
 import com.gitee.fastmybatis.core.query.Sort;
@@ -7,18 +21,6 @@ import com.gitee.fastmybatis.core.util.MapperUtil;
 import com.gitee.fastmybatis.core.util.MyBeanUtil;
 import com.myapp.entity.TUser;
 import com.myapp.mapper.TUserMapper;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * mapper测试
@@ -251,6 +253,21 @@ public class TUserMapperTest extends TestBase {
         
         this.print(list);
     }
+    
+    /**
+     * SELECT DISTINCT(t.`id`) , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` FROM `t_user` t 
+     * WHERE username = ? AND t.isdel = 0 
+     */
+    @Test
+    public void testDistinct() {
+    	Query query = new Query();
+        // 添加查询条件
+        query.eq("username", "张三")
+        	.enableDistinct();
+        
+        List<TUser> list = mapper.list(query);
+        this.print(list);
+    }
 
     /**
      * 自定义sql方式1
@@ -262,7 +279,7 @@ public class TUserMapperTest extends TestBase {
     }
 
     /**
-     * 自定义sql方式2，见TUserMapper.xml
+     * 自定义sql方式2，见TUserMapper3.xml
      */
     @Test
     public void testSelfSql2() {
@@ -440,16 +457,22 @@ public class TUserMapperTest extends TestBase {
     public void testUpdateByQuery() {
         Query query = new Query().eq("state", 2);
         // 方式1
-        TUser user = new TUser();
+        /*TUser user = new TUser();
         user.setUsername("李四");
         int i = mapper.updateByQuery(user, query);
-        print("updateByQuery --> " + i);
+        print("updateByQuery --> " + i);*/
         
-       /* // 方式2
+        // 方式2
+        // key为数据库字段名
+        /*
+         * UPDATE `t_user` SET remark = ? , username = ? WHERE state = ? 
+         * Parameters: null, 李四2(String), 2(Integer)
+         */
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("username", "李四2");
-        i = mapper.updateByQuery(map, query);
-        print("updateByQuery --> " + i);*/
+        map.put("remark", null);
+        int i = mapper.updateByMap(map, query);
+        print("updateByQuery --> " + i);
     }
 
     /**
