@@ -356,7 +356,18 @@
             #end
         </set>
         <include refid="common.updateWhere" />
-    </update>   
+    </update>
+    
+    <!-- 根据指定条件更新 -->
+    <update id="updateByMap">
+        UPDATE ${table.tableName}
+        <set>
+            <foreach collection="entity.keys" item="key" separator=",">  
+                ${key} = #{entity[${key}]}
+            </foreach> 
+        </set>
+        <include refid="common.updateWhere" />
+    </update>
     
 	<!-- 根据实体类删除 -->
 	<delete id="delete" parameterType="${context.className}">

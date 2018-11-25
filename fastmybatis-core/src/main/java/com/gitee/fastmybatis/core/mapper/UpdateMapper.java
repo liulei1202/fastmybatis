@@ -1,5 +1,7 @@
 package com.gitee.fastmybatis.core.mapper;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.gitee.fastmybatis.core.query.Query;
@@ -37,4 +39,12 @@ public interface UpdateMapper<E> extends Mapper<E> {
      * @return 受影响行数
      */
     int updateByQuery(@Param("entity") Object entity, @Param("query") Query query);
+    
+    /**
+     * 根据条件更新
+     * @param map 待更新的数据，key为数据库字段名
+     * @param query 更新条件
+     * @return 受影响行数
+     */
+    int updateByMap(@Param("entity") Map<String, Object> map, @Param("query") Query query);
 }

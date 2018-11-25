@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,8 @@ public class MapperLocationsBuilder {
 	private FastmybatisConfig config = new FastmybatisConfig();
 
 	private Attribute namespace = new DOMAttribute(new QName(ATTR_NAMESPACE));
+	
+	private List<String> mapperNames = Collections.emptyList();
 
 	private String dbName;
 
@@ -80,7 +83,7 @@ public class MapperLocationsBuilder {
 			        ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
 			ClassScanner classScanner = new ClassScanner(basePackages, Mapper.class);
 			Set<Class<?>> clazzsSet = classScanner.getClassSet();
-
+			mapperNames = this.buildMapperNames(clazzsSet);
 			return this.buildMapperLocations(clazzsSet);
 		} catch (Exception e) {
 		    LOG.error("构建mapper失败", e);
@@ -148,6 +151,14 @@ public class MapperLocationsBuilder {
 			throw new GenCodeException(e);
 		}
 
+	}
+	
+	private List<String> buildMapperNames(Set<Class<?>> clazzsSet) {
+	    List<String> list = new ArrayList<String>(clazzsSet.size());
+	    for (Class<?> clazz : clazzsSet) {
+	    	list.add(clazz.getSimpleName());
+		}
+	    return list;
 	}
 
 	/** 保存mapper到本地文件夹 
@@ -238,7 +249,9 @@ public class MapperLocationsBuilder {
 	    StringBuilder xml = new StringBuilder();
 	    String trueNamespace = mapperClass.getName();
 	    for (MapperResourceDefinition mapperResourceDefinition : mapperResourceDefinitions) {
-            if(mapperResourceDefinition.isMerged()) {
+	    	String filename = mapperResourceDefinition.getFilename();
+	    	filename = filename.substring(0, filename.length() - 4);
+            if(mapperResourceDefinition.isMerged() || mapperNames.contains(filename)) {
                 continue;
             }
             Resource resource = mapperResourceDefinition.getResource();
@@ -273,7 +286,7 @@ public class MapperLocationsBuilder {
 	    return xml.toString();
 	    
 	}
-
+	
 	private String getExtFileContent(Resource resource) throws IOException, DocumentException {
 		InputStream in = resource.getInputStream();
 		Document document = this.buildSAXReader().read(in);

@@ -331,6 +331,17 @@
         <include refid="common.updateWhere" />
     </update>
     
+    <!-- 根据指定条件更新 -->
+    <update id="updateByMap">
+        UPDATE ${table.tableName}
+        <set>
+            <foreach collection="entity.keys" item="key" separator=",">  
+                ${key} = #{entity[${key}]}
+            </foreach> 
+        </set>
+        <include refid="common.updateWhere" />
+    </update>
+    
 	<!-- 根据主键删除记录 -->
 	<delete id="delete" parameterType="${context.className}">
 		#if(${table.hasLogicDeleteColumn})            

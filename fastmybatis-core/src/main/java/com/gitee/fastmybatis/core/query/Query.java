@@ -73,7 +73,9 @@ public class Query implements Queryable {
     
     /** 强力查询，设置为true，将无视删除字段 */
     private boolean forceQuery;
-
+    
+    private boolean distinct;
+    
     private List<ExpressionValueable> valueExpressions;
     private List<ExpressionJoinable> joinExpressions;
     private List<ExpressionListable> listExpressions;
@@ -772,4 +774,22 @@ public class Query implements Queryable {
         return this;
     }
 
+    /**
+     * 使用distinct，开启后，会在主键上加distinct。distinct(t.id)<br>
+     * 仅限于mysql
+     */
+    public Query enableDistinct() {
+    	this.distinct = true;
+    	return this;
+    }
+    
+    public Query disableDistinct() {
+    	this.distinct = false;
+    	return this;
+    }
+    
+    public boolean getDistinct() {
+    	return this.distinct;
+    }
+    
 }
