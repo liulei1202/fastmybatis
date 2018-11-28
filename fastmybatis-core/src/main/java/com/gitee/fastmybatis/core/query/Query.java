@@ -64,7 +64,7 @@ public class Query implements Queryable {
     private int limit;
     /** 总记录数，默认为-1，表示没有设置总记录数 */
     private int total = -1;
-
+    
     /** 排序信息 */
     private LinkedHashSet<String> orderInfo;
     
@@ -75,6 +75,8 @@ public class Query implements Queryable {
     private boolean forceQuery;
     
     private boolean distinct;
+    
+    private boolean forceUpdate;
     
     private List<ExpressionValueable> valueExpressions;
     private List<ExpressionJoinable> joinExpressions;
@@ -790,6 +792,24 @@ public class Query implements Queryable {
     
     public boolean getDistinct() {
     	return this.distinct;
+    }
+    
+    /**
+     * 开启强制更新，那么null字段也会更新进去
+     * @return 返回query对象
+     */
+    public Query enableForceUpdate() {
+    	this.forceUpdate = true;
+    	return this;
+    }
+    
+    public Query disableForceUpdate() {
+    	this.forceUpdate = false;
+    	return this;
+    }
+    
+    public boolean getForceUpdate() {
+    	return this.forceUpdate;
     }
     
 }

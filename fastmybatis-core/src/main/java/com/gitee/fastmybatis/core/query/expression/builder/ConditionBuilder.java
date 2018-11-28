@@ -1,11 +1,13 @@
 package com.gitee.fastmybatis.core.query.expression.builder;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 import com.gitee.fastmybatis.core.exception.QueryException;
 import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
@@ -54,7 +56,8 @@ public class ConditionBuilder {
 	public List<Expression> buildExpressions(Object pojo) {
 	    Assert.notNull(pojo, "buildExpressions(Object pojo) pojo can't be null.");
 		List<Expression> expList = new ArrayList<Expression>();
-		Method[] methods = pojo.getClass().getMethods();
+		Class<?> clazz = pojo.getClass();
+		Method[] methods = clazz.getMethods();
 		try {
 			for (Method method : methods) {
 				if (couldBuildExpression(method)) {
@@ -75,8 +78,8 @@ public class ConditionBuilder {
 	}
 
 	private Expression buildExpression(Method method, Object value) {
-		Condition annotation = method.getAnnotation(Condition.class);
 		String columnName = this.buildColumnName(method);
+		Condition annotation = this.findCondition(method, columnName);
 		Expression expression = null;
 
 		if (annotation == null) {
@@ -93,7 +96,19 @@ public class ConditionBuilder {
 
 		return expression;
 	}
-
+	
+	private Condition findCondition(Method method, String columnName) {
+		Condition annotation = method.getAnnotation(Condition.class);
+		if(annotation == null) {
+			Class<?> clazz = method.getDeclaringClass();
+			Field field = ReflectionUtils.findField(clazz, columnName);
+			if(field != null) {
+				annotation = field.getAnnotation(Condition.class);
+			}
+		}
+		return annotation;
+	}
+	
 	/** 返回数据库字段名 */
 	private String buildColumnName(Method method) {
 		String getMethodName = method.getName();

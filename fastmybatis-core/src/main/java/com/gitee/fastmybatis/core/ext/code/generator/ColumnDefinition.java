@@ -40,6 +40,8 @@ public class ColumnDefinition {
     private String comment;
     private String typeHandler;
     private FillType fillType;
+    
+    private int orderIndex = 1;
 
     public String getLogicDeleteValueString() {
         return formatValue(logicDeleteValue);
@@ -293,4 +295,12 @@ public class ColumnDefinition {
         }
     }
 
+	public int getOrderIndex() {
+		return orderIndex;
+	}
+
+	public void setOrderIndex(int orderIndex) {
+		this.orderIndex = orderIndex;
+	}
+    
 }

@@ -16,7 +16,7 @@ import com.gitee.fastmybatis.core.query.Operator;
  * @author tanghc
  */
 @Documented
-@Target({ ElementType.METHOD })
+@Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface Condition {

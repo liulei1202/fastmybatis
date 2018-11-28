@@ -5,21 +5,32 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.util.Assert;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.gitee.fastmybatis.core.exception.QueryException;
+import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
 
 /**
  * 对象拷贝
  * @author tanghc
  */
 public class MyBeanUtil extends org.springframework.beans.BeanUtils {
+	
+	private static final String PREFIX_GET = "get";
+	private static final String GETCLASS_NAME = "getClass";
+	
+	// key:clazz.getName();
+	private static Map<String, List<Method>> objGetMethods = new ConcurrentHashMap<>(16);
     
 	/**
      * 属性拷贝,第一个参数中的属性值拷贝到第二个参数中<br>
@@ -96,6 +107,66 @@ public class MyBeanUtil extends org.springframework.beans.BeanUtils {
     }
     
     /**
+     * 将pojo对象中的字段值和名称存到map中，并且字段值转成数据库字段名
+     * @param pojo
+     * @return 返回map，key为数据库字段名
+     */
+    public static Map<String, Object> createUpdateMap(Object pojo) {
+    	return doCreateUpdateMap(pojo, false);
+    }
+    
+    /**
+     * 将pojo对象中的字段值和名称存到map中，并且字段值转成数据库字段名。忽略null字段
+     * @param pojo
+     * @return 返回map，key为数据库字段名
+     */
+    public static Map<String, Object> createUpdateMapIgnoreNull(Object pojo) {
+    	return doCreateUpdateMap(pojo, true);
+    }
+    
+    public static Map<String, Object> doCreateUpdateMap(Object pojo, boolean ignoreNull) {
+    	Class<?> clazz = pojo.getClass();
+    	String key = clazz.getName();
+    	List<Method> methods = objGetMethods.get(key);
+    	if(methods == null) {
+    		methods = new ArrayList<>();
+    		Method[] clazzMethods = clazz.getMethods();
+        	for (Method method : clazzMethods) {
+    			if(isGetMethod(method)) {
+    				methods.add(method);
+    			}
+    		}
+        	objGetMethods.put(key, methods);
+    	}
+    	
+    	if(CollectionUtils.isEmpty(methods)) {
+    		return Collections.emptyMap();
+    	}
+    	Map<String, Object> ret = new HashMap<>(8);
+    	try {
+	    	for (Method method : methods) {
+	    		Object value = method.invoke(pojo);
+	    		if(value != null || !ignoreNull) {
+	    			String columnName = method.getName().substring(3);
+	    			ret.put(FieldUtil.camelToUnderline(columnName), value);
+	    		}
+			}
+    	} catch (Exception e) {
+			throw new QueryException(e);
+		}
+    	return ret;
+    }
+    
+    /** 是否是get方法 */
+	public static boolean isGetMethod(Method method) {
+	    if(method.getReturnType() == Void.TYPE) {
+	        return false;
+	    }
+	    String methodName = method.getName();
+		return (!GETCLASS_NAME.equals(methodName)) && methodName.startsWith(PREFIX_GET);
+	}
+    
+    /**
      * 将map对象转换成普通类
      * 
      * @param <T> 普通类类型
@@ -129,4 +200,5 @@ public class MyBeanUtil extends org.springframework.beans.BeanUtils {
         }
         return retList;
     }
+    
 }

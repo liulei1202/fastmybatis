@@ -343,7 +343,7 @@
                     #if(${column.hasTypeHandlerUpdate})
                         ${column.columnName}=${column.mybatisUpdateValuePrefix},
                     #else
-                        <if test="entity.${column.javaFieldName} != null" >
+                        <if test="entity.${column.javaFieldName} != null or query.forceUpdate" >
                         ${column.columnName}=${column.mybatisUpdateValuePrefix},
                         </if>
                     #end

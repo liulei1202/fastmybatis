@@ -2,6 +2,7 @@ package com.gitee.fastmybatis.core.ext.code.generator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.gitee.fastmybatis.core.ext.exception.GenCodeException;
@@ -128,11 +129,22 @@ public class TableDefinition {
         this.initPKColumn(columnDefinitions);
         this.initVersionJavaColumn(columnDefinitions);
         this.initDeleteJavaColumn(columnDefinitions);
+        this.initOrderIndex(columnDefinitions);
+    }
+    
+    private void initOrderIndex(List<ColumnDefinition> columnDefinitions) {
+    	Collections.sort(columnDefinitions,new Comparator<ColumnDefinition>(){
+			@Override
+			public int compare(ColumnDefinition o1, ColumnDefinition o2) {
+				return Integer.compare(o1.getOrderIndex(), o2.getOrderIndex());
+			}
+    	});
     }
 
     private void initPKColumn(List<ColumnDefinition> columnDefinitions) {
         for (ColumnDefinition column : columnDefinitions) {
             if (column.getIsPk()) {
+            	column.setOrderIndex(0);
                 this.setPkColumn(column);
                 break;
             }
