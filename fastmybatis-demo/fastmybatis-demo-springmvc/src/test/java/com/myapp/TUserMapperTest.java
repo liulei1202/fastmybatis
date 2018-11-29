@@ -15,8 +15,10 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.gitee.fastmybatis.core.PageInfo;
+import com.gitee.fastmybatis.core.query.Operator;
 import com.gitee.fastmybatis.core.query.Query;
 import com.gitee.fastmybatis.core.query.Sort;
+import com.gitee.fastmybatis.core.query.annotation.Condition;
 import com.gitee.fastmybatis.core.util.MapperUtil;
 import com.gitee.fastmybatis.core.util.MyBeanUtil;
 import com.myapp.entity.TUser;
@@ -96,6 +98,18 @@ public class TUserMapperTest extends TestBase {
                 .in("money", Arrays.asList(100, 1.0, 3))
                 .orderby("state",Sort.DESC);
         List<TUser> list = mapper.list(query);
+        for (TUser tUser : list) {
+            print(tUser);
+        }
+    }
+    
+    @Test
+    public void testListByPojo() {
+    	UserDTO param = new UserDTO();
+    	param.setUsername("张");
+    	param.setRemark("11");
+    	Query query = Query.build(param);
+    	List<TUser> list = mapper.list(query);
         for (TUser tUser : list) {
             print(tUser);
         }
@@ -457,10 +471,11 @@ public class TUserMapperTest extends TestBase {
     public void testUpdateByQuery() {
         Query query = new Query().eq("state", 2);
         // 方式1
-        /*TUser user = new TUser();
+        TUser user = new TUser();
         user.setUsername("李四");
+        user.setRemark(null);
         int i = mapper.updateByQuery(user, query);
-        print("updateByQuery --> " + i);*/
+        print("updateByQuery --> " + i);
         
         // 方式2
         // key为数据库字段名
@@ -468,11 +483,37 @@ public class TUserMapperTest extends TestBase {
          * UPDATE `t_user` SET remark = ? , username = ? WHERE state = ? 
          * Parameters: null, 李四2(String), 2(Integer)
          */
-        Map<String, Object> map = new HashMap<String, Object>();
+        /*Map<String, Object> map = new HashMap<String, Object>();
         map.put("username", "李四2");
         map.put("remark", null);
         int i = mapper.updateByMap(map, query);
-        print("updateByQuery --> " + i);
+        print("updateByQuery --> " + i);*/
+    }
+    
+    public static class UserDTO {
+    	/** 用户名, 数据库字段：username */
+    	@Condition(operator = Operator.likeRight)
+        private String username;
+
+        /** 备注, 数据库字段：remark */
+        private String remark;
+
+		public String getUsername() {
+			return username;
+		}
+
+		public void setUsername(String username) {
+			this.username = username;
+		}
+
+		@Condition(operator = Operator.like)
+		public String getRemark() {
+			return remark;
+		}
+
+		public void setRemark(String remark) {
+			this.remark = remark;
+		}
     }
 
     /**

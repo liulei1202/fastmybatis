@@ -1,5 +1,11 @@
 # 更新日志
 
+## 1.3.0
+
+- updateByQuery可强制更新null
+- 修复distinct使用方式id顺序问题
+- @Condition注解可作用在字段上
+
 ## 1.2.0
 
 - 修复自定义xml文件合并BUG
