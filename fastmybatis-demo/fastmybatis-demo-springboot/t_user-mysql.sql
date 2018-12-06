@@ -56,3 +56,14 @@ CREATE TABLE `address` (
 
 insert  into `address`(`id`,`address`) values ('1','aaaa'),('2','bbbb'),('3','vvv'),('4','3333'),('50830c82-8ede-11e7-8bd2-54e1ad3fb014','address。。');
 
+DROP TABLE IF EXISTS `user_info`;
+
+CREATE TABLE `user_info` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `user_id` int(11) NOT NULL COMMENT 't_user.id',
+  `address` varchar(100) default NULL COMMENT '地址',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+
+insert  into `user_info`(`id`,`user_id`,`address`) values (1,1,'张三的地址'),(2,6,'李四的地址');

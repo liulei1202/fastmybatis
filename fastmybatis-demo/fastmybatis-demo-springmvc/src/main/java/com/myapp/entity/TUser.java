@@ -1,7 +1,6 @@
 package com.myapp.entity;
 
 import java.math.BigDecimal;
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -44,7 +43,7 @@ public class TUser {
 
     /** 剩下的钱, 数据库字段：left_money */
     private Float leftMoney;
-
+    
     /** 设置ID,数据库字段：t_user.id */
     public void setId(Integer id) {
         this.id = id;
