@@ -39,6 +39,7 @@ public class Generator {
 		context.put("columns", tableDefinition.getTableColumns());
 		context.put("allColumns", tableDefinition.getAllColumns());
 		context.put("countExpression", clientParam.getCountExpression());
+		context.put("associations", tableDefinition.getAssociationDefinitions());
 
 		return VelocityUtil.generate(context, templateInputStream);
 	}

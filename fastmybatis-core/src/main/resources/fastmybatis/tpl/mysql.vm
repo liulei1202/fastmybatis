@@ -6,10 +6,22 @@
     #foreach($column in $allColumns)
         <result column="${column.columnName}" property="${column.javaFieldName}" ${column.javaTypeProperty} ${column.typeHandlerProperty} ${column.jdbcTypeProperty} />
     #end
+    #foreach($association in $associations)
+        <association property="${association.property}" column="${association.column}" select="${association.select}"/>
+    #end
     </resultMap>
     
     <!-- 表字段 -->
     <sql id="baseColumns">
+    	#set ($i=0) 
+        #foreach($column in $columns)                         
+        	#if($i > 0),#end t.`${column.columnName}`
+			#set($i=$i+1)             
+        #end
+    </sql>
+    
+    <!-- 表字段 -->
+    <sql id="baseColumnsList">
     	#set ($i=0) 
         #foreach($column in $columns)                         
         	#if($i > 0),#end 
@@ -29,7 +41,7 @@
     <select id="list" parameterType="com.gitee.fastmybatis.core.query.Query"
 		resultMap="baseResultMap">
 		SELECT 
-			<include refid="baseColumns" />
+			<include refid="baseColumnsList" />
 		FROM `${table.tableName}` t
 		<include refid="common.join" />
 		<where>

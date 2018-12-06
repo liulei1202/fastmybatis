@@ -83,6 +83,7 @@ public class MapperLocationsBuilder {
 			        ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
 			ClassScanner classScanner = new ClassScanner(basePackages, Mapper.class);
 			Set<Class<?>> clazzsSet = classScanner.getClassSet();
+			this.initContext(clazzsSet);
 			mapperNames = this.buildMapperNames(clazzsSet);
 			return this.buildMapperLocations(clazzsSet);
 		} catch (Exception e) {
@@ -155,10 +156,16 @@ public class MapperLocationsBuilder {
 	
 	private List<String> buildMapperNames(Set<Class<?>> clazzsSet) {
 	    List<String> list = new ArrayList<String>(clazzsSet.size());
-	    for (Class<?> clazz : clazzsSet) {
-	    	list.add(clazz.getSimpleName());
+	    for (Class<?> mapperClass : clazzsSet) {
+	    	list.add(mapperClass.getSimpleName());
 		}
 	    return list;
+	}
+	
+	private void initContext(Set<Class<?>> clazzsSet) {
+		for (Class<?> mapperClass : clazzsSet) {
+	    	ExtContext.addMapperClass(mapperClass);
+		}
 	}
 
 	/** 保存mapper到本地文件夹 

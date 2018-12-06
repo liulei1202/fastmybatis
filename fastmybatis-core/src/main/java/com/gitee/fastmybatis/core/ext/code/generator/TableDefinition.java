@@ -25,11 +25,14 @@ public class TableDefinition {
     private ColumnDefinition versionColumn;
     /** 逻辑删除字段 */
     private ColumnDefinition logicDeleteColumn;
-
+    
+    /** 一对一关联 */
+    private List<AssociationDefinition> associationDefinitions;
+    
     public TableDefinition() {
-    }
+	}
 
-    public TableDefinition(String tableName) {
+	public TableDefinition(String tableName) {
         this.tableName = tableName;
     }
 
@@ -201,5 +204,14 @@ public class TableDefinition {
     public void setLogicDeleteColumn(ColumnDefinition logicDeleteColumn) {
         this.logicDeleteColumn = logicDeleteColumn;
     }
+
+	public List<AssociationDefinition> getAssociationDefinitions() {
+		return associationDefinitions;
+	}
+
+	public void setAssociationDefinitions(List<AssociationDefinition> associationDefinitions) {
+		this.associationDefinitions = associationDefinitions;
+	}
+
 
 }

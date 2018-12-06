@@ -6,6 +6,9 @@
     #foreach($column in $allColumns)
         <result column="${column.columnName}" property="${column.javaFieldName}" ${column.javaTypeProperty} ${column.typeHandlerProperty} ${column.jdbcTypeProperty} />
     #end
+    #foreach($association in $associations)
+        <association property="${association.property}" column="${association.column}" select="${association.select}"/>
+    #end
     </resultMap>
 
     <sql id="pageOrderBy">

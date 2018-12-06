@@ -1,7 +1,24 @@
 package com.gitee.fastmybatis.core.ext.code.generator;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.Version;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.gitee.fastmybatis.core.FastmybatisConfig;
 import com.gitee.fastmybatis.core.annotation.LogicDelete;
+import com.gitee.fastmybatis.core.ext.ExtContext;
 import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
 import com.gitee.fastmybatis.core.ext.code.util.JavaTypeUtil;
 import com.gitee.fastmybatis.core.ext.code.util.ReflectUtil;
@@ -10,19 +27,6 @@ import com.gitee.fastmybatis.core.handler.BaseEnum;
 import com.gitee.fastmybatis.core.handler.BaseFill;
 import com.gitee.fastmybatis.core.handler.EnumTypeHandler;
 import com.gitee.fastmybatis.core.handler.FillType;
-import org.apache.commons.lang.StringUtils;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 字段查询
@@ -33,6 +37,7 @@ public class ColumnSelector {
 	private static final String UUID_NAME = "uuid";
 	private static final String INCREMENT_NAME = "increment";
 	private static final String STRING_TYPE = "String";
+	private static final String SELECT_GET = "%s.getById";
 	
 	private Class<?> entityClass;
 	private FastmybatisConfig config;
@@ -130,7 +135,7 @@ public class ColumnSelector {
 	 */
 	public List<ColumnDefinition> getColumnDefinitions() {
 		List<Field> fields = ReflectUtil.getDeclaredFields(entityClass);
-		final List<ColumnDefinition> columnDefinitionList = new ArrayList<ColumnDefinition>(fields.size());
+		List<ColumnDefinition> columnDefinitionList = new ArrayList<ColumnDefinition>(fields.size());
 		for (Field field : fields) {
 			ColumnDefinition columnDefinition = buildColumnDefinition(field);
 			if(columnDefinition != null) {
@@ -138,6 +143,42 @@ public class ColumnSelector {
 			}
 		}
 		return columnDefinitionList;
+	}
+	
+	/**
+	 * 返回一对一关联
+	 * @return
+	 */
+	public List<AssociationDefinition> getAssociationDefinitions() {
+		List<Field> fields = ReflectUtil.getDeclaredFields(entityClass);
+		List<AssociationDefinition> associations = new ArrayList<AssociationDefinition>(8);
+		for (Field field : fields) {
+			AssociationDefinition associationDefinition = buildAssociationDefinition(field);
+			if(associationDefinition != null) {
+				associations.add(associationDefinition);
+			}
+		}
+		return associations;
+	}
+	
+	protected AssociationDefinition buildAssociationDefinition(Field field) {
+		Class<?> clazz = field.getType();
+		Table table = clazz.getAnnotation(Table.class);
+		if(table == null) {
+			return null;
+		}
+		String column = this.getColumnName(field);
+		String property = field.getName();
+		Class<?> mapperClass = ExtContext.getMapperClass(clazz);
+		String namespace = mapperClass.getName();
+		String select = String.format(SELECT_GET, namespace);
+		
+		AssociationDefinition associationDefinition = new AssociationDefinition();
+		associationDefinition.setColumn(column);
+		associationDefinition.setProperty(property);
+		associationDefinition.setSelect(select);
+		
+		return associationDefinition;
 	}
 	
 	/**

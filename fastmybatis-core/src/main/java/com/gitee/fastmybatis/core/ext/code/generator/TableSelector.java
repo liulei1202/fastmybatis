@@ -49,6 +49,7 @@ public class TableSelector {
 		tableDefinition.setTableName(tableName);
 		
 		tableDefinition.setColumnDefinitions(columnSelector.getColumnDefinitions());
+		tableDefinition.setAssociationDefinitions(columnSelector.getAssociationDefinitions());
 		
 		return tableDefinition;
 	}
