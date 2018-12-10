@@ -259,7 +259,7 @@ public class TUserMapperTest extends TestBase {
         // 左连接查询,主表的alias默认为t
         query.join("LEFT JOIN user_info t2 ON t.id = t2.user_id");
         // 指定返回字段
-        List<String> column = Arrays.asList("t2.user_id userId", "t.username", "t2.city");
+        List<String> column = Arrays.asList("t2.user_id userId", "t.username", "t2.address");
         // 查询结果返回到map中
         List<Map<String, Object>> mapList = mapper.listMap(column, query);
         // 再将map转换成实体bean
@@ -465,11 +465,14 @@ public class TUserMapperTest extends TestBase {
     
     /**
      * 根据条件更新。将状态为2的数据姓名更新为李四
-     * UPDATE `t_user` SET `username`=?, `add_time`=? WHERE state = ? 
+     * UPDATE `t_user` SET `username`=?, `add_time`=? WHERE state = ? AND isdel = 0
+     * 注：逻辑删除字段在这里有效
      */
     @Test
     public void testUpdateByQuery() {
         Query query = new Query().eq("state", 2);
+        // 无视逻辑删除字段
+        //query.ignoreLogicDeleteColumn();
         // 方式1
         TUser user = new TUser();
         user.setUsername("李四");
