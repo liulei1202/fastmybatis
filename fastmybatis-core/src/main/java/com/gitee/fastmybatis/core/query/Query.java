@@ -767,6 +767,16 @@ public class Query implements Queryable {
     }
     
     /**
+     * 无视逻辑删除字段
+     * @return 返回Query对象
+     * @see com.gitee.fastmybatis.core.annotation.LogicDelete 逻辑删除注解
+     */
+    public Query ignoreLogicDeleteColumn() {
+        this.forceQuery = true;
+        return this;
+    }
+    
+    /**
      * 关闭强力查询，逻辑删除字段生效
      * @return 返回Query对象
      * @see com.gitee.fastmybatis.core.annotation.LogicDelete 逻辑删除注解

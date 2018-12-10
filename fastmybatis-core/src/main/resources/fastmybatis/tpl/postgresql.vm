@@ -332,6 +332,14 @@
             #end
         </set>
         <include refid="common.updateWhere" />
+        #if(${table.hasVersionColumn})
+            AND ${table.versionColumn.columnName} = #{${table.versionColumn.javaFieldName}} 
+        #end
+        #if(${table.hasLogicDeleteColumn})
+        <if test="!query.forceQuery">
+          	AND ${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
+        </if>
+        #end
     </update>
     
     <!-- 根据指定条件更新 -->

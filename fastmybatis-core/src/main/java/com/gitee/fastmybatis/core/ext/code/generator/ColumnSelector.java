@@ -101,7 +101,6 @@ public class ColumnSelector {
 		}else {
 			return javaFieldName;
 		}
-		
 	}
 	
 	private boolean isPK(Field field) {
@@ -167,7 +166,7 @@ public class ColumnSelector {
 		if(table == null) {
 			return null;
 		}
-		String column = this.getColumnName(field);
+		String column = this.getLazyEntityColumnName(field);
 		String property = field.getName();
 		Class<?> mapperClass = ExtContext.getMapperClass(clazz);
 		String namespace = mapperClass.getName();
@@ -179,6 +178,20 @@ public class ColumnSelector {
 		associationDefinition.setSelect(select);
 		
 		return associationDefinition;
+	}
+	
+	/** 懒加载对象字段名 */
+	private String getLazyEntityColumnName(Field field) {
+		Column columnAnno = field.getAnnotation(Column.class);
+		if(columnAnno == null) {
+			throw new IllegalArgumentException("懒加载属性[" + field.getName() + "]必须指定@Column注解");
+		} else {
+			String columnName = columnAnno.name();
+			if("".equals(columnName)) {
+				throw new IllegalArgumentException(field.getName() + "注解@Column(name=\"\")name属性不能为空");
+			}
+			return columnName;
+		}
 	}
 	
 	/**
