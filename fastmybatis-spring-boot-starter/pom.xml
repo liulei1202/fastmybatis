@@ -35,7 +35,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring-boot.version>2.0.3.RELEASE</spring-boot.version>
 		<!-- 变动版本 -->
-		<fastmybatis.version>1.4.1</fastmybatis.version>
+		<fastmybatis.version>1.4.2</fastmybatis.version>
 	</properties>
 	
 	<dependencyManagement>
