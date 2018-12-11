@@ -1,7 +1,6 @@
 package com.gitee.fastmybatis.core.ext.code.generator;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.apache.commons.lang.StringUtils;
@@ -161,6 +159,10 @@ public class ColumnSelector {
 	}
 	
 	protected AssociationDefinition buildAssociationDefinition(Field field) {
+		boolean isTransient = FieldUtil.isTransientField(field);
+		if(isTransient) {
+			return null;
+		}
 		Class<?> clazz = field.getType();
 		Table table = clazz.getAnnotation(Table.class);
 		if(table == null) {
@@ -202,8 +204,7 @@ public class ColumnSelector {
 	protected ColumnDefinition buildColumnDefinition(Field field) {
 		ColumnDefinition columnDefinition = new ColumnDefinition();
 		
-		Transient transientAnno = field.getAnnotation(Transient.class);
-		boolean isTransient = transientAnno != null ? true : Modifier.isTransient(field.getModifiers());
+		boolean isTransient = FieldUtil.isTransientField(field);
 		columnDefinition.setTransient(isTransient);
 		
 		String columnName = this.getColumnName(field);
@@ -281,6 +282,7 @@ public class ColumnSelector {
 			columnDefinition.setLogicNotDeleteValue(notDelVal);
 		}
 	}
+	
 	
 	/** 是否是乐观锁字段 */
 	private boolean isVersionColumn(Field field) {

@@ -1,5 +1,10 @@
 package com.gitee.fastmybatis.core.ext.code.util;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
+import javax.persistence.Transient;
+
 /**
  * @author tanghc
  */
@@ -119,6 +124,16 @@ public class FieldUtil {
 			}
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * 字段是否被transient关键字修饰或有@Transient注解
+	 * @param field
+	 * @return 是返回true
+	 */
+	public static boolean isTransientField(Field field) {
+		Transient transientAnno = field.getAnnotation(Transient.class);
+		return transientAnno != null ? true : Modifier.isTransient(field.getModifiers());
 	}
 
 	private static boolean isEmpty(String s) {
