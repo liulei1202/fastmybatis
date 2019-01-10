@@ -41,7 +41,7 @@
 
 
 <!-- 请把你的html正文部分粘贴到此处，在浏览器中打开之后将会自动生成目录。如果想要将目录保留并嵌入到此文档中，只需在浏览器中“另存为->网页，全部”即可 -->
-<div class="md-preview markdown-body" data-provider="markdown-preview" style="width: 100%; height: 19966px; resize: none;"><h1>简介</h1>
+<div class="md-preview markdown-body" data-provider="markdown-preview" style="width: 100%; height: 21982px; resize: none;"><h1>简介</h1>
 <p>fastmybatis是一个mybatis开发框架，其宗旨为：简单、快速、有效。</p>
 <ul>
 <li>零配置快速上手</li>
@@ -696,6 +696,97 @@ mybatis<span class="hljs-class">.fill</span><span class="hljs-class">.com</span>
 }
 </code></pre>
 <p>关于自动填充的原理是基于mybatis的TypeHandler实现的，这里就不多做介绍了。感兴趣的同学可以查看BaseFill&lt;T&gt;源码。</p>
+<h1>主键策略设置</h1>
+<p>跟hibernate的主键生成策略一致</p>
+<h2>主键自增</h2>
+<p>数据库主键设置自增后，这样设置：</p>
+<pre><code class="hljs"><span class="hljs-annotation">@Id</span>
+<span class="hljs-annotation">@Column</span>(name = <span class="hljs-string">"id"</span>)
+<span class="hljs-annotation">@GeneratedValue</span>(strategy = GenerationType.IDENTITY) <span class="hljs-comment">// 其它数据库也要设置成GenerationType.IDENTITY，只要是自增</span>
+<span class="hljs-keyword">private</span> Integer id;
+</code></pre>
+<p>这样在做insert后，id会自动填充自增后的值。</p>
+<h2>主键使用uuid</h2>
+<p>数据库主键是varchar类型，insert后自动填充uuid，并返回。</p>
+<pre><code class="hljs"><span class="hljs-annotation">@Id</span>
+<span class="hljs-annotation">@Column</span>(name = <span class="hljs-string">"id"</span>)
+<span class="hljs-annotation">@GeneratedValue</span>(generator = <span class="hljs-string">"system-uuid"</span>)
+<span class="hljs-keyword">private</span> String id;
+</code></pre>
+<p>这样在做insert后，id字段会自动填充uuid。</p>
+<ul>
+<li>注：uuid的生成方式是调用数据库底层实现，如MySql的实现方式为： SELECT UUID()</li>
+</ul>
+<h2>自定义uuid</h2>
+<p>如果不希望使用底层数据库的uuid，可自定义自己实现，实现方式如下：</p>
+<ul>
+<li>首先entity中的id字段@GeneratedValue注解设置成AUTO</li>
+</ul>
+<pre><code class="hljs"><span class="hljs-variable">@Id</span>
+<span class="hljs-variable">@Column</span>(name = <span class="hljs-string">"id"</span>)
+<span class="hljs-variable">@GeneratedValue</span>(strategy=GenerationType.AUTO)
+private String id;
+</code></pre>
+<ul>
+<li>创建一个类UUIDFill并继承FillHandler类</li>
+</ul>
+<pre><code class="hljs"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UUIDFill</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FillHandler</span>&lt;<span class="hljs-title">String</span>&gt; </span>{
+	<span class="hljs-annotation">@Override</span>
+	<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getColumnName</span><span class="hljs-params">()</span> </span>{
+		<span class="hljs-keyword">return</span> <span class="hljs-string">"id"</span>; <span class="hljs-comment">// 作用在id字段上</span>
+	}
+	<span class="hljs-annotation">@Override</span>
+	<span class="hljs-function"><span class="hljs-keyword">public</span> FillType <span class="hljs-title">getFillType</span><span class="hljs-params">()</span> </span>{
+		<span class="hljs-keyword">return</span> FillType.INSERT; <span class="hljs-comment">// INSERT时触发</span>
+	}
+	<span class="hljs-annotation">@Override</span>
+	<span class="hljs-function"><span class="hljs-keyword">protected</span> Object <span class="hljs-title">getFillValue</span><span class="hljs-params">(String defaultValue)</span> </span>{
+		<span class="hljs-keyword">return</span> UUID.randomUUID().toString(); <span class="hljs-comment">// 自定义的uuid生成方式</span>
+	}
+}
+</code></pre>
+<ul>
+<li>在application.properties中添加</li>
+</ul>
+<pre><code class="hljs"># <span class="hljs-string">key:</span>填充器全路径类名,<span class="hljs-string">value:</span>构造函数参数值,没有可不填
+mybatis.fill.com.xx.aa.UUIDFill=
+</code></pre>
+<p>格式为mybatis.fill.类路径=构造参数(没有可不填)</p>
+<p>到此已经可以了，当进行insert操作后，id字段会自动插入自定义的uuid。</p>
+<p>但是使用过程中还会有个问题，如果数据库中既有自增主键的表，也有自定义UUID主键的表，那么上面的做法就没办法区分了。因此我们要找出自定义UUID主键的表，解决办法是重写FillHandler的match(Class&lt;?&gt; entityClass, Field field, String columnName)方法，完整的代码如下：</p>
+<pre><code class="hljs"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UUIDFill</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FillHandler</span>&lt;<span class="hljs-title">String</span>&gt; </span>{
+    <span class="hljs-comment">/* 重写方法，自定义匹配
+        entityClass     实体类class
+        field           字段信息
+        columnName      给定的数据库字段名
+    */</span>
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">match</span><span class="hljs-params">(Class&lt;?&gt; entityClass, Field field, String columnName)</span> </span>{
+        <span class="hljs-keyword">boolean</span> isPk = field.getAnnotation(Id.class) != <span class="hljs-keyword">null</span>; <span class="hljs-comment">// 是否有@Id注解</span>
+        
+        GeneratedValue gv = field.getAnnotation(GeneratedValue.class);
+        <span class="hljs-keyword">boolean</span> isAuto = gv != <span class="hljs-keyword">null</span> &amp;&amp; gv.strategy() == GenerationType.AUTO; <span class="hljs-comment">// 是否有@GeneratedValue注解，并且策略是AUTO</span>
+        
+        <span class="hljs-keyword">return</span> isPk &amp;&amp; isAuto;
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getColumnName</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"id"</span>; <span class="hljs-comment">// 作用在id字段上</span>
+    }
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> FillType <span class="hljs-title">getFillType</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> FillType.INSERT; <span class="hljs-comment">// INSERT时触发</span>
+    }
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> Object <span class="hljs-title">getFillValue</span><span class="hljs-params">(String defaultValue)</span> </span>{
+        <span class="hljs-keyword">return</span> UUID.randomUUID().toString(); <span class="hljs-comment">// 自定义的uuid生成方式</span>
+    }
+
+}
+</code></pre>
+<p>这样就能区分出自增主键和自定义主键了。</p>
+<p>此方式是采用<code>字段自动填充</code>功能实现。</p>
 <h1>其他功能</h1>
 <h2>指定外部模板</h2>
 <p>fastmybatis依赖模板文件来生成mapper，默认的模板存放在fastmybatis/tpl/下，模板文件名对应某一种数据库，如mysql.vm对应mysql数据库。</p>
@@ -942,7 +1033,7 @@ public class TUser {
 	}
 </code></pre>
 </div>
-<!-- ***********************************************************内容分割线****************************************************************** -->
+<!-- ***********************************************************内容分割线***************************************************** -->
                 </article>
             </div>
         </div>
