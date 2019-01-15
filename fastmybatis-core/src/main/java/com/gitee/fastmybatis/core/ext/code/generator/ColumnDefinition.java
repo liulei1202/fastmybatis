@@ -64,7 +64,10 @@ public class ColumnDefinition {
     }
 
     private String getTypeHandlerValue(FillType type) {
-        return hasTypeHandler(type) ? (", typeHandler=" + typeHandler) : "";
+        return hasTypeHandler(type)
+                ? (", typeHandler=" + typeHandler)
+                // jdbcType=VARCHAR
+                : type == FillType.INSERT ? this.getJdbcTypeProperty() : "";
     }
 
     public boolean getHasTypeHandlerInsert() {
