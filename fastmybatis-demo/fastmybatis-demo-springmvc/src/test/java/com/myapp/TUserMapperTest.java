@@ -494,10 +494,11 @@ public class TUserMapperTest extends TestBase {
     
     public static class UserDTO {
     	/** 用户名, 数据库字段：username */
-    	@Condition(operator = Operator.likeRight)
+    	@Condition(operator = Operator.likeRight, index = 1)
         private String username;
 
         /** 备注, 数据库字段：remark */
+        @Condition(operator = Operator.like, index = 2)
         private String remark;
 
 		public String getUsername() {
@@ -508,7 +509,7 @@ public class TUserMapperTest extends TestBase {
 			this.username = username;
 		}
 
-		@Condition(operator = Operator.like)
+
 		public String getRemark() {
 			return remark;
 		}

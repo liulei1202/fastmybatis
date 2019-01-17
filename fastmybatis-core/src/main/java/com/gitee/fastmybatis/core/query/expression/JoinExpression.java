@@ -6,6 +6,7 @@ package com.gitee.fastmybatis.core.query.expression;
 public class JoinExpression implements ExpressionJoinable {
 
 	private String joinSql;
+	private int index;
 
 	/**
 	 * 自定义连接语句
@@ -20,6 +21,16 @@ public class JoinExpression implements ExpressionJoinable {
 	@Override
 	public String getJoinSql() {
 		return joinSql;
+	}
+
+	@Override
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	@Override
+	public int index() {
+		return index;
 	}
 
 }

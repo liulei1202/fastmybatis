@@ -59,7 +59,10 @@ public class ExpressionBuilder {
             column = columnName;
         }
 
-        return expressionFactory.buildExpression(annotation.joint(), column, operator, value);
+        Expression expression = expressionFactory.buildExpression(annotation.joint(), column, operator, value);
+        expression.setIndex(annotation.index());
+
+        return expression;
     }
 
 }

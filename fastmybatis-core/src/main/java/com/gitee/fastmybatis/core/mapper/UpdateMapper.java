@@ -41,7 +41,7 @@ public interface UpdateMapper<E> extends Mapper<E> {
     int updateByQuery(@Param("entity") Object entity, @Param("query") Query query);
     
     /**
-     * 根据条件更新
+     * 根据条件更新，map中的数据转化成update语句set部分，key为数据库字段名
      * @param map 待更新的数据，key为数据库字段名
      * @param query 更新条件
      * @return 受影响行数

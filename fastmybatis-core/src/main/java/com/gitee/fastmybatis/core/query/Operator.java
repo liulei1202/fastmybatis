@@ -53,29 +53,29 @@ package com.gitee.fastmybatis.core.query;
  */
 public enum Operator {
 	/** 等于= */
-	eq("=")
+	eq("="),
 	/** 大于&gt; */
-	,gt(">")
+	gt(">"),
 	/** 小于&lt; */
-	,lt("<")
+	lt("<"),
 	/** 大于等于&gt;= */
-	,ge(">=")
+	ge(">="),
 	/** 小于等于&lt;= */
-	,le("<=")
+	le("<="),
 	/** 不等于&lt;&gt; */
-	,notEq("<>")
+	notEq("<>"),
 	/** in()查询  */
-	,in("IN")
+	in("IN"),
 	/** not in()查询 */
-	,notIn("NOT IN")
+	notIn("NOT IN"),
 	/** 模糊查询,两边模糊查询,like '%xx%' */
-	,like("LIKE")
+	like("LIKE"),
 	/** 左模糊查询,like '%xx' */
-	,likeLeft("LIKE")
+	likeLeft("LIKE"),
 	/** 左模糊查询,like 'xx%' */
-	,likeRight("LIKE")
+	likeRight("LIKE"),
 	
-	,nil("")
+	nil(""),
 	;
 	
     

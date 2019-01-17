@@ -1,19 +1,20 @@
 package com.gitee.fastmybatis.core.query.expression.builder;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.springframework.util.Assert;
-import org.springframework.util.ReflectionUtils;
-
 import com.gitee.fastmybatis.core.exception.QueryException;
 import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
 import com.gitee.fastmybatis.core.query.annotation.Condition;
 import com.gitee.fastmybatis.core.query.expression.Expression;
 import com.gitee.fastmybatis.core.query.expression.Expressions;
+import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * 条件生成
@@ -74,6 +75,12 @@ public class ConditionBuilder {
 		} catch (Exception e) {
 			throw new QueryException(e);
 		}
+		Collections.sort(expList, new Comparator<Expression>() {
+			@Override
+			public int compare(Expression o1, Expression o2) {
+				return Integer.compare(o1.index(), o2.index());
+			}
+		});
 		return expList;
 	}
 

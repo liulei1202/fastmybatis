@@ -53,4 +53,10 @@ public @interface Condition {
 	 * @return 返回true，空字符串字段不生成条件
 	 */
 	boolean ignoreEmptyString() default false;
+
+	/**
+	 * 决定WHERE后面表达式顺序，值小的靠左，可设置该值调整WHERE后面的条件顺序。
+	 * @return 返回顺序值
+	 */
+	int index() default 0;
 }

@@ -12,6 +12,7 @@ public class SqlExpression implements ExpressionSqlable {
 
 	private String joint = SqlConsts.AND;
 	private String sql;
+	private int index;
 
 	public SqlExpression(String sql) {
 		this.sql = sql;
@@ -39,5 +40,14 @@ public class SqlExpression implements ExpressionSqlable {
 	public void setJoint(String joint) {
 		this.joint = joint;
 	}
-	
+
+	@Override
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	@Override
+	public int index() {
+		return index;
+	}
 }

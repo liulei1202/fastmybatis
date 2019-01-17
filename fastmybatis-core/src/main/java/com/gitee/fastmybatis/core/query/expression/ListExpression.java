@@ -18,6 +18,7 @@ public class ListExpression implements ExpressionListable {
     private String equal = SqlConsts.IN;
     private Collection<?> value = Collections.emptyList();
     private String joint = SqlConsts.AND;
+    private int index;
 
     public ListExpression(String joint, String column, String equal, Collection<?> value) {
         if (value == null || value.isEmpty()) {
@@ -92,4 +93,13 @@ public class ListExpression implements ExpressionListable {
         this.joint = joint;
     }
 
+    @Override
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    @Override
+    public int index() {
+        return index;
+    }
 }
