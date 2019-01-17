@@ -13,6 +13,8 @@ public class ColumnDefinition {
 
     private static final String PREFIX = "entity.";
 
+    private static final String MYBATIS_JDBC_TYPE = ", jdbcType=%s";
+
     /** java字段名 */
     private String javaFieldName;
     /** 数据库字段名 */
@@ -67,7 +69,8 @@ public class ColumnDefinition {
         return hasTypeHandler(type)
                 ? (", typeHandler=" + typeHandler)
                 // jdbcType=VARCHAR
-                : type == FillType.INSERT ? " , " + this.getJdbcTypeProperty() : "";
+                : type == FillType.INSERT || type == FillType.UPDATE
+                ? String.format(MYBATIS_JDBC_TYPE, this.getMybatisJdbcType()) : "";
     }
 
     public boolean getHasTypeHandlerInsert() {

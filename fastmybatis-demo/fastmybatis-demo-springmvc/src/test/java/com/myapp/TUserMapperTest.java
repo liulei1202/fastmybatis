@@ -307,7 +307,6 @@ public class TUserMapperTest extends TestBase {
     @Test
     public void testSave() {
         TUser user = new TUser();
-        user.setId(30);
         user.setAddTime(new Date());
         user.setIsdel(false);
         user.setLeftMoney(22.1F);
