@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.gitee.fastmybatis.core.annotation.LazyFetch;
 import org.apache.commons.lang.StringUtils;
 
 import com.gitee.fastmybatis.core.FastmybatisConfig;
@@ -184,16 +185,21 @@ public class ColumnSelector {
 	
 	/** 懒加载对象字段名 */
 	private String getLazyEntityColumnName(Field field) {
-		Column columnAnno = field.getAnnotation(Column.class);
-		if(columnAnno == null) {
-			throw new IllegalArgumentException("懒加载属性[" + field.getName() + "]必须指定@Column注解");
+		LazyFetch lazyFetch = field.getAnnotation(LazyFetch.class);
+		String columnName;
+		if(lazyFetch != null) {
+			columnName = lazyFetch.column();
 		} else {
-			String columnName = columnAnno.name();
-			if("".equals(columnName)) {
-				throw new IllegalArgumentException(field.getName() + "注解@Column(name=\"\")name属性不能为空");
+			Column columnAnno = field.getAnnotation(Column.class);
+			if(columnAnno == null) {
+				throw new IllegalArgumentException("懒加载属性[" + field.getName() + "]必须指定@LazyFetch注解");
 			}
-			return columnName;
+			columnName = columnAnno.name();
 		}
+		if("".equals(columnName)) {
+			throw new IllegalArgumentException("必须指定懒加载对象数据库字段名：" + field.getName() + "，是否缺少@LazyFetch.name属性?");
+		}
+		return columnName;
 	}
 	
 	/**

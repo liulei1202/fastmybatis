@@ -1,5 +1,7 @@
 package com.myapp.entity;
 
+import com.gitee.fastmybatis.core.annotation.LazyFetch;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -27,7 +29,7 @@ public class UserInfo {
     // 一对一配置，这里的user_id对应TUser主键
  	// 触发懒加载时，会拿user_id的值去查询t_user表
  	// 即：SELECT * FROM t_user WHERE id={user_id}
- 	@Column(name = "user_id")
+ 	@LazyFetch(column = "user_id")
  	private TUser user;
 
     /** 城市, 数据库字段：city */
