@@ -3,7 +3,7 @@
 
     <groupId>net.oschina.durcframework</groupId>
     <artifactId>fastmybatis-core</artifactId>
-    <version>1.4.3-SNAPSHOT</version>
+    <version>1.5.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>fastmybatis-core</name>
