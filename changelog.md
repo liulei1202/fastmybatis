@@ -1,5 +1,11 @@
 # 更新日志
 
+## 1.5.0 
+
+- @Condition新增index属性，调整条件顺序
+- @新增LazyFetch注解
+- 修复oracle数据库插入问题
+
 ## 1.4.2
 
 - 修复懒加载BUG
