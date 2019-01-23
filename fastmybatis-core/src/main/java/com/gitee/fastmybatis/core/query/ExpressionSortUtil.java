@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class ExpressionSortUtil {
 
+    private ExpressionSortUtil() {
+    }
+
     /**
      * 给条件排序
      * @param expressionList 条件列表

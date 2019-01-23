@@ -154,8 +154,9 @@ public class MapperUtil {
         }
 
         try {
-            // 总条数
+            // 总页数
             int pageCount = 0;
+            // 总条数
             long total = 0;
             // 结果集
             List<Entity> list = Collections.emptyList();
