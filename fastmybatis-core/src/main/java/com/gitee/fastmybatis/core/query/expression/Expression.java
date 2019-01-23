@@ -5,7 +5,7 @@ package com.gitee.fastmybatis.core.query.expression;
  */
 public interface Expression {
     /**
-     * 设置表达式index。<br/>
+     * 设置表达式index。默认为0<br/>
      *
      * 该值决定WHERE后面表达式顺序，值小的靠左。
      * @param index index值

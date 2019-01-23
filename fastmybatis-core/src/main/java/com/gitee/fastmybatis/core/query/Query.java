@@ -1,15 +1,7 @@
 package com.gitee.fastmybatis.core.query;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.gitee.fastmybatis.core.SqlConsts;
+import com.gitee.fastmybatis.core.annotation.LogicDelete;
 import com.gitee.fastmybatis.core.query.expression.Expression;
 import com.gitee.fastmybatis.core.query.expression.ExpressionJoinable;
 import com.gitee.fastmybatis.core.query.expression.ExpressionListable;
@@ -22,6 +14,15 @@ import com.gitee.fastmybatis.core.query.expression.builder.ConditionBuilder;
 import com.gitee.fastmybatis.core.query.param.BaseParam;
 import com.gitee.fastmybatis.core.query.param.SchPageableParam;
 import com.gitee.fastmybatis.core.query.param.SchSortableParam;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 查询类
@@ -734,22 +735,22 @@ public class Query implements Queryable {
 
     @Override
     public List<ExpressionValueable> getValueExpressions() {
-        return this.valueExpressions;
+        return ExpressionSortUtil.sort(this.valueExpressions);
     }
 
     @Override
     public List<ExpressionJoinable> getJoinExpressions() {
-        return this.joinExpressions;
+        return ExpressionSortUtil.sort(this.joinExpressions);
     }
 
     @Override
     public List<ExpressionListable> getListExpressions() {
-        return this.listExpressions;
+        return ExpressionSortUtil.sort(this.listExpressions);
     }
 
     @Override
     public List<ExpressionSqlable> getSqlExpressions() {
-        return this.sqlExpressions;
+        return ExpressionSortUtil.sort(this.sqlExpressions);
     }
 
     public boolean getForceQuery() {
@@ -759,7 +760,7 @@ public class Query implements Queryable {
     /**
      * 开启强力查询，将无视逻辑删除字段
      * @return 返回Query对象
-     * @see com.gitee.fastmybatis.core.annotation.LogicDelete 逻辑删除注解
+     * @see LogicDelete 逻辑删除注解
      */
     public Query enableForceQuery() {
         this.forceQuery = true;
@@ -769,7 +770,7 @@ public class Query implements Queryable {
     /**
      * 无视逻辑删除字段
      * @return 返回Query对象
-     * @see com.gitee.fastmybatis.core.annotation.LogicDelete 逻辑删除注解
+     * @see LogicDelete 逻辑删除注解
      */
     public Query ignoreLogicDeleteColumn() {
         this.forceQuery = true;
@@ -779,7 +780,7 @@ public class Query implements Queryable {
     /**
      * 关闭强力查询，逻辑删除字段生效
      * @return 返回Query对象
-     * @see com.gitee.fastmybatis.core.annotation.LogicDelete 逻辑删除注解
+     * @see LogicDelete 逻辑删除注解
      */
     public Query disableForceQuery() {
         this.forceQuery = false;

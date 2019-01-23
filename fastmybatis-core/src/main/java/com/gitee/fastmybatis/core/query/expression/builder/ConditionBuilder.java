@@ -12,8 +12,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -32,11 +30,9 @@ public class ConditionBuilder {
 	private boolean camel2underline = Boolean.TRUE;
 
 	public ConditionBuilder() {
-		super();
 	}
 
 	public ConditionBuilder(boolean camel2underline) {
-		super();
 		this.camel2underline = camel2underline;
 	}
 
@@ -75,12 +71,6 @@ public class ConditionBuilder {
 		} catch (Exception e) {
 			throw new QueryException(e);
 		}
-		Collections.sort(expList, new Comparator<Expression>() {
-			@Override
-			public int compare(Expression o1, Expression o2) {
-				return Integer.compare(o1.index(), o2.index());
-			}
-		});
 		return expList;
 	}
 
