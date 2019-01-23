@@ -144,8 +144,8 @@ public class ColumnSelector {
 	}
 	
 	/**
-	 * 返回一对一关联
-	 * @return
+	 * 返回一对一关联配置
+	 * @return 返回一对一关联配置
 	 */
 	public List<AssociationDefinition> getAssociationDefinitions() {
 		List<Field> fields = ReflectUtil.getDeclaredFields(entityClass);

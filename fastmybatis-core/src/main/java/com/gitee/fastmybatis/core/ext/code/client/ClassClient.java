@@ -23,16 +23,16 @@ public class ClassClient {
             " <!--_global_vm_--> "+
             "</mapper>";
 
-	private Generator generator = new Generator();
+	private FileCodeGenerator generator;
 	
 	private FastmybatisConfig config;
 
 	public ClassClient(FastmybatisConfig config) {
-		super();
 		if(config == null) {
 			throw new IllegalArgumentException("config不能为null");
 		}
 		this.config = config;
+		this.generator = new FileCodeGenerator();
 	}
 
 	/**
