@@ -72,7 +72,7 @@ public enum Operator {
 	like("LIKE"),
 	/** 左模糊查询,like '%xx' */
 	likeLeft("LIKE"),
-	/** 左模糊查询,like 'xx%' */
+	/** 右模糊查询,like 'xx%' */
 	likeRight("LIKE"),
 	
 	nil(""),
