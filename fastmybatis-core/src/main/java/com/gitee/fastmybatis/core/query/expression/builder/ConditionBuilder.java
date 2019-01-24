@@ -76,7 +76,8 @@ public class ConditionBuilder {
 
 	private Expression buildExpression(Method method, Object value) {
 		String columnName = this.buildColumnName(method);
-		Condition annotation = this.findCondition(method, columnName);
+		String fieldName = this.buildFieldName(method);
+		Condition annotation = this.findCondition(method, fieldName);
 		Expression expression = null;
 
 		if (annotation == null) {
@@ -116,6 +117,17 @@ public class ConditionBuilder {
 		} else {
 			return columnName;
 		}
+	}
+
+	/** 返回字段名 */
+	private String buildFieldName(Method method) {
+		// getUsername()
+		String getMethodName = method.getName();
+		// Username
+		String columnName = getMethodName.substring(3);
+		// username
+		columnName = FieldUtil.lowerFirstLetter(columnName);
+		return columnName;
 	}
 
 	/** 能否构建表达式 */
