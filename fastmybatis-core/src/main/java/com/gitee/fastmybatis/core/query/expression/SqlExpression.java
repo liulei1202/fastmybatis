@@ -12,7 +12,7 @@ public class SqlExpression implements ExpressionSqlable {
 
 	private String joint = SqlConsts.AND;
 	private String sql;
-	private int index;
+	private int index = DEFAULT_INDEX;
 
 	public SqlExpression(String sql) {
 		this.sql = sql;

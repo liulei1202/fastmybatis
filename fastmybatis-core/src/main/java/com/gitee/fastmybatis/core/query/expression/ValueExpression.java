@@ -13,7 +13,7 @@ public class ValueExpression implements ExpressionValueable {
 	private String equal = SqlConsts.EQUAL;
 	private Object value;
 	private String joint = SqlConsts.AND;
-	private int index;
+	private int index = DEFAULT_INDEX;
 
 	public ValueExpression(String column, Object value) {
 		if (value == null) {
@@ -79,4 +79,8 @@ public class ValueExpression implements ExpressionValueable {
 		return index;
 	}
 
+	@Override
+	public String toString() {
+		return this.joint + " " + this.column + this.equal + this.value;
+	}
 }

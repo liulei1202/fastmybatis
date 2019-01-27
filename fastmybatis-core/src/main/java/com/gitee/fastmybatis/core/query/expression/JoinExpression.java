@@ -6,7 +6,7 @@ package com.gitee.fastmybatis.core.query.expression;
 public class JoinExpression implements ExpressionJoinable {
 
 	private String joinSql;
-	private int index;
+	private int index = DEFAULT_INDEX;
 
 	/**
 	 * 自定义连接语句

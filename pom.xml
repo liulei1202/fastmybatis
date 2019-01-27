@@ -12,7 +12,6 @@
 		<module>fastmybatis-core</module>
 		<module>fastmybatis-demo</module>
 		<module>fastmybatis-generator</module>
-		<module>fastmybatis-spring-boot-autoconfigure</module>
 		<module>fastmybatis-spring-boot-starter</module>
 	</modules>
 
