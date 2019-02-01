@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.5.1
+
+- @Condition新增index属性优化
+
 ## 1.5.0 
 
 - @Condition新增index属性，调整条件顺序
