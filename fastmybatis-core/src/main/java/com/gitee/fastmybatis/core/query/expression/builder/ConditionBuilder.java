@@ -2,19 +2,25 @@ package com.gitee.fastmybatis.core.query.expression.builder;
 
 import com.gitee.fastmybatis.core.exception.QueryException;
 import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
+import com.gitee.fastmybatis.core.query.ConditionValueHandler;
 import com.gitee.fastmybatis.core.query.annotation.Condition;
+import com.gitee.fastmybatis.core.query.annotation.ConditionConfig;
 import com.gitee.fastmybatis.core.query.expression.Expression;
 import com.gitee.fastmybatis.core.query.expression.Expressions;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 条件生成
@@ -29,6 +35,10 @@ public class ConditionBuilder {
 
     private static ConditionBuilder underlineFieldBuilder = new ConditionBuilder(true);
     private static ConditionBuilder camelFieldBuilder = new ConditionBuilder(false);
+
+    private static Map<String, String> fieldToColumnNameMap = new HashMap<>(16);
+    private static Map<String, ConditionValueHandler> conditionValueHandlerMap = new HashMap<>(16);
+    private static Map<String, Condition> methodConditionMap = new HashMap<>(16);
 
     private boolean camel2underline = Boolean.TRUE;
 
@@ -47,6 +57,7 @@ public class ConditionBuilder {
         return camelFieldBuilder;
     }
 
+
     /**
      * 获取条件表达式
      *
@@ -57,15 +68,25 @@ public class ConditionBuilder {
         Assert.notNull(pojo, "buildExpressions(Object pojo) pojo can't be null.");
         List<Expression> expList = new ArrayList<Expression>();
         Class<?> clazz = pojo.getClass();
+        ConditionConfig conditionConfig = clazz.getAnnotation(ConditionConfig.class);
+        String[] ignoreFields = conditionConfig == null ? null : conditionConfig.ignoreFields();
         Method[] methods = clazz.getMethods();
         for (Method method : methods) {
             try {
                 if (couldBuildExpression(method)) {
-                    Object value = method.invoke(pojo);
+                    // 类字段名
+                    String fieldName = this.buildFieldName(method);
+                    if (ignoreFields != null && ArrayUtils.contains(ignoreFields, fieldName)) {
+                        continue;
+                    }
+                    Condition condition = this.findCondition(method, fieldName);
+                    Object value = this.getMethodValue(method, fieldName, condition, pojo);
                     if (value == null) {
                         continue;
                     }
-                    Expression expression = buildExpression(method, value);
+                    // 数据库字段名
+                    String columnName = this.getColumnName(method, condition, conditionConfig);
+                    Expression expression = buildExpression(condition, columnName, value);
                     if (expression != null) {
                         expList.add(expression);
                     }
@@ -78,13 +99,9 @@ public class ConditionBuilder {
         return expList;
     }
 
-    private Expression buildExpression(Method method, Object value) {
-        String columnName = this.buildColumnName(method);
-        String fieldName = this.buildFieldName(method);
-        Condition annotation = this.findCondition(method, fieldName);
-        Expression expression = null;
-
-        if (annotation == null) {
+    private Expression buildExpression(Condition condition, String columnName, Object value) {
+        Expression expression;
+        if (condition == null) {
             if (value.getClass().isArray()) {
                 expression = Expressions.in(columnName, (Object[]) value);
             } else if (value instanceof Collection) {
@@ -93,22 +110,79 @@ public class ConditionBuilder {
                 expression = Expressions.eq(columnName, value);
             }
         } else {
-            expression = ExpressionBuilder.buildExpression(annotation, columnName, value);
+            expression = ExpressionBuilder.buildExpression(condition, columnName, value);
         }
-
         return expression;
     }
 
-    private Condition findCondition(Method method, String columnName) {
+    private Condition findCondition(Method method, String fieldName) {
+        String key = method.toString();
+        Condition condition = methodConditionMap.get(key);
+        if (condition != null) {
+            return condition;
+        }
+        // 先找get方法上的注解
         Condition annotation = method.getAnnotation(Condition.class);
         if (annotation == null) {
+            // 找不到再找字段上的注解
             Class<?> clazz = method.getDeclaringClass();
-            Field field = ReflectionUtils.findField(clazz, columnName);
+            Field field = ReflectionUtils.findField(clazz, fieldName);
             if (field != null) {
                 annotation = field.getAnnotation(Condition.class);
             }
+            if (annotation != null) {
+                methodConditionMap.put(key, annotation);
+            }
         }
         return annotation;
+    }
+
+    private String getColumnName(Method method, Condition condition, ConditionConfig conditionConfig) {
+        String key = method.toString();
+        String columnName = fieldToColumnNameMap.get(key);
+        if (columnName != null) {
+            return columnName;
+        }
+        if (condition != null) {
+            String column = condition.column();
+            if (!"".equals(column)) {
+                return column;
+            } else {
+                columnName = this.buildColumnName(method);
+            }
+        }
+        boolean camel2underline = conditionConfig == null ? this.camel2underline : conditionConfig.camel2underline();
+        if (camel2underline) {
+            columnName = FieldUtil.camelToUnderline(columnName);
+        }
+        fieldToColumnNameMap.put(key, columnName);
+        return columnName;
+    }
+
+    private Object getMethodValue(Method method, String fieldName, Condition condition, Object pojo) throws InvocationTargetException, IllegalAccessException {
+        Object fieldValue = method.invoke(pojo);
+        Class<? extends ConditionValueHandler> handlerClass = condition.handlerClass();
+        if (handlerClass != ConditionValueHandler.DefaultConditionValueHandler.class) {
+            try {
+                ConditionValueHandler conditionValueHandler = this.getValueHandler(handlerClass);
+                // 格式化返回内容，做一些特殊处理
+                fieldValue = conditionValueHandler.getConditionValue(fieldValue, fieldName, pojo);
+            } catch (Exception e) {
+                LOG.error("handlerClass.newInstance出错，class:" + handlerClass.getName(), e);
+                throw new QueryException("实例化ConditionValueHandler出错，field:" + method);
+            }
+        }
+        return fieldValue;
+    }
+
+    private ConditionValueHandler getValueHandler(Class<? extends ConditionValueHandler> handlerClass) throws IllegalAccessException, InstantiationException {
+        String key = handlerClass.getName();
+        ConditionValueHandler conditionValueHandler = conditionValueHandlerMap.get(key);
+        if (conditionValueHandler == null) {
+            conditionValueHandler = handlerClass.newInstance();
+            conditionValueHandlerMap.put(key, conditionValueHandler);
+        }
+        return conditionValueHandler;
     }
 
     /**
@@ -118,11 +192,7 @@ public class ConditionBuilder {
         String getMethodName = method.getName();
         String columnName = getMethodName.substring(3);
         columnName = FieldUtil.lowerFirstLetter(columnName);
-        if (camel2underline) {
-            return FieldUtil.camelToUnderline(columnName);
-        } else {
-            return columnName;
-        }
+        return columnName;
     }
 
     /**

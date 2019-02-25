@@ -7,8 +7,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.gitee.fastmybatis.core.query.ConditionValueHandler;
 import com.gitee.fastmybatis.core.query.Joint;
 import com.gitee.fastmybatis.core.query.Operator;
+
+import static com.gitee.fastmybatis.core.query.ConditionValueHandler.DefaultConditionValueHandler;
 
 /**
  * 条件表达式,作用在bean的get方法上
@@ -59,4 +62,9 @@ public @interface Condition {
 	 * @return 返回顺序值
 	 */
 	int index() default Integer.MAX_VALUE;
+
+	/**
+	 * @return 值处理器，用来返回条件值
+	 */
+	Class<? extends ConditionValueHandler> handlerClass() default DefaultConditionValueHandler.class;
 }

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gitee.fastmybatis.core.query.ConditionValueHandler;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
@@ -103,17 +104,7 @@ public class TUserMapperTest extends TestBase {
         }
     }
     
-    @Test
-    public void testListByPojo() {
-    	UserDTO param = new UserDTO();
-    	param.setUsername("张");
-    	param.setRemark("11");
-    	Query query = Query.build(param);
-    	List<TUser> list = mapper.list(query);
-        for (TUser tUser : list) {
-            print(tUser);
-        }
-    }
+
 
     /**
      * 返回自定义字段
@@ -491,6 +482,24 @@ public class TUserMapperTest extends TestBase {
         int i = mapper.updateByMap(map, query);
         print("updateByQuery --> " + i);*/
     }
+
+    @Test
+    public void testListByPojo() {
+        UserDTO param = new UserDTO();
+        param.setUsername("张");
+        param.setRemark("11");
+        Query query = Query.build(param);
+        List<TUser> list = mapper.list(query);
+        for (TUser tUser : list) {
+            print(tUser);
+        }
+
+        query = Query.build(param);
+        List<TUser> list2 = mapper.list(query);
+        for (TUser tUser : list2) {
+            print(tUser);
+        }
+    }
     
     public static class UserDTO {
     	/** 用户名, 数据库字段：username */
@@ -498,7 +507,7 @@ public class TUserMapperTest extends TestBase {
         private String username;
 
         /** 备注, 数据库字段：remark */
-        @Condition(operator = Operator.like, index = 2)
+        @Condition(operator = Operator.like, index = 2, handlerClass = RemarkHander.class)
         private String remark;
 
 		public String getUsername() {
@@ -509,7 +518,6 @@ public class TUserMapperTest extends TestBase {
 			this.username = username;
 		}
 
-
 		public String getRemark() {
 			return remark;
 		}
@@ -517,6 +525,13 @@ public class TUserMapperTest extends TestBase {
 		public void setRemark(String remark) {
 			this.remark = remark;
 		}
+    }
+
+    public static class RemarkHander implements ConditionValueHandler {
+        @Override
+        public Object getConditionValue(Object defaultValue, String fieldName, Object target) {
+            return defaultValue + "1";
+        }
     }
 
     /**
