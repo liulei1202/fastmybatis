@@ -1,4 +1,4 @@
 {
-	"fileName" : "${context.javaBeanName}.java"
+	"fileName" : "${context.javaBeanName}${context.entitySuffix}.java"
 	,"savePath" : "${param.entityPackageName}"
 }

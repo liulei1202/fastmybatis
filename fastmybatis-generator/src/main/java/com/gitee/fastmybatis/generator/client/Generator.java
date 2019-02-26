@@ -40,7 +40,8 @@ public class Generator {
 		
 		for (TableDefinition td : allTable) {
 			if(td.getPkColumn() == null) {
-				throw new RuntimeException("表" + td.getTableName() + "没有设置主键");
+				System.err.println("表" + td.getTableName() + "没有设置主键");
+//				throw new RuntimeException("表" + td.getTableName() + "没有设置主键");
 			}
 			clientParam.setTableName(td.getTableName());
 			this.generateCode(clientParam, dest);
@@ -109,7 +110,6 @@ public class Generator {
 	/**
 	 * 返回SQL上下文列表
 	 * 
-	 * @param tableNames
 	 * @return
 	 */
 	private SQLContext buildClientSQLContextList(ClientParam generatorParam, DataBaseConfig dataBaseConfig) {
@@ -148,13 +148,13 @@ public class Generator {
 		context.put("table", tableDefinition);
 		context.put("pk", tableDefinition.getPkColumn());
 		context.put("columns", tableDefinition.getColumnDefinitions());
-		
+
 		this.putImpls(context, sqlContext);
 		this.putExt(context, sqlContext);
 
 		return VelocityUtil.generate(context, template);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void putImpls(VelocityContext context, SQLContext sqlContext) {
 		Map<String, Collection<String>> impllMap = (Map<String, Collection<String>>)sqlContext.getParam().get("implMap");
@@ -181,7 +181,7 @@ public class Generator {
 	// 格式化代码
 	private String formatCode(String fileName, String content) {
 		if (fileName.endsWith(".xml")) {
-			return FormatUtil.formatXml(content);
+			//return FormatUtil.formatXml(content);
 		}
         if(fileName.toLowerCase().endsWith(".java")) {
             return FormatUtil.formatJava(content);

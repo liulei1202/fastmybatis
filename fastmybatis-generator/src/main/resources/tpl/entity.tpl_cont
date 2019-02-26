@@ -31,7 +31,7 @@ import javax.persistence.GenerationType;
 #if(${param.serializable}=="true")
 @SuppressWarnings("serial")
 #end
-public class ${context.javaBeanName}
+public class ${context.javaBeanName}${context.entitySuffix}
 #if("$!{extClass}" != "")
 	extends $extClass 
 #end

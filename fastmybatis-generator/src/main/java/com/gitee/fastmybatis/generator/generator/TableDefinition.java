@@ -38,10 +38,10 @@ public class TableDefinition {
 	 */
 	public String getJavaBeanName(){
 		String tableName = getJavaBeanNameLF();
-		return FieldUtil.upperFirstLetter(tableName) + getEntityStuffix();
+		return FieldUtil.upperFirstLetter(tableName);
 	}
 	
-    public String getEntityStuffix() {
+    public String getEntitySuffix() {
         String stuffix = (String) dataBaseConfig.getParam().get("entitySuffix");
         if (stuffix == null) {
             return "";

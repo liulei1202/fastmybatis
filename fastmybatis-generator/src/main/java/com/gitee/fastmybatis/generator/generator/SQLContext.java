@@ -18,6 +18,10 @@ public class SQLContext {
         this.packageName = getJavaBeanName().toLowerCase();
     }
 
+    public String getEntitySuffix() {
+        return tableDefinition.getEntitySuffix();
+    }
+
     public String getDbName() {
         return tableDefinition.getDbName();
     }

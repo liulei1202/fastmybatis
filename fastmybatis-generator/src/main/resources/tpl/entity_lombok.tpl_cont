@@ -34,7 +34,7 @@ import lombok.Data;
 @SuppressWarnings("serial")
 #end
 @Data
-public class ${context.javaBeanName} 
+public class ${context.javaBeanName}${context.entitySuffix}
 #if("$!{extClass}" != "")
 	extends $extClass 
 #end

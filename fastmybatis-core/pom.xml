@@ -184,6 +184,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- 以上都为上传jar默认配置不做修改 -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
