@@ -500,6 +500,24 @@ public class TUserMapperTest extends TestBase {
             print(tUser);
         }
     }
+
+    /*
+    演示条件类继承
+    SELECT t.`id` , t.`username` , t.`state` , t.`isdel` , t.`remark` , t.`add_time` , t.`money` , t.`left_money` FROM `t_user` t
+    WHERE username LIKE ? AND remark LIKE ? AND state = ? AND t.isdel = 0
+     */
+    @Test
+    public void testListByPojo2() {
+        UserExtDTO userExtDTO = new UserExtDTO();
+        userExtDTO.setUsername("张");
+        userExtDTO.setRemark("11");
+        userExtDTO.setState(1);
+        Query query = Query.build(userExtDTO);
+        List<TUser> list2 = mapper.list(query);
+        for (TUser tUser : list2) {
+            print(tUser);
+        }
+    }
     
     public static class UserDTO {
     	/** 用户名, 数据库字段：username */
@@ -525,6 +543,20 @@ public class TUserMapperTest extends TestBase {
 		public void setRemark(String remark) {
 			this.remark = remark;
 		}
+    }
+
+    // 继承
+    public static class UserExtDTO extends UserDTO {
+        @Condition(index = 3)
+        private int state;
+
+        public int getState() {
+            return state;
+        }
+
+        public void setState(int state) {
+            this.state = state;
+        }
     }
 
     public static class RemarkHander implements ConditionValueHandler {

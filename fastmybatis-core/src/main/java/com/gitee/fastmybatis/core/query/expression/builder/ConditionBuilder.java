@@ -38,7 +38,7 @@ public class ConditionBuilder {
 
     private static Map<String, String> fieldToColumnNameMap = new HashMap<>(16);
     private static Map<String, ConditionValueHandler> conditionValueHandlerMap = new HashMap<>(16);
-    private static Map<String, Condition> methodConditionMap = new HashMap<>(16);
+    private static Map<String, Condition> methodConditionCache = new HashMap<>(16);
 
     private boolean camel2underline = Boolean.TRUE;
 
@@ -117,21 +117,20 @@ public class ConditionBuilder {
 
     private Condition findCondition(Method method, String fieldName) {
         String key = method.toString();
-        Condition condition = methodConditionMap.get(key);
-        if (condition != null) {
-            return condition;
-        }
-        // 先找get方法上的注解
-        Condition annotation = method.getAnnotation(Condition.class);
+        Condition annotation = methodConditionCache.get(key);
         if (annotation == null) {
-            // 找不到再找字段上的注解
-            Class<?> clazz = method.getDeclaringClass();
-            Field field = ReflectionUtils.findField(clazz, fieldName);
-            if (field != null) {
-                annotation = field.getAnnotation(Condition.class);
-            }
-            if (annotation != null) {
-                methodConditionMap.put(key, annotation);
+            // 先找get方法上的注解
+            annotation = method.getAnnotation(Condition.class);
+            if (annotation == null) {
+                // 找不到再找字段上的注解
+                Class<?> clazz = method.getDeclaringClass();
+                Field field = ReflectionUtils.findField(clazz, fieldName);
+                if (field != null) {
+                    annotation = field.getAnnotation(Condition.class);
+                }
+                if (annotation != null) {
+                    methodConditionCache.put(key, annotation);
+                }
             }
         }
         return annotation;
