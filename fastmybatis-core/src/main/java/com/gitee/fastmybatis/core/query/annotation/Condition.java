@@ -58,6 +58,14 @@ public @interface Condition {
 	boolean ignoreEmptyString() default false;
 
 	/**
+	 * 设置忽略的值，如果字段值跟设置的值匹配，则不会生成条件。<br>
+	 * 比如前端传一个0，表示未选择，这样需要查询出所有数据，此时需要设置ignoreValue="0"。
+	 * 如果不设置的话，会生成条件where status = 0导致查不到数据。
+	 * @return 返回忽略的值
+	 */
+	String[] ignoreValue() default {};
+
+	/**
 	 * 决定WHERE后面表达式顺序，值小的靠左，可设置该值调整WHERE后面的条件顺序。
 	 * @return 返回顺序值
 	 */

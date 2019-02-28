@@ -1,14 +1,15 @@
 package com.gitee.fastmybatis.core.query.expression.builder;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.gitee.fastmybatis.core.query.Operator;
 import com.gitee.fastmybatis.core.query.annotation.Condition;
 import com.gitee.fastmybatis.core.query.expression.Expression;
 import com.gitee.fastmybatis.core.query.expression.Expressions;
 import com.gitee.fastmybatis.core.query.expression.builder.factory.ExpressionFactory;
 import com.gitee.fastmybatis.core.util.ClassUtil;
+import org.apache.commons.lang.ArrayUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 负责构建条件表达式
@@ -38,6 +39,10 @@ public class ExpressionBuilder {
             throw new NullPointerException("Condition不能为null");
         }
         if (annotation.ignore()) {
+            return null;
+        }
+        String[] ignoreValue = annotation.ignoreValue();
+        if (ArrayUtils.contains(ignoreValue, String.valueOf(value))) {
             return null;
         }
         // 是否忽略空字符串

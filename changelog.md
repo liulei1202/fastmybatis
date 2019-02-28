@@ -1,5 +1,10 @@
 # 更新日志
 
+## 1.6.0
+
+- @Condition新增handlerClass属性
+- @Condition新增ignoreValue属性
+
 ## 1.5.1
 
 - @Condition新增index属性优化
