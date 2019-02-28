@@ -110,10 +110,10 @@
 
 	<!-- 根据主键获取单条记录 -->
     <select id="getById" resultMap="baseResultMap" parameterType="${pk.fullType}">
-		SELECT 	TOP 1
+		SELECT TOP 1
        		<include refid="baseColumns" />
 		FROM [${table.tableName}] t
-		WHERE [${pk.columnName}] = #{value}
+		WHERE t.[${pk.columnName}] = #{value}
 		#if(${table.hasLogicDeleteColumn})
           AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
         #end

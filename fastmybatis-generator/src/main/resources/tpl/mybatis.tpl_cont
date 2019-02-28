@@ -94,7 +94,7 @@
 		SELECT 
         	<include refid="baseColumns" />
 		FROM `${table.tableName}` t
-		WHERE `${pk.columnName}` = #{value}
+		WHERE t.`${pk.columnName}` = #{value}
 		#if(${table.hasLogicDeleteColumn})
           AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
         #end
@@ -235,7 +235,7 @@
         ( #set ($i=0)
         #foreach($column in $columns) 
             #if(!${column.isIdentityPk})               
-         	#if($i > 0),#end ${column.mybatisInsertValuePrefix}
+         	#if($i > 0),#end #{${column.javaFieldName}}
          	#set($i=$i +1)
             #end          
         #end
@@ -260,7 +260,7 @@
         SELECT  #set ($i=0)
         #foreach($column in $columns) 
             #if(!${column.isIdentityPk})               
-         	#if($i > 0),#end ${column.mybatisInsertValuePrefix}
+         	#if($i > 0),#end #{${column.javaFieldName}}
          	#set($i=$i +1)
             #end          
         #end        
@@ -283,7 +283,7 @@
         SELECT  #set ($i=0)
         #foreach($column in $columns)
             #if(!${column.isIdentityPk})
-         	#if($i > 0),#end ${column.mybatisInsertValuePrefix}
+         	#if($i > 0),#end #{${column.javaFieldName}}
          	#set($i=$i +1)
             #end
         #end
@@ -296,7 +296,7 @@
      <set>		
      #foreach($column in $columns) 
          #if(!${column.isPk})               
-         `${column.columnName}`=${column.mybatisUpdateValue},
+         `${column.columnName}`=#{${column.javaFieldName}},
          #end          
      #end
      </set>	
@@ -313,10 +313,10 @@
     	#foreach($column in $columns) 
             #if(!${column.isPk})  
                 #if(${column.hasTypeHandlerUpdate})
-                    `${column.columnName}`=${column.mybatisUpdateValue},
+                    `${column.columnName}`=#{${column.javaFieldName}},
                 #else
                     <if test="${column.javaFieldName} != null" >
-                    `${column.columnName}`=${column.mybatisUpdateValue},
+                    `${column.columnName}`=#{${column.javaFieldName}},
                     </if>
                 #end
             #end          

@@ -94,7 +94,7 @@
 		SELECT 
         	<include refid="baseColumns" />
 		FROM `${table.tableName}` t
-		WHERE `${pk.columnName}` = #{value}
+		WHERE t.`${pk.columnName}` = #{value}
 		#if(${table.hasLogicDeleteColumn})
           AND t.${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
         #end
