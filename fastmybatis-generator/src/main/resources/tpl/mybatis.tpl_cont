@@ -77,7 +77,7 @@
 	<!-- 根据条件查询记录数 -->
     <select id="getCount" parameterType="com.gitee.fastmybatis.core.query.Query"
 		resultType="long">
-		SELECT * FROM `${table.tableName}` t
+		SELECT count(*) FROM `${table.tableName}` t
 		<include refid="common.join" />
         <where>
             <include refid="common.condition" />
