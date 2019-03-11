@@ -92,7 +92,7 @@ public class ${context.javaBeanName}${context.entitySuffix}
 		if (obj == null) {return false;}			
 		if (getClass() != obj.getClass()) {return false;}
 			
-		${context.javaBeanName} other = (${context.javaBeanName}) obj;
+		${context.javaBeanName}${context.entitySuffix} other = (${context.javaBeanName}${context.entitySuffix}) obj;
 		
 		if (${pk.javaFieldName} == null) {
 			if (other.${pk.javaFieldName} != null) {return false;}				
