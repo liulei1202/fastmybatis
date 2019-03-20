@@ -363,29 +363,6 @@
         <include refid="common.updateWhere" />
     </update>
     
-	<!-- 根据主键删除记录 -->
-	<delete id="delete" parameterType="${context.packageName}.${param.entityPackageName}.${context.javaBeanName}${context.entitySuffix}">
-	   #if(${table.hasLogicDeleteColumn})            
-            UPDATE ${table.tableName}
-            <set>
-                #foreach($column in $columns) 
-                    #if(${column.isPk})  
-                    #elseif(${column.isLogicDelete})
-                        ${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicDeleteValueString},
-                    #end          
-                #end
-            </set>
-            WHERE ${pk.columnName} = #{${pk.javaFieldName}}
-            AND ${table.logicDeleteColumn.columnName} = ${table.logicDeleteColumn.logicNotDeleteValueString}
-            #if(${table.hasVersionColumn})
-                AND ${table.versionColumn.columnName} = #{${table.versionColumn.javaFieldName}} 
-            #end    
-       #else
-            DELETE FROM ${table.tableName}
-            WHERE ${pk.columnName} = #{${pk.javaFieldName}}
-       #end
-	</delete>    
-	
 	<!-- 根据主键删除 -->
     <delete id="deleteById" parameterType="${pk.fullType}">
         #if(${table.hasLogicDeleteColumn})            
