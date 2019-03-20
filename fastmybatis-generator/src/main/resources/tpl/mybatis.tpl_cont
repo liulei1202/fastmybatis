@@ -364,7 +364,7 @@
     </update>
     
 	<!-- 根据主键删除 -->
-    <delete id="deleteById" parameterType="${pk.fullType}">
+    <delete id="deleteById" parameterType="${pk.javaTypeBox}">
         #if(${table.hasLogicDeleteColumn})            
             UPDATE ${table.tableName}
             <set>
