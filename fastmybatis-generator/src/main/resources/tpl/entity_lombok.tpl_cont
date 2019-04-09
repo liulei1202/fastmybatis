@@ -68,7 +68,7 @@ public class ${context.javaBeanName}${context.entitySuffix}
         @com.gitee.fastmybatis.core.annotation.LogicDelete
     #end
         /** #if("$!{column.comment}" != "")${column.comment},#end 数据库字段：${column.columnName} */
-    	private ${column.javaTypeBox} ${column.javaFieldName2};
+    	private ${column.javaTypeBox} ${column.javaFieldName};
     	
 #end
 }
