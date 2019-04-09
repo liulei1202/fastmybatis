@@ -17,6 +17,9 @@ public class EnumTypeHandler<E extends Enum<?> & BaseEnum<?>> extends AbstractTy
 
 	@Override
 	protected Object getFillValue(E defaultValue) {
+		if (defaultValue == null) {
+			return null;
+		}
 		return defaultValue.getCode();
 	}
 
