@@ -28,6 +28,8 @@ import lombok.Data;
 #if("$!{table.comment}" != "")
  * 备注：${table.comment}
 #end
+ *
+ * @author ${param.author}
  */
 @Table(name = "${table.tableName}")
 #if(${param.serializable}=="true")
@@ -66,7 +68,7 @@ public class ${context.javaBeanName}${context.entitySuffix}
         @com.gitee.fastmybatis.core.annotation.LogicDelete
     #end
         /** #if("$!{column.comment}" != "")${column.comment},#end 数据库字段：${column.columnName} */
-    	private ${column.javaTypeBox} ${column.javaFieldName};
+    	private ${column.javaTypeBox} ${column.javaFieldName2};
     	
 #end
 }

@@ -26,6 +26,8 @@ import javax.persistence.GenerationType;
 #if("$!{table.comment}" != "")
  * 备注：${table.comment}
 #end
+ *
+ * @author ${param.author}
  */
 @Table(name = "${table.tableName}")
 #if(${param.serializable}=="true")
