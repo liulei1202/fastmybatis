@@ -102,7 +102,6 @@ public class MapperLocationsBuilder {
 		for (Resource mapperLocation : mapperLocations) {
 		    // XxDao.xml
 			String filename = mapperLocation.getFilename();
-
 			mapperResourceStore.put(filename, new MapperResourceDefinition(mapperLocation));
 		}
 	}
@@ -339,6 +338,10 @@ public class MapperLocationsBuilder {
 
 	public void setMapperExecutorPoolSize(int poolSize) {
 		config.setMapperExecutorPoolSize(poolSize);
+	}
+
+	public FastmybatisConfig getConfig() {
+		return config;
 	}
 
 	/** MapperResource包装类 */

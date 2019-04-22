@@ -130,6 +130,9 @@ public class MybatisProperties {
      */
     private String logicNotDeleteValue = "0";
 
+	/** 开启mapper文件热部署，开启后修改mapper文件无需重启 */
+	private boolean hotDeploy;
+
 	public boolean isCamel2underline() {
 		return camel2underline;
 	}
@@ -311,5 +314,12 @@ public class MybatisProperties {
     public void setGlobalVmLocation(String globalVmLocation) {
         this.globalVmLocation = globalVmLocation;
     }
-    
+
+	public boolean isHotDeploy() {
+		return hotDeploy;
+	}
+
+	public void setHotDeploy(boolean hotDeploy) {
+		this.hotDeploy = hotDeploy;
+	}
 }

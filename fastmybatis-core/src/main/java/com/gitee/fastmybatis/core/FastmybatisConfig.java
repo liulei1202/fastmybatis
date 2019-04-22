@@ -49,6 +49,9 @@ public class FastmybatisConfig {
     /** 填充器 */
     private List<BaseFill<?>> fillList = new ArrayList<>(8);
 
+    /** 开启mapper文件热部署，开启后修改mapper文件无需重启 */
+    private boolean hotDeploy;
+
     public String getGlobalVmPlaceholder() {
         return GLOBAL_VM_PLACEHOLDER;
     }
@@ -179,4 +182,11 @@ public class FastmybatisConfig {
         this.logicNotDeleteValue = logicNotDeleteValue;
     }
 
+    public boolean isHotDeploy() {
+        return hotDeploy;
+    }
+
+    public void setHotDeploy(boolean hotDeploy) {
+        this.hotDeploy = hotDeploy;
+    }
 }
