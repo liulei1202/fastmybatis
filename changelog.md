@@ -1,5 +1,9 @@
 # 更新日志
 
+## 1.7.0
+
+- 支持热部署，修改xml无需重启
+
 ## 1.6.0
 
 - @Condition新增handlerClass属性
