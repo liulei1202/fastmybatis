@@ -73,6 +73,8 @@
 				        </bean>
 				    </list>
 				</property>
+				<!-- 热部署 -->
+				<property name="hotDeploy" value="true"/>
 			</bean>
 		</property>
 	</bean>

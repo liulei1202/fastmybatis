@@ -13,6 +13,7 @@
 		<module>fastmybatis-demo</module>
 		<module>fastmybatis-generator</module>
 		<module>fastmybatis-spring-boot-starter</module>
+		<module>doc</module>
 	</modules>
 
 </project>
