@@ -143,29 +143,41 @@ public class ConditionBuilder {
         if (columnName != null) {
             return columnName;
         }
-        if (condition != null) {
-            String column = condition.column();
-            // 如果注解里面直接申明了字段名，则返回
-            if (!"".equals(column)) {
-                return column;
-            } else {
-                columnName = this.buildColumnName(method);
-            }
+        columnName = buildColumnNameByCondition(condition);
+        if (columnName == null || "".equals(columnName)) {
+            columnName = this.buildColumnNameByMethod(method, conditionConfig);
         }
+        fieldToColumnNameMap.put(key, columnName);
+        return columnName;
+    }
+
+    private String buildColumnNameByMethod(Method method, ConditionConfig conditionConfig) {
+        String columnName = this.buildColumnName(method);
         boolean camel2underline = conditionConfig == null ? this.camel2underline : conditionConfig.camel2underline();
         if (camel2underline) {
             columnName = FieldUtil.camelToUnderline(columnName);
         }
         // 加上默认别名
         columnName = DEFAULT_ALIAS + columnName;
-        fieldToColumnNameMap.put(key, columnName);
+        return columnName;
+    }
+
+    private String buildColumnNameByCondition(Condition condition) {
+        String columnName = null;
+        if (condition != null) {
+            String column = condition.column();
+            // 如果注解里面直接申明了字段名，则返回
+            if (!"".equals(column)) {
+                columnName = column;
+            }
+        }
         return columnName;
     }
 
     private Object getMethodValue(Method method, String fieldName, Condition condition, Object pojo) throws InvocationTargetException, IllegalAccessException {
         Object fieldValue = method.invoke(pojo);
-        Class<? extends ConditionValueHandler> handlerClass = condition.handlerClass();
-        if (handlerClass != ConditionValueHandler.DefaultConditionValueHandler.class) {
+        Class<? extends ConditionValueHandler> handlerClass = condition == null ? null : condition.handlerClass();
+        if (handlerClass != null && handlerClass != ConditionValueHandler.DefaultConditionValueHandler.class) {
             try {
                 ConditionValueHandler conditionValueHandler = this.getValueHandler(handlerClass);
                 // 格式化返回内容，做一些特殊处理
