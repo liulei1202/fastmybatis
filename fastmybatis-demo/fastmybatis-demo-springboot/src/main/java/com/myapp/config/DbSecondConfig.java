@@ -66,7 +66,6 @@ public class DbSecondConfig {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean
     public FastmybatisConfig fastmybatisConfig() {
         FastmybatisConfig config = new FastmybatisConfig();
         /*
@@ -85,10 +84,8 @@ public class DbSecondConfig {
     }
 
     @Bean(name = sqlSessionFactoryName)
-    public SqlSessionFactory sqlSessionFactory(@Autowired @Qualifier(dataSourceName) DataSource dataSource,
-           FastmybatisConfig config) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(@Autowired @Qualifier(dataSourceName) DataSource dataSource) throws Exception {
         Assert.notNull(dataSource, "dataSource can not be null.");
-        Assert.notNull(config, "fastmybatisConfig can not be null.");
         SqlSessionFactoryBeanExt bean = new SqlSessionFactoryBeanExt();
 
         bean.setDataSource(dataSource);
@@ -99,7 +96,7 @@ public class DbSecondConfig {
 
         // dao所在的包名,跟MapperScannerConfigurer的basePackage一致,多个用;隔开
         bean.setBasePackage(basePackage);
-        bean.setConfig(config);
+        bean.setConfig(fastmybatisConfig());
 
         return bean.getObject();
 
