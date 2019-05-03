@@ -67,6 +67,17 @@ public class TUserMapperTest extends TestBase {
         TUser user = mapper.getByQuery(query);
         print(user);
     }
+    
+    @Test
+    public void testGetQuery2() {
+    	TUser user = new TUser();
+    	user.setId(3);
+    	user.setMoney(BigDecimal.TEN);
+    	Query query = Query.build(user);
+    	TUser user2 = mapper.getByQuery(query);
+        print(user2);
+    	
+    }
 
     /**
      * 根据字段查询一条记录
@@ -152,6 +163,7 @@ public class TUserMapperTest extends TestBase {
 
         print("total:" + total);
     }
+    
     
     @Test
     public void testLike() {
@@ -595,6 +607,15 @@ public class TUserMapperTest extends TestBase {
         query.eq("state", 3);
         int i = mapper.deleteByQuery(query);
         print("deleteByQuery --> " + i);
+    }
+    
+    @Test
+    public void testDeleteByQuery2() {
+    	TUser user = new TUser();
+    	user.setState((byte)3);
+    	Query query = Query.build(user);
+    	int i = mapper.deleteByQuery(query);
+        print("deleteByQuery2 --> " + i);
     }
     
     /**

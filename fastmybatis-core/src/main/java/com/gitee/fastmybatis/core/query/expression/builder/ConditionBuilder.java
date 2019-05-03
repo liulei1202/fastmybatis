@@ -32,7 +32,6 @@ public class ConditionBuilder {
 
     private static final String PREFIX_GET = "get";
     private static final String GETCLASS_NAME = "getClass";
-    public static final String DEFAULT_ALIAS = "t.";
 
     private static ConditionBuilder underlineFieldBuilder = new ConditionBuilder(true);
     private static ConditionBuilder camelFieldBuilder = new ConditionBuilder(false);
@@ -157,8 +156,6 @@ public class ConditionBuilder {
         if (camel2underline) {
             columnName = FieldUtil.camelToUnderline(columnName);
         }
-        // 加上默认别名
-        columnName = DEFAULT_ALIAS + columnName;
         return columnName;
     }
 

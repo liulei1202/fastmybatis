@@ -395,7 +395,7 @@
                 AND ${table.versionColumn.columnName} = #{${table.versionColumn.javaFieldName}} 
             #end    
         #else
-            DELETE FROM ${table.tableName} t
+            DELETE FROM ${table.tableName}
             WHERE ${pk.columnName} = #{${pk.javaFieldName}}
        #end
 	</delete>    
@@ -418,7 +418,7 @@
                 AND ${table.versionColumn.columnName} = #{${table.versionColumn.javaFieldName}} 
             #end    
         #else
-            DELETE FROM ${table.tableName} t
+            DELETE FROM ${table.tableName}
             WHERE ${pk.columnName} = #{value}
         #end
     </delete>
@@ -426,7 +426,7 @@
             
     <!-- 根据条件删除记录 -->
     <delete id="deleteByQuery" parameterType="com.gitee.fastmybatis.core.query.Query">
-		DELETE FROM [${table.tableName}] t
+		DELETE FROM [${table.tableName}]
 		<include refid="common.where" />
 	</delete>
 
