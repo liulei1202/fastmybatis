@@ -3,6 +3,7 @@ package com.gitee.fastmybatis.core.ext.code.generator;
 import com.gitee.fastmybatis.core.ext.code.util.FieldUtil;
 import com.gitee.fastmybatis.core.ext.code.util.JavaTypeUtil;
 import com.gitee.fastmybatis.core.handler.FillType;
+import com.gitee.fastmybatis.core.handler.Identitys;
 
 /**
  * 表字段信息
@@ -26,8 +27,11 @@ public class ColumnDefinition {
     private boolean isTransient;
     /** 是否自增 */
     private boolean isIdentity;
+    /** 是否auto策略 */
+    private boolean isAuto;
     /** 是否uuid策略 */
     private boolean isUuid;
+
     /** 是否主键 */
     private boolean isPk;
     private boolean isEnum;
@@ -44,6 +48,22 @@ public class ColumnDefinition {
     private FillType fillType;
     
     private int orderIndex = 1;
+
+    public boolean getIsCustomIdFill() {
+        return isAuto && typeHandler != null;
+    }
+
+    public String getCustomIdTypeHandlerValue() {
+        return "#{" + this.getJavaFieldName() + ", typeHandler=com.gitee.fastmybatis.core.handler.CustomIdTypeHandler}";
+    }
+
+    public Object getAutoId() {
+        try {
+            return Identitys.get();
+        } finally {
+            Identitys.remove();
+        }
+    }
 
     public String getLogicDeleteValueString() {
         return formatValue(logicDeleteValue);
@@ -308,5 +328,13 @@ public class ColumnDefinition {
 	public void setOrderIndex(int orderIndex) {
 		this.orderIndex = orderIndex;
 	}
-    
+
+    public boolean getIsAuto() {
+        return isAuto;
+    }
+
+    public void setIsAuto(boolean isAuto) {
+        this.isAuto = isAuto;
+    }
+
 }
