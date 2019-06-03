@@ -71,6 +71,7 @@
 				        <bean class="com.gitee.fastmybatis.core.support.DateFillUpdate">
 				            <constructor-arg index="0" value="add_time" />
 				        </bean>
+						<bean class="com.myapp.fill.UUIDFill" />
 				    </list>
 				</property>
 				<!-- 热部署 -->
